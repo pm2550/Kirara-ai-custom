@@ -20,15 +20,15 @@ class LLMChatRequest(BaseModel):
     
     messages: List[LLMChatMessage] = []
     model: Optional[str] = None
-    frequency_penalty: Optional[int] = None
+    frequency_penalty: Optional[float] = None
     max_tokens: Optional[int] = None
-    presence_penalty: Optional[int] = None
+    presence_penalty: Optional[float] = None
     response_format: Optional[ResponseFormat] = None
     stop: Optional[Any] = None
     stream: Optional[bool] = None
     stream_options: Optional[Any] = None
-    temperature: Optional[int] = None
-    top_p: Optional[int] = None
+    temperature: Optional[float] = None
+    top_p: Optional[float] = None
     # 规范tool传递
     tools: Optional[list[Tool]] = None 
     # tool_choice各家目前标准不尽相同，暂不向用户提供更改这个值的选项

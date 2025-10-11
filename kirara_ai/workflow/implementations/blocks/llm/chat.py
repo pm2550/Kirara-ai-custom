@@ -93,7 +93,9 @@ class ChatMessageConstructor(Block):
             "{current_date_time}": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "{user_msg}": user_msg.content,
             "{user_name}": user_msg.sender.display_name,
-            "{user_id}": user_msg.sender.user_id
+            "{user_id}": user_msg.sender.user_id,
+            "{user_qq_nickname}": user_msg.sender.raw_metadata.get("nickname", user_msg.sender.display_name),
+            "{user_group_card}": user_msg.sender.raw_metadata.get("card", ""),
         }
 
         if isinstance(memory_content, list) and all(isinstance(item, str) for item in memory_content):
@@ -143,8 +145,29 @@ class ChatCompletion(Block):
                 description="要使用的模型 ID",
                 options_provider=model_name_options_provider),
         ] = None,
+        temperature: Annotated[
+            Optional[float],
+            ParamMeta(
+                label="温度",
+                description="控制输出的随机性，范围 0-2，值越高越随机"),
+        ] = 1.0,
+        top_p: Annotated[
+            Optional[float],
+            ParamMeta(
+                label="Top P",
+                description="核采样参数，范围 0-1"),
+        ] = None,
+        max_tokens: Annotated[
+            Optional[int],
+            ParamMeta(
+                label="最大Token数",
+                description="生成的最大token数量"),
+        ] = None,
     ):
         self.model_name = model_name
+        self.temperature = temperature
+        self.top_p = top_p
+        self.max_tokens = max_tokens
         self.logger = get_logger("ChatCompletionBlock")
 
     def execute(self, prompt: List[LLMChatMessage]) -> Dict[str, Any]:
@@ -165,7 +188,13 @@ class ChatCompletion(Block):
         if not llm:
             raise ValueError(
                 f"LLM {model_id} not found, please check the model name")
-        req = LLMChatRequest(messages=prompt, model=model_id)
+        req = LLMChatRequest(
+            messages=prompt,
+            model=model_id,
+            temperature=self.temperature,
+            top_p=self.top_p,
+            max_tokens=self.max_tokens
+        )
         return {"resp": llm.chat(req)}
 
 

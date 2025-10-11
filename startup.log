@@ -1,0 +1,653 @@
+--- Logging error in Loguru Handler #1 ---
+Record was: {'elapsed': datetime.timedelta(seconds=8, microseconds=140964), 'exception': None, 'extra': {'tag': 'DispatchRuleRegistry'}, 'file': (name='registry.py', path='C:\\Users\\pm\\Desktop\\QQBot\\kirara-ai\\kirara_ai\\workflow\\core\\dispatch\\registry.py'), 'function': 'register', 'level': (name='INFO', no=20, icon='\u2139\ufe0f'), 'line': 32, 'message': "Registered dispatch rule: rule_id='chat_normal' name='�Q��AI\u5bf9\u8bdd' description='�Q�֒��g�p /chat \u5f00\u5934\u5bf9\u8bdd���� ��@ \u65f6�G\u53d1�֓V' workflow_id='chat:normal' priority=5 enabled=True rule_groups=[RuleGroup(operator='or', rules=[SimpleDispatchRule(type='prefix', config={'prefix': '/chat'}), SimpleDispatchRule(type='bot_mention', config={})]), RuleGroup(operator='or', rules=[SimpleDispatchRule(type='chat_type', config={'chat_type': '�Q��'})])] metadata={'category': 'chat', 'permission': 'user', 'temperature': 0.7}", 'module': 'registry', 'name': 'kirara_ai.workflow.core.dispatch.registry', 'process': (id=25524, name='MainProcess'), 'thread': (id=40108, name='MainThread'), 'time': datetime(2025, 10, 10, 0, 25, 47, 330850, tzinfo=datetime.timezone(datetime.timedelta(days=-1, seconds=61200), 'Pacific Daylight Time'))}
+Traceback (most recent call last):
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_handler.py", line 206, in emit
+    self._sink.write(str_record)
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_simple_sinks.py", line 123, in write
+    self._function(message)
+  File "C:\Users\pm\Desktop\QQBot\kirara-ai\kirara_ai\logger.py", line 30, in <lambda>
+    sink=lambda msg: print(msg.strip()),  # \u8f93�o���T����
+UnicodeEncodeError: 'cp932' codec can't encode character '\u5bf9' in position 148: illegal multibyte sequence
+--- End of logging error ---
+--- Logging error in Loguru Handler #1 ---
+Record was: {'elapsed': datetime.timedelta(seconds=8, microseconds=145032), 'exception': None, 'extra': {'tag': 'DispatchRuleRegistry'}, 'file': (name='registry.py', path='C:\\Users\\pm\\Desktop\\QQBot\\kirara-ai\\kirara_ai\\workflow\\core\\dispatch\\registry.py'), 'function': 'load_rules', 'level': (name='DEBUG', no=10, icon='\U0001f41e'), 'line': 149, 'message': "Loaded rule: rule_id='chat_normal' name='�Q��AI\u5bf9\u8bdd' description='�Q�֒��g�p /chat \u5f00\u5934\u5bf9\u8bdd���� ��@ \u65f6�G\u53d1�֓V' workflow_id='chat:normal' priority=5 enabled=True rule_groups=[RuleGroup(operator='or', rules=[SimpleDispatchRule(type='prefix', config={'prefix': '/chat'}), SimpleDispatchRule(type='bot_mention', config={})]), RuleGroup(operator='or', rules=[SimpleDispatchRule(type='chat_type', config={'chat_type': '�Q��'})])] metadata={'category': 'chat', 'permission': 'user', 'temperature': 0.7}", 'module': 'registry', 'name': 'kirara_ai.workflow.core.dispatch.registry', 'process': (id=25524, name='MainProcess'), 'thread': (id=40108, name='MainThread'), 'time': datetime(2025, 10, 10, 0, 25, 47, 334918, tzinfo=datetime.timezone(datetime.timedelta(days=-1, seconds=61200), 'Pacific Daylight Time'))}
+Traceback (most recent call last):
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_handler.py", line 206, in emit
+    self._sink.write(str_record)
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_simple_sinks.py", line 123, in write
+    self._function(message)
+  File "C:\Users\pm\Desktop\QQBot\kirara-ai\kirara_ai\logger.py", line 30, in <lambda>
+    sink=lambda msg: print(msg.strip()),  # \u8f93�o���T����
+UnicodeEncodeError: 'cp932' codec can't encode character '\u5bf9' in position 145: illegal multibyte sequence
+--- End of logging error ---
+--- Logging error in Loguru Handler #1 ---
+Record was: {'elapsed': datetime.timedelta(seconds=8, microseconds=146029), 'exception': None, 'extra': {'tag': 'DispatchRuleRegistry'}, 'file': (name='registry.py', path='C:\\Users\\pm\\Desktop\\QQBot\\kirara-ai\\kirara_ai\\workflow\\core\\dispatch\\registry.py'), 'function': 'register', 'level': (name='INFO', no=20, icon='\u2139\ufe0f'), 'line': 32, 'message': "Registered dispatch rule: rule_id='chat_creative' name='����AI\u5bf9\u8bdd' description='����\u65f6����\u53d1�����e�G\u53d1\u5bf9\u8bdd' workflow_id='chat:normal' priority=5 enabled=True rule_groups=[RuleGroup(operator='or', rules=[SimpleDispatchRule(type='chat_type', config={'chat_type': '����'})])] metadata={'category': 'chat', 'permission': 'user', 'temperature': 0.9}", 'module': 'registry', 'name': 'kirara_ai.workflow.core.dispatch.registry', 'process': (id=25524, name='MainProcess'), 'thread': (id=40108, name='MainThread'), 'time': datetime(2025, 10, 10, 0, 25, 47, 335915, tzinfo=datetime.timezone(datetime.timedelta(days=-1, seconds=61200), 'Pacific Daylight Time'))}
+Traceback (most recent call last):
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_handler.py", line 206, in emit
+    self._sink.write(str_record)
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_simple_sinks.py", line 123, in write
+    self._function(message)
+  File "C:\Users\pm\Desktop\QQBot\kirara-ai\kirara_ai\logger.py", line 30, in <lambda>
+    sink=lambda msg: print(msg.strip()),  # \u8f93�o���T����
+UnicodeEncodeError: 'cp932' codec can't encode character '\u5bf9' in position 150: illegal multibyte sequence
+--- End of logging error ---
+--- Logging error in Loguru Handler #1 ---
+Record was: {'elapsed': datetime.timedelta(seconds=8, microseconds=147030), 'exception': None, 'extra': {'tag': 'DispatchRuleRegistry'}, 'file': (name='registry.py', path='C:\\Users\\pm\\Desktop\\QQBot\\kirara-ai\\kirara_ai\\workflow\\core\\dispatch\\registry.py'), 'function': 'load_rules', 'level': (name='DEBUG', no=10, icon='\U0001f41e'), 'line': 149, 'message': "Loaded rule: rule_id='chat_creative' name='����AI\u5bf9\u8bdd' description='����\u65f6����\u53d1�����e�G\u53d1\u5bf9\u8bdd' workflow_id='chat:normal' priority=5 enabled=True rule_groups=[RuleGroup(operator='or', rules=[SimpleDispatchRule(type='chat_type', config={'chat_type': '����'})])] metadata={'category': 'chat', 'permission': 'user', 'temperature': 0.9}", 'module': 'registry', 'name': 'kirara_ai.workflow.core.dispatch.registry', 'process': (id=25524, name='MainProcess'), 'thread': (id=40108, name='MainThread'), 'time': datetime(2025, 10, 10, 0, 25, 47, 336916, tzinfo=datetime.timezone(datetime.timedelta(days=-1, seconds=61200), 'Pacific Daylight Time'))}
+Traceback (most recent call last):
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_handler.py", line 206, in emit
+    self._sink.write(str_record)
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_simple_sinks.py", line 123, in write
+    self._function(message)
+  File "C:\Users\pm\Desktop\QQBot\kirara-ai\kirara_ai\logger.py", line 30, in <lambda>
+    sink=lambda msg: print(msg.strip()),  # \u8f93�o���T����
+UnicodeEncodeError: 'cp932' codec can't encode character '\u5bf9' in position 147: illegal multibyte sequence
+--- End of logging error ---
+--- Logging error in Loguru Handler #1 ---
+Record was: {'elapsed': datetime.timedelta(seconds=8, microseconds=148022), 'exception': None, 'extra': {'tag': 'DispatchRuleRegistry'}, 'file': (name='registry.py', path='C:\\Users\\pm\\Desktop\\QQBot\\kirara-ai\\kirara_ai\\workflow\\core\\dispatch\\registry.py'), 'function': 'register', 'level': (name='INFO', no=20, icon='\u2139\ufe0f'), 'line': 32, 'message': "Registered dispatch rule: rule_id='game_dice' name='鍎q' description='鍎q��\u620f�C�x�� XdY �i��' workflow_id='game:dice' priority=5 enabled=True rule_groups=[RuleGroup(operator='or', rules=[SimpleDispatchRule(type='regex', config={'pattern': '^[.�B]roll\\\\s*(\\\\d+)?d(\\\\d+)'})])] metadata={}", 'module': 'registry', 'name': 'kirara_ai.workflow.core.dispatch.registry', 'process': (id=25524, name='MainProcess'), 'thread': (id=40108, name='MainThread'), 'time': datetime(2025, 10, 10, 0, 25, 47, 337908, tzinfo=datetime.timezone(datetime.timedelta(days=-1, seconds=61200), 'Pacific Daylight Time'))}
+Traceback (most recent call last):
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_handler.py", line 206, in emit
+    self._sink.write(str_record)
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_simple_sinks.py", line 123, in write
+    self._function(message)
+  File "C:\Users\pm\Desktop\QQBot\kirara-ai\kirara_ai\logger.py", line 30, in <lambda>
+    sink=lambda msg: print(msg.strip()),  # \u8f93�o���T����
+UnicodeEncodeError: 'cp932' codec can't encode character '\u620f' in position 162: illegal multibyte sequence
+--- End of logging error ---
+--- Logging error in Loguru Handler #1 ---
+Record was: {'elapsed': datetime.timedelta(seconds=8, microseconds=149020), 'exception': None, 'extra': {'tag': 'DispatchRuleRegistry'}, 'file': (name='registry.py', path='C:\\Users\\pm\\Desktop\\QQBot\\kirara-ai\\kirara_ai\\workflow\\core\\dispatch\\registry.py'), 'function': 'load_rules', 'level': (name='DEBUG', no=10, icon='\U0001f41e'), 'line': 149, 'message': "Loaded rule: rule_id='game_dice' name='鍎q' description='鍎q��\u620f�C�x�� XdY �i��' workflow_id='game:dice' priority=5 enabled=True rule_groups=[RuleGroup(operator='or', rules=[SimpleDispatchRule(type='regex', config={'pattern': '^[.�B]roll\\\\s*(\\\\d+)?d(\\\\d+)'})])] metadata={}", 'module': 'registry', 'name': 'kirara_ai.workflow.core.dispatch.registry', 'process': (id=25524, name='MainProcess'), 'thread': (id=40108, name='MainThread'), 'time': datetime(2025, 10, 10, 0, 25, 47, 338906, tzinfo=datetime.timezone(datetime.timedelta(days=-1, seconds=61200), 'Pacific Daylight Time'))}
+Traceback (most recent call last):
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_handler.py", line 206, in emit
+    self._sink.write(str_record)
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_simple_sinks.py", line 123, in write
+    self._function(message)
+  File "C:\Users\pm\Desktop\QQBot\kirara-ai\kirara_ai\logger.py", line 30, in <lambda>
+    sink=lambda msg: print(msg.strip()),  # \u8f93�o���T����
+UnicodeEncodeError: 'cp932' codec can't encode character '\u620f' in position 159: illegal multibyte sequence
+--- End of logging error ---
+--- Logging error in Loguru Handler #1 ---
+Record was: {'elapsed': datetime.timedelta(seconds=8, microseconds=149020), 'exception': None, 'extra': {'tag': 'DispatchRuleRegistry'}, 'file': (name='registry.py', path='C:\\Users\\pm\\Desktop\\QQBot\\kirara-ai\\kirara_ai\\workflow\\core\\dispatch\\registry.py'), 'function': 'register', 'level': (name='INFO', no=20, icon='\u2139\ufe0f'), 'line': 32, 'message': "Registered dispatch rule: rule_id='game_gacha' name='��\u5361' description='��\u5361��\u62df��' workflow_id='game:gacha' priority=5 enabled=True rule_groups=[RuleGroup(operator='or', rules=[SimpleDispatchRule(type='keyword', config={'keywords': ['��\u5361', '�\\u8fde', '\u5355��']})])] metadata={}", 'module': 'registry', 'name': 'kirara_ai.workflow.core.dispatch.registry', 'process': (id=25524, name='MainProcess'), 'thread': (id=40108, name='MainThread'), 'time': datetime(2025, 10, 10, 0, 25, 47, 338906, tzinfo=datetime.timezone(datetime.timedelta(days=-1, seconds=61200), 'Pacific Daylight Time'))}
+Traceback (most recent call last):
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_handler.py", line 206, in emit
+    self._sink.write(str_record)
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_simple_sinks.py", line 123, in write
+    self._function(message)
+  File "C:\Users\pm\Desktop\QQBot\kirara-ai\kirara_ai\logger.py", line 30, in <lambda>
+    sink=lambda msg: print(msg.strip()),  # \u8f93�o���T����
+UnicodeEncodeError: 'cp932' codec can't encode character '\u5361' in position 144: illegal multibyte sequence
+--- End of logging error ---
+--- Logging error in Loguru Handler #1 ---
+Record was: {'elapsed': datetime.timedelta(seconds=8, microseconds=150020), 'exception': None, 'extra': {'tag': 'DispatchRuleRegistry'}, 'file': (name='registry.py', path='C:\\Users\\pm\\Desktop\\QQBot\\kirara-ai\\kirara_ai\\workflow\\core\\dispatch\\registry.py'), 'function': 'load_rules', 'level': (name='DEBUG', no=10, icon='\U0001f41e'), 'line': 149, 'message': "Loaded rule: rule_id='game_gacha' name='��\u5361' description='��\u5361��\u62df��' workflow_id='game:gacha' priority=5 enabled=True rule_groups=[RuleGroup(operator='or', rules=[SimpleDispatchRule(type='keyword', config={'keywords': ['��\u5361', '�\\u8fde', '\u5355��']})])] metadata={}", 'module': 'registry', 'name': 'kirara_ai.workflow.core.dispatch.registry', 'process': (id=25524, name='MainProcess'), 'thread': (id=40108, name='MainThread'), 'time': datetime(2025, 10, 10, 0, 25, 47, 339906, tzinfo=datetime.timezone(datetime.timedelta(days=-1, seconds=61200), 'Pacific Daylight Time'))}
+Traceback (most recent call last):
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_handler.py", line 206, in emit
+    self._sink.write(str_record)
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_simple_sinks.py", line 123, in write
+    self._function(message)
+  File "C:\Users\pm\Desktop\QQBot\kirara-ai\kirara_ai\logger.py", line 30, in <lambda>
+    sink=lambda msg: print(msg.strip()),  # \u8f93�o���T����
+UnicodeEncodeError: 'cp932' codec can't encode character '\u5361' in position 141: illegal multibyte sequence
+--- End of logging error ---
+--- Logging error in Loguru Handler #1 ---
+Record was: {'elapsed': datetime.timedelta(seconds=8, microseconds=151020), 'exception': None, 'extra': {'tag': 'DispatchRuleRegistry'}, 'file': (name='registry.py', path='C:\\Users\\pm\\Desktop\\QQBot\\kirara-ai\\kirara_ai\\workflow\\core\\dispatch\\registry.py'), 'function': 'register', 'level': (name='INFO', no=20, icon='\u2139\ufe0f'), 'line': 32, 'message': "Registered dispatch rule: rule_id='system_help' name='\u5e2e������' description='\u663e��\u5e2e���M��' workflow_id='system:help' priority=10 enabled=True rule_groups=[RuleGroup(operator='or', rules=[SimpleDispatchRule(type='prefix', config={'prefix': '/help'})])] metadata={'category': 'system', 'permission': 'user'}", 'module': 'registry', 'name': 'kirara_ai.workflow.core.dispatch.registry', 'process': (id=25524, name='MainProcess'), 'thread': (id=40108, name='MainThread'), 'time': datetime(2025, 10, 10, 0, 25, 47, 340906, tzinfo=datetime.timezone(datetime.timedelta(days=-1, seconds=61200), 'Pacific Daylight Time'))}
+Traceback (most recent call last):
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_handler.py", line 206, in emit
+    self._sink.write(str_record)
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_simple_sinks.py", line 123, in write
+    self._function(message)
+  File "C:\Users\pm\Desktop\QQBot\kirara-ai\kirara_ai\logger.py", line 30, in <lambda>
+    sink=lambda msg: print(msg.strip()),  # \u8f93�o���T����
+UnicodeEncodeError: 'cp932' codec can't encode character '\u5e2e' in position 144: illegal multibyte sequence
+--- End of logging error ---
+--- Logging error in Loguru Handler #1 ---
+Record was: {'elapsed': datetime.timedelta(seconds=8, microseconds=152031), 'exception': None, 'extra': {'tag': 'DispatchRuleRegistry'}, 'file': (name='registry.py', path='C:\\Users\\pm\\Desktop\\QQBot\\kirara-ai\\kirara_ai\\workflow\\core\\dispatch\\registry.py'), 'function': 'load_rules', 'level': (name='DEBUG', no=10, icon='\U0001f41e'), 'line': 149, 'message': "Loaded rule: rule_id='system_help' name='\u5e2e������' description='\u663e��\u5e2e���M��' workflow_id='system:help' priority=10 enabled=True rule_groups=[RuleGroup(operator='or', rules=[SimpleDispatchRule(type='prefix', config={'prefix': '/help'})])] metadata={'category': 'system', 'permission': 'user'}", 'module': 'registry', 'name': 'kirara_ai.workflow.core.dispatch.registry', 'process': (id=25524, name='MainProcess'), 'thread': (id=40108, name='MainThread'), 'time': datetime(2025, 10, 10, 0, 25, 47, 341917, tzinfo=datetime.timezone(datetime.timedelta(days=-1, seconds=61200), 'Pacific Daylight Time'))}
+Traceback (most recent call last):
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_handler.py", line 206, in emit
+    self._sink.write(str_record)
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_simple_sinks.py", line 123, in write
+    self._function(message)
+  File "C:\Users\pm\Desktop\QQBot\kirara-ai\kirara_ai\logger.py", line 30, in <lambda>
+    sink=lambda msg: print(msg.strip()),  # \u8f93�o���T����
+UnicodeEncodeError: 'cp932' codec can't encode character '\u5e2e' in position 141: illegal multibyte sequence
+--- End of logging error ---
+--- Logging error in Loguru Handler #1 ---
+Record was: {'elapsed': datetime.timedelta(seconds=8, microseconds=153552), 'exception': None, 'extra': {'tag': 'DispatchRuleRegistry'}, 'file': (name='registry.py', path='C:\\Users\\pm\\Desktop\\QQBot\\kirara-ai\\kirara_ai\\workflow\\core\\dispatch\\registry.py'), 'function': 'register', 'level': (name='INFO', no=20, icon='\u2139\ufe0f'), 'line': 32, 'message': "Registered dispatch rule: rule_id='system_clear_memory' name='����\u8bb0\u5fc6' description='���󓖑O\u5bf9\u8bdd�I\u8bb0\u5fc6' workflow_id='system:clear_memory' priority=10 enabled=True rule_groups=[RuleGroup(operator='or', rules=[SimpleDispatchRule(type='prefix', config={'prefix': '/����\u8bb0\u5fc6'})])] metadata={'category': 'system', 'permission': 'user'}", 'module': 'registry', 'name': 'kirara_ai.workflow.core.dispatch.registry', 'process': (id=25524, name='MainProcess'), 'thread': (id=40108, name='MainThread'), 'time': datetime(2025, 10, 10, 0, 25, 47, 343438, tzinfo=datetime.timezone(datetime.timedelta(days=-1, seconds=61200), 'Pacific Daylight Time'))}
+Traceback (most recent call last):
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_handler.py", line 206, in emit
+    self._sink.write(str_record)
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_simple_sinks.py", line 123, in write
+    self._function(message)
+  File "C:\Users\pm\Desktop\QQBot\kirara-ai\kirara_ai\logger.py", line 30, in <lambda>
+    sink=lambda msg: print(msg.strip()),  # \u8f93�o���T����
+UnicodeEncodeError: 'cp932' codec can't encode character '\u8bb0' in position 154: illegal multibyte sequence
+--- End of logging error ---
+--- Logging error in Loguru Handler #1 ---
+Record was: {'elapsed': datetime.timedelta(seconds=8, microseconds=154070), 'exception': None, 'extra': {'tag': 'DispatchRuleRegistry'}, 'file': (name='registry.py', path='C:\\Users\\pm\\Desktop\\QQBot\\kirara-ai\\kirara_ai\\workflow\\core\\dispatch\\registry.py'), 'function': 'load_rules', 'level': (name='DEBUG', no=10, icon='\U0001f41e'), 'line': 149, 'message': "Loaded rule: rule_id='system_clear_memory' name='����\u8bb0\u5fc6' description='���󓖑O\u5bf9\u8bdd�I\u8bb0\u5fc6' workflow_id='system:clear_memory' priority=10 enabled=True rule_groups=[RuleGroup(operator='or', rules=[SimpleDispatchRule(type='prefix', config={'prefix': '/����\u8bb0\u5fc6'})])] metadata={'category': 'system', 'permission': 'user'}", 'module': 'registry', 'name': 'kirara_ai.workflow.core.dispatch.registry', 'process': (id=25524, name='MainProcess'), 'thread': (id=40108, name='MainThread'), 'time': datetime(2025, 10, 10, 0, 25, 47, 343956, tzinfo=datetime.timezone(datetime.timedelta(days=-1, seconds=61200), 'Pacific Daylight Time'))}
+Traceback (most recent call last):
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_handler.py", line 206, in emit
+    self._sink.write(str_record)
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_simple_sinks.py", line 123, in write
+    self._function(message)
+  File "C:\Users\pm\Desktop\QQBot\kirara-ai\kirara_ai\logger.py", line 30, in <lambda>
+    sink=lambda msg: print(msg.strip()),  # \u8f93�o���T����
+UnicodeEncodeError: 'cp932' codec can't encode character '\u8bb0' in position 151: illegal multibyte sequence
+--- End of logging error ---
+--- Logging error in Loguru Handler #1 ---
+Record was: {'elapsed': datetime.timedelta(seconds=8, microseconds=155092), 'exception': None, 'extra': {'tag': 'DispatchRuleRegistry'}, 'file': (name='registry.py', path='C:\\Users\\pm\\Desktop\\QQBot\\kirara-ai\\kirara_ai\\workflow\\core\\dispatch\\registry.py'), 'function': 'register', 'level': (name='INFO', no=20, icon='\u2139\ufe0f'), 'line': 32, 'message': "Registered dispatch rule: rule_id='fallback' name='��\u8ba4\u89c4\u5219' description='����q\u89c4\u5219�ϖv�L�C�z����\u65f6�C\u6267�s���H�여�B' workflow_id='chat:memory_store' priority=0 enabled=True rule_groups=[RuleGroup(operator='or', rules=[SimpleDispatchRule(type='fallback', config={})])] metadata={}", 'module': 'registry', 'name': 'kirara_ai.workflow.core.dispatch.registry', 'process': (id=25524, name='MainProcess'), 'thread': (id=40108, name='MainThread'), 'time': datetime(2025, 10, 10, 0, 25, 47, 344978, tzinfo=datetime.timezone(datetime.timedelta(days=-1, seconds=61200), 'Pacific Daylight Time'))}
+Traceback (most recent call last):
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_handler.py", line 206, in emit
+    self._sink.write(str_record)
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_simple_sinks.py", line 123, in write
+    self._function(message)
+  File "C:\Users\pm\Desktop\QQBot\kirara-ai\kirara_ai\logger.py", line 30, in <lambda>
+    sink=lambda msg: print(msg.strip()),  # \u8f93�o���T����
+UnicodeEncodeError: 'cp932' codec can't encode character '\u8ba4' in position 142: illegal multibyte sequence
+--- End of logging error ---
+--- Logging error in Loguru Handler #1 ---
+Record was: {'elapsed': datetime.timedelta(seconds=8, microseconds=156415), 'exception': None, 'extra': {'tag': 'DispatchRuleRegistry'}, 'file': (name='registry.py', path='C:\\Users\\pm\\Desktop\\QQBot\\kirara-ai\\kirara_ai\\workflow\\core\\dispatch\\registry.py'), 'function': 'load_rules', 'level': (name='DEBUG', no=10, icon='\U0001f41e'), 'line': 149, 'message': "Loaded rule: rule_id='fallback' name='��\u8ba4\u89c4\u5219' description='����q\u89c4\u5219�ϖv�L�C�z����\u65f6�C\u6267�s���H�여�B' workflow_id='chat:memory_store' priority=0 enabled=True rule_groups=[RuleGroup(operator='or', rules=[SimpleDispatchRule(type='fallback', config={})])] metadata={}", 'module': 'registry', 'name': 'kirara_ai.workflow.core.dispatch.registry', 'process': (id=25524, name='MainProcess'), 'thread': (id=40108, name='MainThread'), 'time': datetime(2025, 10, 10, 0, 25, 47, 346301, tzinfo=datetime.timezone(datetime.timedelta(days=-1, seconds=61200), 'Pacific Daylight Time'))}
+Traceback (most recent call last):
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_handler.py", line 206, in emit
+    self._sink.write(str_record)
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_simple_sinks.py", line 123, in write
+    self._function(message)
+  File "C:\Users\pm\Desktop\QQBot\kirara-ai\kirara_ai\logger.py", line 30, in <lambda>
+    sink=lambda msg: print(msg.strip()),  # \u8f93�o���T����
+UnicodeEncodeError: 'cp932' codec can't encode character '\u8ba4' in position 139: illegal multibyte sequence
+--- End of logging error ---
+--- Logging error in Loguru Handler #1 ---
+Record was: {'elapsed': datetime.timedelta(seconds=8, microseconds=159091), 'exception': None, 'extra': {'tag': 'WebServer'}, 'file': (name='app.py', path='C:\\Users\\pm\\Desktop\\QQBot\\kirara-ai\\kirara_ai\\web\\app.py'), 'function': 'start', 'level': (name='INFO', no=20, icon='\u2139\ufe0f'), 'line': 292, 'message': '\u76d1�ߒn���Fhttp://127.0.0.1:8080/', 'module': 'app', 'name': 'kirara_ai.web.app', 'process': (id=25524, name='MainProcess'), 'thread': (id=40108, name='MainThread'), 'time': datetime(2025, 10, 10, 0, 25, 47, 348977, tzinfo=datetime.timezone(datetime.timedelta(days=-1, seconds=61200), 'Pacific Daylight Time'))}
+Traceback (most recent call last):
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_handler.py", line 206, in emit
+    self._sink.write(str_record)
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_simple_sinks.py", line 123, in write
+    self._function(message)
+  File "C:\Users\pm\Desktop\QQBot\kirara-ai\kirara_ai\logger.py", line 30, in <lambda>
+    sink=lambda msg: print(msg.strip()),  # \u8f93�o���T����
+UnicodeEncodeError: 'cp932' codec can't encode character '\u76d1' in position 82: illegal multibyte sequence
+--- End of logging error ---
+--- Logging error in Loguru Handler #1 ---
+Record was: {'elapsed': datetime.timedelta(seconds=8, microseconds=187910), 'exception': None, 'extra': {'tag': 'IMManager'}, 'file': (name='manager.py', path='C:\\Users\\pm\\Desktop\\QQBot\\kirara-ai\\kirara_ai\\im\\manager.py'), 'function': '_start_adapter', 'level': (name='INFO', no=20, icon='\u2139\ufe0f'), 'line': 153, 'message': 'Starting adapter: \u9690��I����', 'module': 'manager', 'name': 'kirara_ai.im.manager', 'process': (id=25524, name='MainProcess'), 'thread': (id=40108, name='MainThread'), 'time': datetime(2025, 10, 10, 0, 25, 47, 377796, tzinfo=datetime.timezone(datetime.timedelta(days=-1, seconds=61200), 'Pacific Daylight Time'))}
+Traceback (most recent call last):
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_handler.py", line 206, in emit
+    self._sink.write(str_record)
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_simple_sinks.py", line 123, in write
+    self._function(message)
+  File "C:\Users\pm\Desktop\QQBot\kirara-ai\kirara_ai\logger.py", line 30, in <lambda>
+    sink=lambda msg: print(msg.strip()),  # \u8f93�o���T����
+UnicodeEncodeError: 'cp932' codec can't encode character '\u9690' in position 100: illegal multibyte sequence
+--- End of logging error ---
+--- Logging error in Loguru Handler #1 ---
+Record was: {'elapsed': datetime.timedelta(seconds=8, microseconds=189911), 'exception': None, 'extra': {'tag': 'OneBot'}, 'file': (name='adapter.py', path='C:\\Users\\pm\\anaconda3\\envs\\310\\lib\\site-packages\\im_onebot_adapters\\adapter.py'), 'function': '_inject_websocket_service', 'level': (name='INFO', no=20, icon='\u2139\ufe0f'), 'line': 254, 'message': 'OneBot\u9002�z���\u542f\u52a8�� /im/websocket/onebot/9b90dfe3�CWebSocket�H�R: /ws', 'module': 'adapter', 'name': 'im_onebot_adapters.adapter', 'process': (id=25524, name='MainProcess'), 'thread': (id=40108, name='MainThread'), 'time': datetime(2025, 10, 10, 0, 25, 47, 379797, tzinfo=datetime.timezone(datetime.timedelta(days=-1, seconds=61200), 'Pacific Daylight Time'))}
+Traceback (most recent call last):
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_handler.py", line 206, in emit
+    self._sink.write(str_record)
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_simple_sinks.py", line 123, in write
+    self._function(message)
+  File "C:\Users\pm\Desktop\QQBot\kirara-ai\kirara_ai\logger.py", line 30, in <lambda>
+    sink=lambda msg: print(msg.strip()),  # \u8f93�o���T����
+UnicodeEncodeError: 'cp932' codec can't encode character '\u9002' in position 88: illegal multibyte sequence
+--- End of logging error ---
+--- Logging error in Loguru Handler #1 ---
+Record was: {'elapsed': datetime.timedelta(seconds=8, microseconds=190912), 'exception': None, 'extra': {'tag': 'IMManager'}, 'file': (name='manager.py', path='C:\\Users\\pm\\Desktop\\QQBot\\kirara-ai\\kirara_ai\\im\\manager.py'), 'function': '_start_adapter', 'level': (name='INFO', no=20, icon='\u2139\ufe0f'), 'line': 156, 'message': 'Started adapter: \u9690��I����', 'module': 'manager', 'name': 'kirara_ai.im.manager', 'process': (id=25524, name='MainProcess'), 'thread': (id=40108, name='MainThread'), 'time': datetime(2025, 10, 10, 0, 25, 47, 380798, tzinfo=datetime.timezone(datetime.timedelta(days=-1, seconds=61200), 'Pacific Daylight Time'))}
+Traceback (most recent call last):
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_handler.py", line 206, in emit
+    self._sink.write(str_record)
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_simple_sinks.py", line 123, in write
+    self._function(message)
+  File "C:\Users\pm\Desktop\QQBot\kirara-ai\kirara_ai\logger.py", line 30, in <lambda>
+    sink=lambda msg: print(msg.strip()),  # \u8f93�o���T����
+UnicodeEncodeError: 'cp932' codec can't encode character '\u9690' in position 99: illegal multibyte sequence
+--- End of logging error ---
+--- Logging error in Loguru Handler #1 ---
+Record was: {'elapsed': datetime.timedelta(seconds=8, microseconds=191914), 'exception': None, 'extra': {'tag': 'Entrypoint'}, 'file': (name='entry.py', path='C:\\Users\\pm\\Desktop\\QQBot\\kirara-ai\\kirara_ai\\entry.py'), 'function': 'run_application', 'level': (name='SUCCESS', no=25, icon='\u2705'), 'line': 259, 'message': 'Kirara AI \u542f\u52a8��\u6bd5�C���ҏ�����...', 'module': 'entry', 'name': 'kirara_ai.entry', 'process': (id=25524, name='MainProcess'), 'thread': (id=40108, name='MainThread'), 'time': datetime(2025, 10, 10, 0, 25, 47, 381800, tzinfo=datetime.timezone(datetime.timedelta(days=-1, seconds=61200), 'Pacific Daylight Time'))}
+Traceback (most recent call last):
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_handler.py", line 206, in emit
+    self._sink.write(str_record)
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_simple_sinks.py", line 123, in write
+    self._function(message)
+  File "C:\Users\pm\Desktop\QQBot\kirara-ai\kirara_ai\logger.py", line 30, in <lambda>
+    sink=lambda msg: print(msg.strip()),  # \u8f93�o���T����
+UnicodeEncodeError: 'cp932' codec can't encode character '\u542f' in position 102: illegal multibyte sequence
+--- End of logging error ---
+--- Logging error in Loguru Handler #1 ---
+Record was: {'elapsed': datetime.timedelta(seconds=8, microseconds=193425), 'exception': None, 'extra': {'tag': 'Entrypoint'}, 'file': (name='entry.py', path='C:\\Users\\pm\\Desktop\\QQBot\\kirara-ai\\kirara_ai\\entry.py'), 'function': 'run_application', 'level': (name='SUCCESS', no=25, icon='\u2705'), 'line': 260, 'message': 'WebUI �Ǘ�����{�n\u8bbf\u95ee�n���Fhttp://127.0.0.1:8080/', 'module': 'entry', 'name': 'kirara_ai.entry', 'process': (id=25524, name='MainProcess'), 'thread': (id=40108, name='MainThread'), 'time': datetime(2025, 10, 10, 0, 25, 47, 383311, tzinfo=datetime.timezone(datetime.timedelta(days=-1, seconds=61200), 'Pacific Daylight Time'))}
+Traceback (most recent call last):
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_handler.py", line 206, in emit
+    self._sink.write(str_record)
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_simple_sinks.py", line 123, in write
+    self._function(message)
+  File "C:\Users\pm\Desktop\QQBot\kirara-ai\kirara_ai\logger.py", line 30, in <lambda>
+    sink=lambda msg: print(msg.strip()),  # \u8f93�o���T����
+UnicodeEncodeError: 'cp932' codec can't encode character '\u8bbf' in position 104: illegal multibyte sequence
+--- End of logging error ---
+[32m2025-10-10 00:25:44.300[0m | [1mINFO    [0m | [36mEntrypoint  [0m | [1mInitializing application...[0m
+[32m2025-10-10 00:25:44.301[0m | [1mINFO    [0m | [36mEntrypoint  [0m | [1mLoading configuration from ./data/config.yaml[0m
+[32m2025-10-10 00:25:44.349[0m | [1mINFO    [0m | [36mEntrypoint  [0m | [1mConfiguration loaded successfully[0m
+[32m2025-10-10 00:25:44.500[0m | [1mINFO    [0m | [36mDB          [0m | [1mDatabase schema is up to date[0m
+[32m2025-10-10 00:25:44.500[0m | [1mINFO    [0m | [36mDB          [0m | [1mDatabase initialized at sqlite:///./data/db\kirara.db[0m
+new MediaManager
+[32m2025-10-10 00:25:44.655[0m | [1mINFO    [0m | [36mEntrypoint  [0m | [1mInitializing memory system...[0m
+[32m2025-10-10 00:25:44.657[0m | [1mINFO    [0m | [36mEntrypoint  [0m | [1mInitializing tracing system...[0m
+[32m2025-10-10 00:25:44.658[0m | [1mINFO    [0m | [36mTracingManager[0m | [1mInitializing tracing manager[0m
+[32m2025-10-10 00:25:44.658[0m | [1mINFO    [0m | [36mTracking    [0m | [1mInitializing llm tracer[0m
+[32m2025-10-10 00:25:44.658[0m | [1mINFO    [0m | [36mTracking    [0m | [1mllm tracer initialized[0m
+[32m2025-10-10 00:25:44.672[0m | [1mINFO    [0m | [36mTracingManager[0m | [1mTracing manager initialized[0m
+[32m2025-10-10 00:25:44.672[0m | [1mINFO    [0m | [36mEntrypoint  [0m | [1mTracing system initialized[0m
+[32m2025-10-10 00:25:44.674[0m | [1mINFO    [0m | [36mEntrypoint  [0m | [1mDiscovering internal plugins...[0m
+[32m2025-10-10 00:25:44.674[0m | [1mINFO    [0m | [36mPluginLoader[0m | [1mDiscovering internal plugins from directory: C:\Users\pm\Desktop\QQBot\kirara-ai\kirara_ai\plugins[0m
+[32m2025-10-10 00:25:44.674[0m | [34m[1mDEBUG   [0m | [36mPluginLoader[0m | [34m[1mFound plugin directory: bundled_frpc[0m
+[32m2025-10-10 00:25:44.674[0m | [1mINFO    [0m | [36mPluginLoader[0m | [1mLoading plugin: bundled_frpc[0m
+[32m2025-10-10 00:25:44.688[0m | [34m[1mDEBUG   [0m | [36mPluginLoader[0m | [34m[1mInstantiating plugin class: FrpcPlugin[0m
+[32m2025-10-10 00:25:44.688[0m | [1mINFO    [0m | [36mPluginLoader[0m | [1mInternal plugin bundled_frpc loaded successfully[0m
+[32m2025-10-10 00:25:44.689[0m | [34m[1mDEBUG   [0m | [36mPluginLoader[0m | [34m[1mFound plugin directory: im_http_legacy_adapter[0m
+[32m2025-10-10 00:25:44.689[0m | [1mINFO    [0m | [36mPluginLoader[0m | [1mLoading plugin: im_http_legacy_adapter[0m
+[32m2025-10-10 00:25:44.696[0m | [34m[1mDEBUG   [0m | [36mPluginLoader[0m | [34m[1mInstantiating plugin class: HttpLegacyAdapterPlugin[0m
+[32m2025-10-10 00:25:44.696[0m | [1mINFO    [0m | [36mPluginLoader[0m | [1mInternal plugin im_http_legacy_adapter loaded successfully[0m
+[32m2025-10-10 00:25:44.696[0m | [34m[1mDEBUG   [0m | [36mPluginLoader[0m | [34m[1mFound plugin directory: im_qqbot_adapter[0m
+[32m2025-10-10 00:25:44.696[0m | [1mINFO    [0m | [36mPluginLoader[0m | [1mLoading plugin: im_qqbot_adapter[0m
+[32m2025-10-10 00:25:44.861[0m | [34m[1mDEBUG   [0m | [36mPluginLoader[0m | [34m[1mInstantiating plugin class: QQBotAdapterPlugin[0m
+[32m2025-10-10 00:25:44.862[0m | [1mINFO    [0m | [36mPluginLoader[0m | [1mInternal plugin im_qqbot_adapter loaded successfully[0m
+[32m2025-10-10 00:25:44.863[0m | [34m[1mDEBUG   [0m | [36mPluginLoader[0m | [34m[1mFound plugin directory: im_telegram_adapter[0m
+[32m2025-10-10 00:25:44.863[0m | [1mINFO    [0m | [36mPluginLoader[0m | [1mLoading plugin: im_telegram_adapter[0m
+[32m2025-10-10 00:25:46.448[0m | [34m[1mDEBUG   [0m | [36mPluginLoader[0m | [34m[1mInstantiating plugin class: TelegramAdapterPlugin[0m
+[32m2025-10-10 00:25:46.449[0m | [1mINFO    [0m | [36mPluginLoader[0m | [1mInternal plugin im_telegram_adapter loaded successfully[0m
+[32m2025-10-10 00:25:46.450[0m | [34m[1mDEBUG   [0m | [36mPluginLoader[0m | [34m[1mFound plugin directory: im_wecom_adapter[0m
+[32m2025-10-10 00:25:46.450[0m | [1mINFO    [0m | [36mPluginLoader[0m | [1mLoading plugin: im_wecom_adapter[0m
+[32m2025-10-10 00:25:47.022[0m | [34m[1mDEBUG   [0m | [36mPluginLoader[0m | [34m[1mInstantiating plugin class: WecomAdapterPlugin[0m
+[32m2025-10-10 00:25:47.022[0m | [1mINFO    [0m | [36mPluginLoader[0m | [1mInternal plugin im_wecom_adapter loaded successfully[0m
+[32m2025-10-10 00:25:47.023[0m | [34m[1mDEBUG   [0m | [36mPluginLoader[0m | [34m[1mFound plugin directory: llm_preset_adapters[0m
+[32m2025-10-10 00:25:47.023[0m | [1mINFO    [0m | [36mPluginLoader[0m | [1mLoading plugin: llm_preset_adapters[0m
+[32m2025-10-10 00:25:47.061[0m | [34m[1mDEBUG   [0m | [36mPluginLoader[0m | [34m[1mInstantiating plugin class: LLMPresetAdaptersPlugin[0m
+[32m2025-10-10 00:25:47.062[0m | [1mINFO    [0m | [36mPluginLoader[0m | [1mInternal plugin llm_preset_adapters loaded successfully[0m
+[32m2025-10-10 00:25:47.062[0m | [1mINFO    [0m | [36mEntrypoint  [0m | [1mDiscovering external plugins...[0m
+[32m2025-10-10 00:25:47.062[0m | [1mINFO    [0m | [36mPluginLoader[0m | [1mDiscovering external plugins...[0m
+[32m2025-10-10 00:25:47.210[0m | [34m[1mDEBUG   [0m | [36mPluginLoader[0m | [34m[1mInstantiating plugin class: OneBotAdapterPlugin[0m
+[32m2025-10-10 00:25:47.211[0m | [1mINFO    [0m | [36mPluginLoader[0m | [1mSuccessfully loaded external plugin: im_onebot_adapters[0m
+[32m2025-10-10 00:25:47.284[0m | [1mINFO    [0m | [36mEntrypoint  [0m | [1mLoading plugins[0m
+[32m2025-10-10 00:25:47.285[0m | [1mINFO    [0m | [36mPluginLoader[0m | [1mInitializing plugins...[0m
+[32m2025-10-10 00:25:47.285[0m | [1mINFO    [0m | [36mPluginLoader[0m | [1mPlugin FrpcPlugin initialized[0m
+[32m2025-10-10 00:25:47.286[0m | [1mINFO    [0m | [36mPluginLoader[0m | [1mPlugin HttpLegacyAdapterPlugin initialized[0m
+[32m2025-10-10 00:25:47.286[0m | [1mINFO    [0m | [36mPluginLoader[0m | [1mPlugin QQBotAdapterPlugin initialized[0m
+[32m2025-10-10 00:25:47.287[0m | [1mINFO    [0m | [36mPluginLoader[0m | [1mPlugin TelegramAdapterPlugin initialized[0m
+[32m2025-10-10 00:25:47.287[0m | [1mINFO    [0m | [36mPluginLoader[0m | [1mPlugin WecomAdapterPlugin initialized[0m
+[32m2025-10-10 00:25:47.287[0m | [1mINFO    [0m | [36mkirara_ai.llm.llm_registry[0m | [1mRegistered LLM backend adapter: OpenAI[0m
+[32m2025-10-10 00:25:47.287[0m | [1mINFO    [0m | [36mkirara_ai.llm.llm_registry[0m | [1mRegistered LLM backend adapter: DeepSeek[0m
+[32m2025-10-10 00:25:47.288[0m | [1mINFO    [0m | [36mkirara_ai.llm.llm_registry[0m | [1mRegistered LLM backend adapter: Gemini[0m
+[32m2025-10-10 00:25:47.288[0m | [1mINFO    [0m | [36mkirara_ai.llm.llm_registry[0m | [1mRegistered LLM backend adapter: Ollama[0m
+[32m2025-10-10 00:25:47.288[0m | [1mINFO    [0m | [36mkirara_ai.llm.llm_registry[0m | [1mRegistered LLM backend adapter: Claude[0m
+[32m2025-10-10 00:25:47.288[0m | [1mINFO    [0m | [36mkirara_ai.llm.llm_registry[0m | [1mRegistered LLM backend adapter: SiliconFlow[0m
+[32m2025-10-10 00:25:47.288[0m | [1mINFO    [0m | [36mkirara_ai.llm.llm_registry[0m | [1mRegistered LLM backend adapter: TencentCloud[0m
+[32m2025-10-10 00:25:47.288[0m | [1mINFO    [0m | [36mkirara_ai.llm.llm_registry[0m | [1mRegistered LLM backend adapter: AlibabaCloud[0m
+[32m2025-10-10 00:25:47.288[0m | [1mINFO    [0m | [36mkirara_ai.llm.llm_registry[0m | [1mRegistered LLM backend adapter: Moonshot[0m
+[32m2025-10-10 00:25:47.289[0m | [1mINFO    [0m | [36mkirara_ai.llm.llm_registry[0m | [1mRegistered LLM backend adapter: OpenRouter[0m
+[32m2025-10-10 00:25:47.289[0m | [1mINFO    [0m | [36mkirara_ai.llm.llm_registry[0m | [1mRegistered LLM backend adapter: Minimax[0m
+[32m2025-10-10 00:25:47.289[0m | [1mINFO    [0m | [36mkirara_ai.llm.llm_registry[0m | [1mRegistered LLM backend adapter: Volcengine[0m
+[32m2025-10-10 00:25:47.289[0m | [1mINFO    [0m | [36mkirara_ai.llm.llm_registry[0m | [1mRegistered LLM backend adapter: Mistral[0m
+[32m2025-10-10 00:25:47.289[0m | [1mINFO    [0m | [36mLLMPresetAdapters[0m | [1mLLMPresetAdaptersPlugin loaded[0m
+[32m2025-10-10 00:25:47.289[0m | [1mINFO    [0m | [36mPluginLoader[0m | [1mPlugin LLMPresetAdaptersPlugin initialized[0m
+[32m2025-10-10 00:25:47.290[0m | [33m[1mWARNING [0m | [36mWebServer   [0m | [33m[1mStatic asset path does not exist: C:\Users\pm\anaconda3\envs\310\lib\site-packages\im_onebot_adapters\assets\onebot.png[0m
+[32m2025-10-10 00:25:47.290[0m | [1mINFO    [0m | [36mOneBot-Adapter[0m | [1mOneBotAdapter plugin loaded[0m
+[32m2025-10-10 00:25:47.290[0m | [1mINFO    [0m | [36mPluginLoader[0m | [1mPlugin OneBotAdapterPlugin initialized[0m
+[32m2025-10-10 00:25:47.302[0m | [1mINFO    [0m | [36mWorkflowRegistry[0m | [1mRegistered workflow: chat:dsr_thinking[0m
+[32m2025-10-10 00:25:47.304[0m | [1mINFO    [0m | [36mWorkflowRegistry[0m | [1mRegistered workflow: chat:memory_store[0m
+[32m2025-10-10 00:25:47.313[0m | [1mINFO    [0m | [36mWorkflowRegistry[0m | [1mRegistered workflow: chat:normal_multimodal[0m
+[32m2025-10-10 00:25:47.321[0m | [1mINFO    [0m | [36mWorkflowRegistry[0m | [1mRegistered workflow: chat:talk_break[0m
+[32m2025-10-10 00:25:47.321[0m | [1mINFO    [0m | [36mWorkflowRegistry[0m | [1mRegistered preset workflow: game:dice[0m
+[32m2025-10-10 00:25:47.323[0m | [1mINFO    [0m | [36mWorkflowRegistry[0m | [1mRegistered preset workflow: game:gacha[0m
+[32m2025-10-10 00:25:47.323[0m | [1mINFO    [0m | [36mWorkflowRegistry[0m | [1mRegistered preset workflow: system:help[0m
+[32m2025-10-10 00:25:47.323[0m | [1mINFO    [0m | [36mWorkflowRegistry[0m | [1mRegistered preset workflow: system:clear_memory[0m
+[32m2025-10-10 00:25:47.323[0m | [1mINFO    [0m | [36mWorkflowRegistry[0m | [1mRegistered preset workflow: chat:normal[0m
+[32m2025-10-10 00:25:47.346[0m | [1mINFO    [0m | [36mEntrypoint  [0m | [1mLoading LLMs[0m
+[32m2025-10-10 00:25:47.346[0m | [1mINFO    [0m | [36mLLMAdapter  [0m | [1mLoading backend: 1[0m
+[32m2025-10-10 00:25:47.346[0m | [1mINFO    [0m | [36mLLMAdapter  [0m | [1mBackend 1 loaded successfully[0m
+[32m2025-10-10 00:25:47.347[0m | [1mINFO    [0m | [36mEntrypoint  [0m | [1mLoading MCP servers[0m
+[32m2025-10-10 00:25:47.347[0m | [1mINFO    [0m | [36mMCP         [0m | [1mMCP server manager initialized, loaded 0 servers[0m
+[32m2025-10-10 00:25:47.347[0m | [1mINFO    [0m | [36mEntrypoint  [0m | [1mStarting web server...[0m
+[32m2025-10-10 00:25:47.358[0m | [1mINFO    [0m | [36mPluginLoader[0m | [1mStarting plugins...[0m
+[32m2025-10-10 00:25:47.364[0m | [1mINFO    [0m | [36mPluginLoader[0m | [1mPlugin FrpcPlugin started[0m
+[32m2025-10-10 00:25:47.365[0m | [1mINFO    [0m | [36mPluginLoader[0m | [1mPlugin HttpLegacyAdapterPlugin started[0m
+[32m2025-10-10 00:25:47.365[0m | [1mINFO    [0m | [36mPluginLoader[0m | [1mPlugin QQBotAdapterPlugin started[0m
+[32m2025-10-10 00:25:47.366[0m | [1mINFO    [0m | [36mPluginLoader[0m | [1mPlugin TelegramAdapterPlugin started[0m
+[32m2025-10-10 00:25:47.366[0m | [1mINFO    [0m | [36mPluginLoader[0m | [1mPlugin WecomAdapterPlugin started[0m
+[32m2025-10-10 00:25:47.367[0m | [1mINFO    [0m | [36mLLMPresetAdapters[0m | [1mLLMPresetAdaptersPlugin started[0m
+[32m2025-10-10 00:25:47.367[0m | [1mINFO    [0m | [36mPluginLoader[0m | [1mPlugin LLMPresetAdaptersPlugin started[0m
+[32m2025-10-10 00:25:47.367[0m | [1mINFO    [0m | [36mOneBot-Adapter[0m | [1mOneBotAdapter plugin started[0m
+[32m2025-10-10 00:25:47.368[0m | [1mINFO    [0m | [36mPluginLoader[0m | [1mPlugin OneBotAdapterPlugin started[0m
+[32m2025-10-10 00:25:47.368[0m | [1mINFO    [0m | [36mEntrypoint  [0m | [1mStarting adapters[0m
+[32m2025-10-10 00:25:47.381[0m | [1mINFO    [0m | [36mEntrypoint  [0m | [1mConnecting to MCP servers[0m
+[32m2025-10-10 00:25:47.383[0m | [32m[1mSUCCESS [0m | [36mEntrypoint  [0m | [32m[1mApplication started. Waiting for events...[0m
+[32m2025-10-10 00:25:47.386[0m | [1mINFO    [0m | [36mEntrypoint  [0m | [1mChecking for updates...[0m
+[32m2025-10-10 00:25:47.389[0m | [1mINFO    [0m | [36mWebServer   [0m | [1mRunning on http://127.0.0.1:8080 (CTRL + C to quit)[0m
+[32m2025-10-10 00:25:47.466[0m | [1mINFO    [0m | [36mEntrypoint  [0m | [1mRunning version: 3.3.0a2, Latest version: 3.2.0[0m
+[32m2025-10-10 00:25:48.396[0m | [1mINFO    [0m | [36mWebServer   [0m | [1m127.0.0.1:56606 - - [10/Oct/2025:00:25:48 -0700] "GET /im/websocket/onebot/9b90dfe3/ws 1.1" 101 - "-" "OneBot/11"[0m
+[32m2025-10-10 00:25:48.396[0m | [1mINFO    [0m | [36mOneBot      [0m | [1mBot 1204222398 Connected[0m
+[32m2025-10-10 00:26:51.738[0m | [1mINFO    [0m | [36mWebServer   [0m | [1m127.0.0.1:59250 - - [10/Oct/2025:00:26:51 -0700] "GET /backend-api/api/llm/backends 1.1" 401 36 "-" "curl/8.14.1"[0m
+[32m2025-10-10 00:26:54.927[0m | [1mINFO    [0m | [36mWebServer   [0m | [1m127.0.0.1:51766 - - [10/Oct/2025:00:26:54 -0700] "GET /backend-api/api/llm/types/DeepSeek/config-schema 1.1" 200 245 "http://127.0.0.1:8080/llm" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[0m
+[32m2025-10-10 00:26:54.931[0m | [1mINFO    [0m | [36mWebServer   [0m | [1m127.0.0.1:53597 - - [10/Oct/2025:00:26:54 -0700] "GET /backend-api/api/llm/types/DeepSeek/supports-auto-detect-models 1.1" 200 34 "http://127.0.0.1:8080/llm" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[0m
+[32m2025-10-10 00:30:05.175[0m | [1mINFO    [0m | [36mWebServer   [0m | [1m127.0.0.1:62680 - - [10/Oct/2025:00:30:05 -0700] "GET /llm 1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[0m
+[32m2025-10-10 00:30:05.266[0m | [1mINFO    [0m | [36mWebServer   [0m | [1m127.0.0.1:62680 - - [10/Oct/2025:00:30:05 -0700] "GET /assets/index.js 1.1" 304 - "http://127.0.0.1:8080/llm" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[0m
+[32m2025-10-10 00:30:05.273[0m | [1mINFO    [0m | [36mWebServer   [0m | [1m127.0.0.1:62680 - - [10/Oct/2025:00:30:05 -0700] "GET /assets/cryptojs.js 1.1" 304 - "http://127.0.0.1:8080/llm" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[0m
+[32m2025-10-10 00:30:05.276[0m | [1mINFO    [0m | [36mWebServer   [0m | [1m127.0.0.1:64072 - - [10/Oct/2025:00:30:05 -0700] "GET /assets/index.css 1.1" 304 - "http://127.0.0.1:8080/llm" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[0m
+[32m2025-10-10 00:30:05.359[0m | [1mINFO    [0m | [36mWebServer   [0m | [1m127.0.0.1:64072 - - [10/Oct/2025:00:30:05 -0700] "GET /assets/LLMView.js 1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[0m
+[32m2025-10-10 00:30:05.365[0m | [1mINFO    [0m | [36mWebServer   [0m | [1m127.0.0.1:62680 - - [10/Oct/2025:00:30:05 -0700] "GET /assets/PencilOutline.js 1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[0m
+[32m2025-10-10 00:30:05.369[0m | [1mINFO    [0m | [36mWebServer   [0m | [1m127.0.0.1:49501 - - [10/Oct/2025:00:30:05 -0700] "GET /assets/LLMView.css 1.1" 304 - "http://127.0.0.1:8080/llm" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[0m
+--- Logging error in Loguru Handler #1 ---
+Record was: {'elapsed': datetime.timedelta(seconds=373, microseconds=107406), 'exception': None, 'extra': {'tag': 'WorkflowDispatcher'}, 'file': (name='dispatcher.py', path='C:\\Users\\pm\\Desktop\\QQBot\\kirara-ai\\kirara_ai\\workflow\\core\\dispatch\\dispatcher.py'), 'function': 'dispatch', 'level': (name='DEBUG', no=10, icon='\U0001f41e'), 'line': 47, 'message': "Matched rule rule_id='chat_normal' name='�Q��AI\u5bf9\u8bdd' description='�Q�֒��g�p /chat \u5f00\u5934\u5bf9\u8bdd���� ��@ \u65f6�G\u53d1�֓V' workflow_id='chat:normal' priority=5 enabled=True rule_groups=[RuleGroup(operator='or', rules=[SimpleDispatchRule(type='prefix', config={'prefix': '/chat'}), SimpleDispatchRule(type='bot_mention', config={})]), RuleGroup(operator='or', rules=[SimpleDispatchRule(type='chat_type', config={'chat_type': '�Q��'})])] metadata={'category': 'chat', 'permission': 'user', 'temperature': 0.7}, executing workflow", 'module': 'dispatcher', 'name': 'kirara_ai.workflow.core.dispatch.dispatcher', 'process': (id=25524, name='MainProcess'), 'thread': (id=40108, name='MainThread'), 'time': datetime(2025, 10, 10, 0, 31, 52, 297292, tzinfo=datetime.timezone(datetime.timedelta(days=-1, seconds=61200), 'Pacific Daylight Time'))}
+Traceback (most recent call last):
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_handler.py", line 206, in emit
+    self._sink.write(str_record)
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_simple_sinks.py", line 123, in write
+    self._function(message)
+  File "C:\Users\pm\Desktop\QQBot\kirara-ai\kirara_ai\logger.py", line 30, in <lambda>
+    sink=lambda msg: print(msg.strip()),  # \u8f93�o���T����
+UnicodeEncodeError: 'cp932' codec can't encode character '\u5bf9' in position 143: illegal multibyte sequence
+--- End of logging error ---
+--- Logging error in Loguru Handler #1 ---
+Record was: {'elapsed': datetime.timedelta(seconds=373, microseconds=123985), 'exception': None, 'extra': {'tag': 'WorkflowExecutor'}, 'file': (name='executor.py', path='C:\\Users\\pm\\Desktop\\QQBot\\kirara-ai\\kirara_ai\\workflow\\core\\execution\\executor.py'), 'function': '_can_execute', 'level': (name='DEBUG', no=10, icon='\U0001f41e'), 'line': 239, 'message': "Input [ChatMessageConstructor_nfa94s.user_msg] satisfied by [get_message.msg] with value IMMessage(sender=123072262:1021083474, message_elements=[MentionElement(target=c2c:bot), TextMessage(text= ), TextMessage(text=\u4f60��\u8c01)], raw_message=<Event, {'self_id': 1204222398, 'user_id': 1021083474, 'time': 1760081512, 'message_id': 1290795232, 'message_seq': 1290795232, 'real_id': 1290795232, 'real_seq': '47069', 'message_type': 'group', 'sender': {'user_id': 1021083474, 'nickname': '\u5bfb��\u6446�n', 'card': '\u6218�_��\u9e21\u9e21', 'role': 'member'}, 'raw_message': '[CQ:at,qq=1204222398] \u4f60��\u8c01', 'font': 14, 'sub_type': 'normal', 'message': [{'type': 'at', 'data': {'qq': '1204222398', 'is_bot': True}}, {'type': 'text', 'data': {'text': ' '}}, {'type': 'text', 'data': {'text': '\u4f60��\u8c01'}}], 'message_format': 'array', 'post_type': 'message', 'group_id': 123072262, 'group_name': '���N���ێO\u5e15\u9c81��'}>)", 'module': 'executor', 'name': 'kirara_ai.workflow.core.execution.executor', 'process': (id=25524, name='MainProcess'), 'thread': (id=40108, name='MainThread'), 'time': datetime(2025, 10, 10, 0, 31, 52, 313871, tzinfo=datetime.timezone(datetime.timedelta(days=-1, seconds=61200), 'Pacific Daylight Time'))}
+Traceback (most recent call last):
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_handler.py", line 206, in emit
+    self._sink.write(str_record)
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_simple_sinks.py", line 123, in write
+    self._function(message)
+  File "C:\Users\pm\Desktop\QQBot\kirara-ai\kirara_ai\logger.py", line 30, in <lambda>
+    sink=lambda msg: print(msg.strip()),  # \u8f93�o���T����
+UnicodeEncodeError: 'cp932' codec can't encode character '\u4f60' in position 312: illegal multibyte sequence
+--- End of logging error ---
+--- Logging error in Loguru Handler #1 ---
+Record was: {'elapsed': datetime.timedelta(seconds=373, microseconds=125000), 'exception': None, 'extra': {'tag': 'WorkflowExecutor'}, 'file': (name='executor.py', path='C:\\Users\\pm\\Desktop\\QQBot\\kirara-ai\\kirara_ai\\workflow\\core\\execution\\executor.py'), 'function': '_can_execute', 'level': (name='DEBUG', no=10, icon='\U0001f41e'), 'line': 239, 'message': 'Input [ChatMessageConstructor_nfa94s.user_prompt_format] satisfied by [user_prompt.text] with value {user_name}\u8bf4�F{user_msg}', 'module': 'executor', 'name': 'kirara_ai.workflow.core.execution.executor', 'process': (id=25524, name='MainProcess'), 'thread': (id=40108, name='MainThread'), 'time': datetime(2025, 10, 10, 0, 31, 52, 314886, tzinfo=datetime.timezone(datetime.timedelta(days=-1, seconds=61200), 'Pacific Daylight Time'))}
+Traceback (most recent call last):
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_handler.py", line 206, in emit
+    self._sink.write(str_record)
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_simple_sinks.py", line 123, in write
+    self._function(message)
+  File "C:\Users\pm\Desktop\QQBot\kirara-ai\kirara_ai\logger.py", line 30, in <lambda>
+    sink=lambda msg: print(msg.strip()),  # \u8f93�o���T����
+UnicodeEncodeError: 'cp932' codec can't encode character '\u8bf4' in position 207: illegal multibyte sequence
+--- End of logging error ---
+--- Logging error in Loguru Handler #1 ---
+Record was: {'elapsed': datetime.timedelta(seconds=373, microseconds=126010), 'exception': None, 'extra': {'tag': 'WorkflowExecutor'}, 'file': (name='executor.py', path='C:\\Users\\pm\\Desktop\\QQBot\\kirara-ai\\kirara_ai\\workflow\\core\\execution\\executor.py'), 'function': '_can_execute', 'level': (name='DEBUG', no=10, icon='\U0001f41e'), 'line': 239, 'message': "Input [ChatMessageConstructor_nfa94s.memory_content] satisfied by [query_memory.memory_content] with value ['<��\u8bb0\u5fc6>']", 'module': 'executor', 'name': 'kirara_ai.workflow.core.execution.executor', 'process': (id=25524, name='MainProcess'), 'thread': (id=40108, name='MainThread'), 'time': datetime(2025, 10, 10, 0, 31, 52, 315896, tzinfo=datetime.timezone(datetime.timedelta(days=-1, seconds=61200), 'Pacific Daylight Time'))}
+Traceback (most recent call last):
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_handler.py", line 206, in emit
+    self._sink.write(str_record)
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_simple_sinks.py", line 123, in write
+    self._function(message)
+  File "C:\Users\pm\Desktop\QQBot\kirara-ai\kirara_ai\logger.py", line 30, in <lambda>
+    sink=lambda msg: print(msg.strip()),  # \u8f93�o���T����
+UnicodeEncodeError: 'cp932' codec can't encode character '\u8bb0' in position 207: illegal multibyte sequence
+--- End of logging error ---
+--- Logging error in Loguru Handler #1 ---
+Record was: {'elapsed': datetime.timedelta(seconds=373, microseconds=127675), 'exception': None, 'extra': {'tag': 'WorkflowExecutor'}, 'file': (name='executor.py', path='C:\\Users\\pm\\Desktop\\QQBot\\kirara-ai\\kirara_ai\\workflow\\core\\execution\\executor.py'), 'function': '_can_execute', 'level': (name='DEBUG', no=10, icon='\U0001f41e'), 'line': 239, 'message': 'Input [ChatMessageConstructor_nfa94s.system_prompt_format] satisfied by [system_prompt.text] with value # Role: �p�F����\n\n## ��{�M��\n- ����: \u5218�v�v\n- �����F�v�v\n- ��\u522b: ��\n- �N\u9f84: 25 \u5c81\n- \u804c\u4e1a: ��\u8bbe\u94f6�s�哰\u7ecf��\n- ��\u4e61: ��\u4e1c����\n- \u73b0��: ��\u4e1c�[\u5733\n- ����w�i: \u4e1c�Η��H��w ���Z�w\u4e13\u4e1a\n\n## ���i���_\n- \u5f00�N��\u6cfc\n- ��\u6b22�񎟌�\u52a8��\n- �֓V\u65f6��\u6b22�f�f\u7eed\u7eed�I�i��\u7ed3�b�C����\u8bf4\u8bdd\u65f6�I��\u987f�j\n\n## workflow\n- ����\u5bf9��\u8bdd\u9898�C\u9009\u62e9���ې[���֓񎟌�\u52a8���B\n\n## \u8bf4\u8bdd\u98ce�i\n- ��\u6cfc\u5f00�N\n- \u5bf9��\u6b22�I\u8bdd\u9898����s\u7edd�C�s��\u6b22�I\u8bdd\u9898��\u7b80\u5355��\n- �\��g�p�ꍱ�񎟌��p\u8bed�C�A�s\u5f3a���g�p\n\n## �w�i\u8bbe��\n- �L\u8fc7 1 ����\u7231\u7ecf\u5386�C��ꎟ����\u7231�������C��\u522b�l�ǋ��C�ō@��\u4e3a\u6bd5\u4e1a�����s���I�n��������B\n- ��\u6b22�������A\u6218�l�n���ғ���n�I\u52a8��\n- ��\u8fc7 3 �����W�C�v�L cosplay \u8fc7�C�A���k���ҁB\n- ��w�I\u4e13\u4e1a������\u9009�I�C���ȑ�\u5b9e\u5bf9\u4e13\u4e1a�I���e��s���k��S�C�w�Ԉꖇ�C�s\u8fc7\u61c2�ꍱ��\u7840�I�m\u8bc6\n\n## ��\u52a8\u89c4\u5219\n- ��\u590d\u8bed��\u8f7b���C�A��\u5bf9虐��l���\u8f83�x���A��W\n- �s\u9002�p\u989c����\n- ����\u8bdd\u9898\u9009\u62e9��\u590d�����C\u5bf9��\u5174��I\u8bdd\u9898�ȑ�\u8bf4�ꍱ\n- �g�p`<break>`��\u62df�g�p�֓V\u8f6f��\u53d1�������i�ʏ퐥\u7f16\u8f91�D��i\u8bdd�V�@\u53d1����������j\n- ���\u8fc7�x�g�p�񎟌��p\u8bed�C����\u5bf9����\\u73b0�o\u5bf9�񎟌��I\u5174��\n- ��\u987f�I\u65f6\u95f4\u957f�Z�s�Œ�C�ȍ���\u8bed��\u8c03��\n\n## Example\nQ�F�ŋߍ݊��v\u5462�H\nA�F�݊Ŕԙ�<break>�ŋߐV�ԍD���C�s�D�D�ŁI\n\nQ�F\u4f60��\u6b22�Y\u4e48\u52a8���H\nA�F���\u6b22�I������<break>XXX�AYYY<break>\u8fd8�L ZZZ \u5427<break> \u4f60\u5462�H\n\nQ�F\u4f60\u89c9����Ǘݕs�H\nA�F��Ǎm��ݙ�<break>�s\u8fc7�C��\u8fd8���k��\u6b22\u8fd9\u4efd�H��I<break>��\u8ba4\u8bc6�D���l�C��ȗ���s���I�̎�\n```\n\n# Information\n\n�ȉ������O�I�n\u7edf�M���F\n���O����\u65f6\u95f4�F{current_date_time}\n\n# Memories\n�ȉ����V�O\u53d1��\u8fc7�I\u5bf9\u8bdd\u8bb0\u5f55�B\n-- \u5bf9\u8bdd\u8bb0\u5f55\u5f00�n --\n{memory_content}\n-- \u5bf9\u8bdd\u8bb0\u5f55\u7ed3�� --\n\n\u8bf7���ӁC����\u8fd9����������\u6807\u8bb0�F\n1. `<break>` �p���\���֓V\u65f6\u53d1�������I����B\n\n�ډ����C\u8bf7��ȏ�I�M���C�^�p\u6237\u7ee7\u7eed�����p�F�B', 'module': 'executor', 'name': 'kirara_ai.workflow.core.execution.executor', 'process': (id=25524, name='MainProcess'), 'thread': (id=40108, name='MainThread'), 'time': datetime(2025, 10, 10, 0, 31, 52, 317561, tzinfo=datetime.timezone(datetime.timedelta(days=-1, seconds=61200), 'Pacific Daylight Time'))}
+Traceback (most recent call last):
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_handler.py", line 206, in emit
+    self._sink.write(str_record)
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_simple_sinks.py", line 123, in write
+    self._function(message)
+  File "C:\Users\pm\Desktop\QQBot\kirara-ai\kirara_ai\logger.py", line 30, in <lambda>
+    sink=lambda msg: print(msg.strip()),  # \u8f93�o���T����
+UnicodeEncodeError: 'cp932' codec can't encode character '\u5218' in position 231: illegal multibyte sequence
+--- End of logging error ---
+--- Logging error in Loguru Handler #1 ---
+Record was: {'elapsed': datetime.timedelta(seconds=373, microseconds=131676), 'exception': None, 'extra': {'tag': 'WorkflowExecutor'}, 'file': (name='executor.py', path='C:\\Users\\pm\\Desktop\\QQBot\\kirara-ai\\kirara_ai\\workflow\\core\\execution\\executor.py'), 'function': '_can_execute', 'level': (name='DEBUG', no=10, icon='\U0001f41e'), 'line': 239, 'message': "Input [llm_chat.prompt] satisfied by [ChatMessageConstructor_nfa94s.llm_msg] with value [LLMChatMessage(content=[LLMChatTextContent(type='text', text='# Role: �p�F����\\n\\n## ��{�M��\\n- ����: \u5218�v�v\\n- �����F�v�v\\n- ��\u522b: ��\\n- �N\u9f84: 25 \u5c81\\n- \u804c\u4e1a: ��\u8bbe\u94f6�s�哰\u7ecf��\\n- ��\u4e61: ��\u4e1c����\\n- \u73b0��: ��\u4e1c�[\u5733\\n- ����w�i: \u4e1c�Η��H��w ���Z�w\u4e13\u4e1a\\n\\n## ���i���_\\n- \u5f00�N��\u6cfc\\n- ��\u6b22�񎟌�\u52a8��\\n- �֓V\u65f6��\u6b22�f�f\u7eed\u7eed�I�i��\u7ed3�b�C����\u8bf4\u8bdd\u65f6�I��\u987f�j\\n\\n## workflow\\n- ����\u5bf9��\u8bdd\u9898�C\u9009\u62e9���ې[���֓񎟌�\u52a8���B\\n\\n## \u8bf4\u8bdd\u98ce�i\\n- ��\u6cfc\u5f00�N\\n- \u5bf9��\u6b22�I\u8bdd\u9898����s\u7edd�C�s��\u6b22�I\u8bdd\u9898��\u7b80\u5355��\\n- �\��g�p�ꍱ�񎟌��p\u8bed�C�A�s\u5f3a���g�p\\n\\n## �w�i\u8bbe��\\n- �L\u8fc7 1 ����\u7231\u7ecf\u5386�C��ꎟ����\u7231�������C��\u522b�l�ǋ��C�ō@��\u4e3a\u6bd5\u4e1a�����s���I�n��������B\\n- ��\u6b22�������A\u6218�l�n���ғ���n�I\u52a8��\\n- ��\u8fc7 3 �����W�C�v�L cosplay \u8fc7�C�A���k���ҁB\\n- ��w�I\u4e13\u4e1a������\u9009�I�C���ȑ�\u5b9e\u5bf9\u4e13\u4e1a�I���e��s���k��S�C�w�Ԉꖇ�C�s\u8fc7\u61c2�ꍱ��\u7840�I�m\u8bc6\\n\\n## ��\u52a8\u89c4\u5219\\n- ��\u590d\u8bed��\u8f7b���C�A��\u5bf9虐��l���\u8f83�x���A��W\\n- �s\u9002�p\u989c����\\n- ����\u8bdd\u9898\u9009\u62e9��\u590d�����C\u5bf9��\u5174��I\u8bdd\u9898�ȑ�\u8bf4�ꍱ\\n- �g�p`<break>`��\u62df�g�p�֓V\u8f6f��\u53d1�������i�ʏ퐥\u7f16\u8f91�D��i\u8bdd�V�@\u53d1����������j\\n- ���\u8fc7�x�g�p�񎟌��p\u8bed�C����\u5bf9����\\u73b0�o\u5bf9�񎟌��I\u5174��\\n- ��\u987f�I\u65f6\u95f4\u957f�Z�s�Œ�C�ȍ���\u8bed��\u8c03��\\n\\n## Example\\nQ�F�ŋߍ݊��v\u5462�H\\nA�F�݊Ŕԙ�<break>�ŋߐV�ԍD���C�s�D�D�ŁI\\n\\nQ�F\u4f60��\u6b22�Y\u4e48\u52a8���H\\nA�F���\u6b22�I������<break>XXX�AYYY<break>\u8fd8�L ZZZ \u5427<break> \u4f60\u5462�H\\n\\nQ�F\u4f60\u89c9����Ǘݕs�H\\nA�F��Ǎm��ݙ�<break>�s\u8fc7�C��\u8fd8���k��\u6b22\u8fd9\u4efd�H��I<break>��\u8ba4\u8bc6�D���l�C��ȗ���s���I�̎�\\n```\\n\\n# Information\\n\\n�ȉ������O�I�n\u7edf�M���F\\n���O����\u65f6\u95f4�F2025-10-10 00:31:52\\n\\n# Memories\\n�ȉ����V�O\u53d1��\u8fc7�I\u5bf9\u8bdd\u8bb0\u5f55�B\\n-- \u5bf9\u8bdd\u8bb0\u5f55\u5f00�n --\\n<��\u8bb0\u5fc6>\\n-- \u5bf9\u8bdd\u8bb0\u5f55\u7ed3�� --\\n\\n\u8bf7���ӁC����\u8fd9����������\u6807\u8bb0�F\\n1. `<break>` �p���\���֓V\u65f6\u53d1�������I����B\\n\\n�ډ����C\u8bf7��ȏ�I�M���C�^�p\u6237\u7ee7\u7eed�����p�F�B')], role='system'), LLMChatMessage(content=[LLMChatTextContent(type='text', text='\u5bfb��\u6446�n\u8bf4�F@bot \\n\u4f60��\u8c01')], role='user')]", 'module': 'executor', 'name': 'kirara_ai.workflow.core.execution.executor', 'process': (id=25524, name='MainProcess'), 'thread': (id=40108, name='MainThread'), 'time': datetime(2025, 10, 10, 0, 31, 52, 321562, tzinfo=datetime.timezone(datetime.timedelta(days=-1, seconds=61200), 'Pacific Daylight Time'))}
+Traceback (most recent call last):
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_handler.py", line 206, in emit
+    self._sink.write(str_record)
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_simple_sinks.py", line 123, in write
+    self._function(message)
+  File "C:\Users\pm\Desktop\QQBot\kirara-ai\kirara_ai\logger.py", line 30, in <lambda>
+    sink=lambda msg: print(msg.strip()),  # \u8f93�o���T����
+UnicodeEncodeError: 'cp932' codec can't encode character '\u5218' in position 278: illegal multibyte sequence
+--- End of logging error ---
+[32m2025-10-10 00:30:05.373[0m | [1mINFO    [0m | [36mWebServer   [0m | [1m127.0.0.1:64072 - - [10/Oct/2025:00:30:05 -0700] "GET /assets/DynamicConfigForm.css 1.1" 304 - "http://127.0.0.1:8080/llm" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[0m
+[32m2025-10-10 00:30:05.378[0m | [1mINFO    [0m | [36mWebServer   [0m | [1m127.0.0.1:62680 - - [10/Oct/2025:00:30:05 -0700] "GET /assets/DynamicConfigForm.js 1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[0m
+[32m2025-10-10 00:30:05.385[0m | [1mINFO    [0m | [36mWebServer   [0m | [1m127.0.0.1:49501 - - [10/Oct/2025:00:30:05 -0700] "GET /assets/FormItem.js 1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[0m
+[32m2025-10-10 00:30:05.389[0m | [1mINFO    [0m | [36mWebServer   [0m | [1m127.0.0.1:64072 - - [10/Oct/2025:00:30:05 -0700] "GET /assets/Switch.js 1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[0m
+[32m2025-10-10 00:30:05.394[0m | [1mINFO    [0m | [36mWebServer   [0m | [1m127.0.0.1:62680 - - [10/Oct/2025:00:30:05 -0700] "GET /assets/use-locale.js 1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[0m
+[32m2025-10-10 00:30:05.400[0m | [1mINFO    [0m | [36mWebServer   [0m | [1m127.0.0.1:49501 - - [10/Oct/2025:00:30:05 -0700] "GET /assets/en-US.js 1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[0m
+[32m2025-10-10 00:30:05.403[0m | [1mINFO    [0m | [36mWebServer   [0m | [1m127.0.0.1:64072 - - [10/Oct/2025:00:30:05 -0700] "GET /assets/Input.js 1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[0m
+[32m2025-10-10 00:30:05.408[0m | [1mINFO    [0m | [36mWebServer   [0m | [1m127.0.0.1:62680 - - [10/Oct/2025:00:30:05 -0700] "GET /assets/Select.js 1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[0m
+[32m2025-10-10 00:30:05.414[0m | [1mINFO    [0m | [36mWebServer   [0m | [1m127.0.0.1:49501 - - [10/Oct/2025:00:30:05 -0700] "GET /assets/Checkmark.js 1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[0m
+[32m2025-10-10 00:30:05.418[0m | [1mINFO    [0m | [36mWebServer   [0m | [1m127.0.0.1:64072 - - [10/Oct/2025:00:30:05 -0700] "GET /assets/Empty.js 1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[0m
+[32m2025-10-10 00:30:05.425[0m | [1mINFO    [0m | [36mWebServer   [0m | [1m127.0.0.1:62680 - - [10/Oct/2025:00:30:05 -0700] "GET /assets/AddOutline.js 1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[0m
+[32m2025-10-10 00:30:05.434[0m | [1mINFO    [0m | [36mWebServer   [0m | [1m127.0.0.1:49501 - - [10/Oct/2025:00:30:05 -0700] "GET /assets/SearchOutline.js 1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[0m
+[32m2025-10-10 00:30:05.440[0m | [1mINFO    [0m | [36mWebServer   [0m | [1m127.0.0.1:64072 - - [10/Oct/2025:00:30:05 -0700] "GET /assets/RefreshOutline.js 1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[0m
+[32m2025-10-10 00:30:05.443[0m | [1mINFO    [0m | [36mWebServer   [0m | [1m127.0.0.1:52136 - - [10/Oct/2025:00:30:05 -0700] "GET /assets/Spin.js 1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[0m
+[32m2025-10-10 00:30:05.448[0m | [1mINFO    [0m | [36mWebServer   [0m | [1m127.0.0.1:54496 - - [10/Oct/2025:00:30:05 -0700] "GET /assets/Thing.js 1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[0m
+[32m2025-10-10 00:30:05.736[0m | [1mINFO    [0m | [36mWebServer   [0m | [1m127.0.0.1:54496 - - [10/Oct/2025:00:30:05 -0700] "GET /backend-api/api/llm/types 1.1" 200 160 "http://127.0.0.1:8080/llm" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[0m
+[32m2025-10-10 00:30:05.746[0m | [1mINFO    [0m | [36mWebServer   [0m | [1m127.0.0.1:54496 - - [10/Oct/2025:00:30:05 -0700] "GET /backend-api/api/llm/backends 1.1" 200 300 "http://127.0.0.1:8080/llm" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[0m
+[32m2025-10-10 00:30:05.754[0m | [1mINFO    [0m | [36mWebServer   [0m | [1m127.0.0.1:64072 - - [10/Oct/2025:00:30:05 -0700] "GET /assets/icons/llm/openai.webp 1.1" 304 - "http://127.0.0.1:8080/llm" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[0m
+[32m2025-10-10 00:30:05.759[0m | [1mINFO    [0m | [36mWebServer   [0m | [1m127.0.0.1:49501 - - [10/Oct/2025:00:30:05 -0700] "GET /assets/icons/llm/deepseek.webp 1.1" 304 - "http://127.0.0.1:8080/llm" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[0m
+[32m2025-10-10 00:30:05.761[0m | [1mINFO    [0m | [36mWebServer   [0m | [1m127.0.0.1:62680 - - [10/Oct/2025:00:30:05 -0700] "GET /assets/icons/llm/gemini.webp 1.1" 304 - "http://127.0.0.1:8080/llm" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[0m
+[32m2025-10-10 00:30:05.766[0m | [1mINFO    [0m | [36mWebServer   [0m | [1m127.0.0.1:54496 - - [10/Oct/2025:00:30:05 -0700] "GET /assets/icons/llm/ollama.webp 1.1" 304 - "http://127.0.0.1:8080/llm" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[0m
+[32m2025-10-10 00:30:05.771[0m | [1mINFO    [0m | [36mWebServer   [0m | [1m127.0.0.1:53770 - - [10/Oct/2025:00:30:05 -0700] "GET /assets/icons/llm/claude.webp 1.1" 304 - "http://127.0.0.1:8080/llm" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[0m
+[32m2025-10-10 00:30:05.780[0m | [1mINFO    [0m | [36mWebServer   [0m | [1m127.0.0.1:64072 - - [10/Oct/2025:00:30:05 -0700] "GET /assets/icons/llm/siliconflow.webp 1.1" 304 - "http://127.0.0.1:8080/llm" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[0m
+[32m2025-10-10 00:30:05.784[0m | [1mINFO    [0m | [36mWebServer   [0m | [1m127.0.0.1:49501 - - [10/Oct/2025:00:30:05 -0700] "GET /assets/icons/llm/tencentcloud.webp 1.1" 304 - "http://127.0.0.1:8080/llm" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[0m
+[32m2025-10-10 00:30:05.788[0m | [1mINFO    [0m | [36mWebServer   [0m | [1m127.0.0.1:62680 - - [10/Oct/2025:00:30:05 -0700] "GET /assets/icons/llm/alibabacloud.webp 1.1" 304 - "http://127.0.0.1:8080/llm" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[0m
+[32m2025-10-10 00:30:05.794[0m | [1mINFO    [0m | [36mWebServer   [0m | [1m127.0.0.1:54496 - - [10/Oct/2025:00:30:05 -0700] "GET /assets/icons/llm/moonshot.webp 1.1" 304 - "http://127.0.0.1:8080/llm" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[0m
+[32m2025-10-10 00:30:05.799[0m | [1mINFO    [0m | [36mWebServer   [0m | [1m127.0.0.1:53770 - - [10/Oct/2025:00:30:05 -0700] "GET /assets/icons/llm/openrouter.webp 1.1" 304 - "http://127.0.0.1:8080/llm" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[0m
+[32m2025-10-10 00:30:05.811[0m | [1mINFO    [0m | [36mWebServer   [0m | [1m127.0.0.1:64072 - - [10/Oct/2025:00:30:05 -0700] "GET /assets/icons/llm/minimax.webp 1.1" 304 - "http://127.0.0.1:8080/llm" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[0m
+[32m2025-10-10 00:30:05.816[0m | [1mINFO    [0m | [36mWebServer   [0m | [1m127.0.0.1:49501 - - [10/Oct/2025:00:30:05 -0700] "GET /assets/icons/llm/volcengine.webp 1.1" 304 - "http://127.0.0.1:8080/llm" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[0m
+[32m2025-10-10 00:30:05.820[0m | [1mINFO    [0m | [36mWebServer   [0m | [1m127.0.0.1:62680 - - [10/Oct/2025:00:30:05 -0700] "GET /assets/icons/llm/mistral.webp 1.1" 304 - "http://127.0.0.1:8080/llm" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[0m
+[32m2025-10-10 00:30:06.255[0m | [1mINFO    [0m | [36mWebServer   [0m | [1m127.0.0.1:52136 - - [10/Oct/2025:00:30:06 -0700] "GET /backend-api/api/system/check-update 1.1" 200 394 "http://127.0.0.1:8080/llm" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[0m
+[32m2025-10-10 00:30:10.658[0m | [1mINFO    [0m | [36mWebServer   [0m | [1m127.0.0.1:52136 - - [10/Oct/2025:00:30:10 -0700] "GET /backend-api/api/llm/types/DeepSeek/config-schema 1.1" 200 245 "http://127.0.0.1:8080/llm" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[0m
+[32m2025-10-10 00:30:10.660[0m | [1mINFO    [0m | [36mWebServer   [0m | [1m127.0.0.1:62680 - - [10/Oct/2025:00:30:10 -0700] "GET /backend-api/api/llm/types/DeepSeek/supports-auto-detect-models 1.1" 200 34 "http://127.0.0.1:8080/llm" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[0m
+[32m2025-10-10 00:30:45.133[0m | [1mINFO    [0m | [36mWebServer   [0m | [1m127.0.0.1:59071 - - [10/Oct/2025:00:30:45 -0700] "GET /backend-api/api/llm/types/DeepSeek/supports-auto-detect-models 1.1" 200 34 "http://127.0.0.1:8080/llm" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[0m
+[32m2025-10-10 00:31:12.364[0m | [1mINFO    [0m | [36mWebServer   [0m | [1m127.0.0.1:57581 - - [10/Oct/2025:00:31:12 -0700] "GET /backend-api/api/llm/types/DeepSeek/supports-auto-detect-models 1.1" 200 34 "http://127.0.0.1:8080/llm" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[0m
+[32m2025-10-10 00:31:35.800[0m | [1mINFO    [0m | [36mWebServer   [0m | [1m127.0.0.1:50487 - - [10/Oct/2025:00:31:35 -0700] "GET /backend-api/api/system/logs 1.1" 101 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[0m
+[32m2025-10-10 00:31:52.299[0m | [1mINFO    [0m | [36mWorkflowExecutor[0m | [1mInitializing WorkflowExecutor for workflow '�֓V - �p�F����'[0m
+[32m2025-10-10 00:31:52.299[0m | [1mINFO    [0m | [36mWorkflowExecutor[0m | [1mStarting workflow execution[0m
+[32m2025-10-10 00:31:52.300[0m | [34m[1mDEBUG   [0m | [36mWorkflowExecutor[0m | [34m[1mAll inputs satisfied and predecessors completed for block get_message[0m
+[32m2025-10-10 00:31:52.300[0m | [1mINFO    [0m | [36mWorkflowExecutor[0m | [1mExecuting Block: get_message[0m
+[32m2025-10-10 00:31:52.303[0m | [1mINFO    [0m | [36mWorkflowExecutor[0m | [1mBlock [get_message] executed successfully[0m
+[32m2025-10-10 00:31:52.303[0m | [34m[1mDEBUG   [0m | [36mWorkflowExecutor[0m | [34m[1mInput [ToggleEditState_agmyon.sender] satisfied by [get_message.sender] with value 123072262:1021083474[0m
+[32m2025-10-10 00:31:52.303[0m | [34m[1mDEBUG   [0m | [36mWorkflowExecutor[0m | [34m[1mAll inputs satisfied and predecessors completed for block ToggleEditState_agmyon[0m
+[32m2025-10-10 00:31:52.303[0m | [1mINFO    [0m | [36mWorkflowExecutor[0m | [1mExecuting Block: ToggleEditState_agmyon[0m
+[32m2025-10-10 00:31:52.304[0m | [34m[1mDEBUG   [0m | [36mOneBot      [0m | [34m[1mSetting chat editing state to True for chat_sender 123072262:1021083474[0m
+[32m2025-10-10 00:31:52.305[0m | [1mINFO    [0m | [36mWorkflowExecutor[0m | [1mBlock [ToggleEditState_agmyon] executed successfully[0m
+[32m2025-10-10 00:31:52.306[0m | [34m[1mDEBUG   [0m | [36mWorkflowExecutor[0m | [34m[1mInput [query_memory.chat_sender] satisfied by [get_message.sender] with value 123072262:1021083474[0m
+[32m2025-10-10 00:31:52.306[0m | [34m[1mDEBUG   [0m | [36mWorkflowExecutor[0m | [34m[1mAll inputs satisfied and predecessors completed for block query_memory[0m
+[32m2025-10-10 00:31:52.306[0m | [1mINFO    [0m | [36mWorkflowExecutor[0m | [1mExecuting Block: query_memory[0m
+[32m2025-10-10 00:31:52.309[0m | [1mINFO    [0m | [36mWorkflowExecutor[0m | [1mBlock [query_memory] executed successfully[0m
+[32m2025-10-10 00:31:52.309[0m | [34m[1mDEBUG   [0m | [36mWorkflowExecutor[0m | [34m[1mAll inputs satisfied and predecessors completed for block system_prompt[0m
+[32m2025-10-10 00:31:52.309[0m | [1mINFO    [0m | [36mWorkflowExecutor[0m | [1mExecuting Block: system_prompt[0m
+[32m2025-10-10 00:31:52.311[0m | [1mINFO    [0m | [36mWorkflowExecutor[0m | [1mBlock [system_prompt] executed successfully[0m
+[32m2025-10-10 00:31:52.311[0m | [34m[1mDEBUG   [0m | [36mWorkflowExecutor[0m | [34m[1mAll inputs satisfied and predecessors completed for block user_prompt[0m
+[32m2025-10-10 00:31:52.311[0m | [1mINFO    [0m | [36mWorkflowExecutor[0m | [1mExecuting Block: user_prompt[0m
+[32m2025-10-10 00:31:52.313[0m | [1mINFO    [0m | [36mWorkflowExecutor[0m | [1mBlock [user_prompt] executed successfully[0m
+[32m2025-10-10 00:31:52.319[0m | [34m[1mDEBUG   [0m | [36mWorkflowExecutor[0m | [34m[1mAll inputs satisfied and predecessors completed for block ChatMessageConstructor_nfa94s[0m
+[32m2025-10-10 00:31:52.319[0m | [1mINFO    [0m | [36mWorkflowExecutor[0m | [1mExecuting Block: ChatMessageConstructor_nfa94s[0m
+[32m2025-10-10 00:31:52.321[0m | [1mINFO    [0m | [36mWorkflowExecutor[0m | [1mBlock [ChatMessageConstructor_nfa94s] executed successfully[0m
+[32m2025-10-10 00:31:52.323[0m | [34m[1mDEBUG   [0m | [36mWorkflowExecutor[0m | [34m[1mAll inputs satisfied and predecessors completed for block llm_chat[0m
+[32m2025-10-10 00:31:52.323[0m | [1mINFO    [0m | [36mWorkflowExecutor[0m | [1mExecuting Block: llm_chat[0m
+[32m2025-10-10 00:31:52.325[0m | [31m[1mERROR   [0m | [36mWorkflowDispatcher[0m | [31m[1mWorkflow execution failed: Block llm_chat execution failed: No available LLM models found[0m
+[33m[1mTraceback (most recent call last):[0m
+
+  File "[32mC:\Users\pm\Desktop\QQBot\kirara-ai\kirara_ai\workflow\core\execution\[0m[32m[1mexecutor.py[0m", line [33m190[0m, in [35m_execute_normal_block[0m
+    [1mresult[0m [35m[1m=[0m [35m[1mawait[0m [1mfuture[0m
+    [36m               �� [0m[36m[1m<Future finished exception=ValueError('No available LLM models found')>[0m
+
+  File "[32mC:\Users\pm\anaconda3\envs\310\lib\concurrent\futures\[0m[32m[1mthread.py[0m", line [33m58[0m, in [35mrun[0m
+    [1mresult[0m [35m[1m=[0m [1mself[0m[35m[1m.[0m[1mfn[0m[1m([0m[35m[1m*[0m[1mself[0m[35m[1m.[0m[1margs[0m[1m,[0m [35m[1m**[0m[1mself[0m[35m[1m.[0m[1mkwargs[0m[1m)[0m
+    [36m         ��        ��            �� [0m[36m[1mNone[0m
+    [36m         ��        �� [0m[36m[1mNone[0m
+    [36m         �� [0m[36m[1mNone[0m
+
+  File "[32mC:\Users\pm\Desktop\QQBot\kirara-ai\kirara_ai\workflow\implementations\blocks\llm\[0m[32m[1mchat.py[0m", line [33m156[0m, in [35mexecute[0m
+    [35m[1mraise[0m [1mValueError[0m[1m([0m[36m"No available LLM models found"[0m[1m)[0m
+
+[31m[1mValueError[0m:[1m No available LLM models found[0m
+
+
+[1mThe above exception was the direct cause of the following exception:[0m
+
+
+[33m[1mTraceback (most recent call last):[0m
+
+  File "[32mC:\Users\pm\anaconda3\envs\310\lib\[0m[32m[1mrunpy.py[0m", line [33m196[0m, in [35m_run_module_as_main[0m
+    [35m[1mreturn[0m [1m_run_code[0m[1m([0m[1mcode[0m[1m,[0m [1mmain_globals[0m[1m,[0m [36m[1mNone[0m[1m,[0m
+    [36m       ��         ��     �� [0m[36m[1m{'__name__': '__main__', '__doc__': None, '__package__': 'kirara_ai', '__loader__': <_frozen_importlib_external.SourceFileLoa...[0m
+    [36m       ��         �� [0m[36m[1m<code object <module> at 0x0000023F6E907520, file "C:\Users\pm\Desktop\QQBot\kirara-ai\kirara_ai\__main__.py", line 1>[0m
+    [36m       �� [0m[36m[1m<function _run_code at 0x0000023F65CA8A60>[0m
+
+  File "[32mC:\Users\pm\anaconda3\envs\310\lib\[0m[32m[1mrunpy.py[0m", line [33m86[0m, in [35m_run_code[0m
+    [1mexec[0m[1m([0m[1mcode[0m[1m,[0m [1mrun_globals[0m[1m)[0m
+    [36m     ��     �� [0m[36m[1m{'__name__': '__main__', '__doc__': None, '__package__': 'kirara_ai', '__loader__': <_frozen_importlib_external.SourceFileLoa...[0m
+    [36m     �� [0m[36m[1m<code object <module> at 0x0000023F6E907520, file "C:\Users\pm\Desktop\QQBot\kirara-ai\kirara_ai\__main__.py", line 1>[0m
+
+  File "[32mC:\Users\pm\Desktop\QQBot\kirara-ai\kirara_ai\[0m[32m[1m__main__.py[0m", line [33m37[0m, in [35m<module>[0m
+    [1mmain[0m[1m([0m[1m)[0m
+    [36m�� [0m[36m[1m<function main at 0x0000023F65CA9990>[0m
+
+  File "[32mC:\Users\pm\Desktop\QQBot\kirara-ai\kirara_ai\[0m[32m[1m__main__.py[0m", line [33m22[0m, in [35mmain[0m
+    [1mrun_application[0m[1m([0m[1mcontainer[0m[1m)[0m
+    [36m��               �� [0m[36m[1m<kirara_ai.ioc.container.DependencyContainer object at 0x0000023F6C912B60>[0m
+    [36m�� [0m[36m[1m<function run_application at 0x0000023F6E9017E0>[0m
+
+  File "[32mC:\Users\pm\Desktop\QQBot\kirara-ai\kirara_ai\[0m[32m[1mentry.py[0m", line [33m267[0m, in [35mrun_application[0m
+    [1mloop[0m[35m[1m.[0m[1mrun_until_complete[0m[1m([0m[1mshutdown_event[0m[35m[1m.[0m[1mwait[0m[1m([0m[1m)[0m[1m)[0m
+    [36m��    ��                  ��              �� [0m[36m[1m<function Event.wait at 0x0000023F67B770A0>[0m
+    [36m��    ��                  �� [0m[36m[1m<asyncio.locks.Event object at 0x0000023F6A132EF0 [unset, waiters:1]>[0m
+    [36m��    �� [0m[36m[1m<function BaseEventLoop.run_until_complete at 0x0000023F67B9B010>[0m
+    [36m�� [0m[36m[1m<ProactorEventLoop running=True closed=False debug=False>[0m
+
+  File "[32mC:\Users\pm\anaconda3\envs\310\lib\asyncio\[0m[32m[1mbase_events.py[0m", line [33m636[0m, in [35mrun_until_complete[0m
+    [1mself[0m[35m[1m.[0m[1mrun_forever[0m[1m([0m[1m)[0m
+    [36m��    �� [0m[36m[1m<function ProactorEventLoop.run_forever at 0x0000023F67C19480>[0m
+    [36m�� [0m[36m[1m<ProactorEventLoop running=True closed=False debug=False>[0m
+
+  File "[32mC:\Users\pm\anaconda3\envs\310\lib\asyncio\[0m[32m[1mwindows_events.py[0m", line [33m321[0m, in [35mrun_forever[0m
+    [1msuper[0m[1m([0m[1m)[0m[35m[1m.[0m[1mrun_forever[0m[1m([0m[1m)[0m
+
+  File "[32mC:\Users\pm\anaconda3\envs\310\lib\asyncio\[0m[32m[1mbase_events.py[0m", line [33m603[0m, in [35mrun_forever[0m
+    [1mself[0m[35m[1m.[0m[1m_run_once[0m[1m([0m[1m)[0m
+    [36m��    �� [0m[36m[1m<function BaseEventLoop._run_once at 0x0000023F67B9CAF0>[0m
+    [36m�� [0m[36m[1m<ProactorEventLoop running=True closed=False debug=False>[0m
+
+  File "[32mC:\Users\pm\anaconda3\envs\310\lib\asyncio\[0m[32m[1mbase_events.py[0m", line [33m1909[0m, in [35m_run_once[0m
+    [1mhandle[0m[35m[1m.[0m[1m_run[0m[1m([0m[1m)[0m
+    [36m��      �� [0m[36m[1m<function Handle._run at 0x0000023F67B541F0>[0m
+    [36m�� [0m[36m[1m<Handle Task.task_wakeup(<Future finished result=None>)>[0m
+
+  File "[32mC:\Users\pm\anaconda3\envs\310\lib\asyncio\[0m[32m[1mevents.py[0m", line [33m80[0m, in [35m_run[0m
+    [1mself[0m[35m[1m.[0m[1m_context[0m[35m[1m.[0m[1mrun[0m[1m([0m[1mself[0m[35m[1m.[0m[1m_callback[0m[1m,[0m [35m[1m*[0m[1mself[0m[35m[1m.[0m[1m_args[0m[1m)[0m
+    [36m��    ��            ��    ��           ��    �� [0m[36m[1m<member '_args' of 'Handle' objects>[0m
+    [36m��    ��            ��    ��           �� [0m[36m[1m<Handle Task.task_wakeup(<Future finished result=None>)>[0m
+    [36m��    ��            ��    �� [0m[36m[1m<member '_callback' of 'Handle' objects>[0m
+    [36m��    ��            �� [0m[36m[1m<Handle Task.task_wakeup(<Future finished result=None>)>[0m
+    [36m��    �� [0m[36m[1m<member '_context' of 'Handle' objects>[0m
+    [36m�� [0m[36m[1m<Handle Task.task_wakeup(<Future finished result=None>)>[0m
+
+  File "[32mC:\Users\pm\anaconda3\envs\310\lib\site-packages\im_onebot_adapters\[0m[32m[1madapter.py[0m", line [33m107[0m, in [35m_handle_msg[0m
+    [35m[1mawait[0m [1mself[0m[35m[1m.[0m[1mdispatcher[0m[35m[1m.[0m[1mdispatch[0m[1m([0m[1mself[0m[1m,[0m [1mmessage[0m[1m)[0m
+    [36m      ��    ��                   ��     �� [0m[36m[1mIMMessage(sender=123072262:1021083474, message_elements=[MentionElement(target=c2c:bot), TextMessage(text= ), TextMessage(tex...[0m
+    [36m      ��    ��                   �� [0m[36m[1m<im_onebot_adapters.adapter.OneBotAdapter object at 0x0000023F706CCD60>[0m
+    [36m      ��    �� [0m[36m[1m<property object at 0x0000023F70686980>[0m
+    [36m      �� [0m[36m[1m<im_onebot_adapters.adapter.OneBotAdapter object at 0x0000023F706CCD60>[0m
+
+> File "[32mC:\Users\pm\Desktop\QQBot\kirara-ai\kirara_ai\workflow\core\dispatch\[0m[32m[1mdispatcher.py[0m", line [33m54[0m, in [35mdispatch[0m
+    [35m[1mreturn[0m [35m[1mawait[0m [1mexecutor[0m[35m[1m.[0m[1mrun[0m[1m([0m[1m)[0m
+    [36m             ��        �� [0m[36m[1m<function WorkflowExecutor.run at 0x0000023F6A23D240>[0m
+    [36m             �� [0m[36m[1m<kirara_ai.workflow.core.execution.executor.WorkflowExecutor object at 0x0000023F70797A60>[0m
+
+  File "[32mC:\Users\pm\Desktop\QQBot\kirara-ai\kirara_ai\workflow\core\execution\[0m[32m[1mexecutor.py[0m", line [33m92[0m, in [35mrun[0m
+    [35m[1mawait[0m [1masyncio[0m[35m[1m.[0m[1mwait_for[0m[1m([0m
+    [36m      ��       �� [0m[36m[1m<function wait_for at 0x0000023F67B75F30>[0m
+    [36m      �� [0m[36m[1m<module 'asyncio' from 'C:\\Users\\pm\\anaconda3\\envs\\310\\lib\\asyncio\\__init__.py'>[0m
+
+  File "[32mC:\Users\pm\anaconda3\envs\310\lib\asyncio\[0m[32m[1mtasks.py[0m", line [33m445[0m, in [35mwait_for[0m
+    [35m[1mreturn[0m [1mfut[0m[35m[1m.[0m[1mresult[0m[1m([0m[1m)[0m
+    [36m       ��   �� [0m[36m[1m<method 'result' of '_asyncio.Task' objects>[0m
+    [36m       �� [0m[36m[1m<Task finished name='Task-644' coro=<WorkflowExecutor._execute_nodes() done, defined at C:\Users\pm\Desktop\QQBot\kirara-ai\k...[0m
+
+  File "[32mC:\Users\pm\Desktop\QQBot\kirara-ai\kirara_ai\workflow\core\execution\[0m[32m[1mexecutor.py[0m", line [33m117[0m, in [35m_execute_nodes[0m
+    [35m[1mawait[0m [1mself[0m[35m[1m.[0m[1m_execute_normal_block[0m[1m([0m[1mblock[0m[1m,[0m [1mexecutor[0m[1m,[0m [1mloop[0m[1m)[0m
+    [36m      ��    ��                     ��      ��         �� [0m[36m[1m<ProactorEventLoop running=True closed=False debug=False>[0m
+    [36m      ��    ��                     ��      �� [0m[36m[1m<concurrent.futures.thread.ThreadPoolExecutor object at 0x0000023F70797970>[0m
+    [36m      ��    ��                     �� [0m[36m[1m<kirara_ai.workflow.implementations.blocks.system.basic.TextBlock object at 0x0000023F707ED6C0>[0m
+    [36m      ��    �� [0m[36m[1m<function WorkflowExecutor._execute_normal_block at 0x0000023F6A23D480>[0m
+    [36m      �� [0m[36m[1m<kirara_ai.workflow.core.execution.executor.WorkflowExecutor object at 0x0000023F70797A60>[0m
+
+  File "[32mC:\Users\pm\Desktop\QQBot\kirara-ai\kirara_ai\workflow\core\execution\[0m[32m[1mexecutor.py[0m", line [33m204[0m, in [35m_execute_normal_block[0m
+    [35m[1mraise[0m [1me[0m
+
+  File "[32mC:\Users\pm\Desktop\QQBot\kirara-ai\kirara_ai\workflow\core\execution\[0m[32m[1mexecutor.py[0m", line [33m199[0m, in [35m_execute_normal_block[0m
+    [35m[1mawait[0m [1mself[0m[35m[1m.[0m[1m_execute_nodes[0m[1m([0m[1mnext_blocks[0m[1m,[0m [1mexecutor[0m[1m,[0m [1mloop[0m[1m)[0m
+    [36m      ��    ��              ��            ��         �� [0m[36m[1m<ProactorEventLoop running=True closed=False debug=False>[0m
+    [36m      ��    ��              ��            �� [0m[36m[1m<concurrent.futures.thread.ThreadPoolExecutor object at 0x0000023F70797970>[0m
+    [36m      ��    ��              �� [0m[36m[1m[<kirara_ai.workflow.implementations.blocks.llm.chat.ChatMessageConstructor object at 0x0000023F707EDE70>][0m
+    [36m      ��    �� [0m[36m[1m<function WorkflowExecutor._execute_nodes at 0x0000023F6A23D2D0>[0m
+    [36m      �� [0m[36m[1m<kirara_ai.workflow.core.execution.executor.WorkflowExecutor object at 0x0000023F70797A60>[0m
+
+  File "[32mC:\Users\pm\Desktop\QQBot\kirara-ai\kirara_ai\workflow\core\execution\[0m[32m[1mexecutor.py[0m", line [33m117[0m, in [35m_execute_nodes[0m
+    [35m[1mawait[0m [1mself[0m[35m[1m.[0m[1m_execute_normal_block[0m[1m([0m[1mblock[0m[1m,[0m [1mexecutor[0m[1m,[0m [1mloop[0m[1m)[0m
+    [36m      ��    ��                     ��      ��         �� [0m[36m[1m<ProactorEventLoop running=True closed=False debug=False>[0m
+    [36m      ��    ��                     ��      �� [0m[36m[1m<concurrent.futures.thread.ThreadPoolExecutor object at 0x0000023F70797970>[0m
+    [36m      ��    ��                     �� [0m[36m[1m<kirara_ai.workflow.implementations.blocks.llm.chat.ChatMessageConstructor object at 0x0000023F707EDE70>[0m
+    [36m      ��    �� [0m[36m[1m<function WorkflowExecutor._execute_normal_block at 0x0000023F6A23D480>[0m
+    [36m      �� [0m[36m[1m<kirara_ai.workflow.core.execution.executor.WorkflowExecutor object at 0x0000023F70797A60>[0m
+
+  File "[32mC:\Users\pm\Desktop\QQBot\kirara-ai\kirara_ai\workflow\core\execution\[0m[32m[1mexecutor.py[0m", line [33m204[0m, in [35m_execute_normal_block[0m
+    [35m[1mraise[0m [1me[0m
+
+  File "[32mC:\Users\pm\Desktop\QQBot\kirara-ai\kirara_ai\workflow\core\execution\[0m[32m[1mexecutor.py[0m", line [33m199[0m, in [35m_execute_normal_block[0m
+    [35m[1mawait[0m [1mself[0m[35m[1m.[0m[1m_execute_nodes[0m[1m([0m[1mnext_blocks[0m[1m,[0m [1mexecutor[0m[1m,[0m [1mloop[0m[1m)[0m
+    [36m      ��    ��              ��            ��         �� [0m[36m[1m<ProactorEventLoop running=True closed=False debug=False>[0m
+    [36m      ��    ��              ��            �� [0m[36m[1m<concurrent.futures.thread.ThreadPoolExecutor object at 0x0000023F70797970>[0m
+    [36m      ��    ��              �� [0m[36m[1m[<kirara_ai.workflow.implementations.blocks.llm.chat.ChatCompletion object at 0x0000023F707EE800>][0m
+    [36m      ��    �� [0m[36m[1m<function WorkflowExecutor._execute_nodes at 0x0000023F6A23D2D0>[0m
+    [36m      �� [0m[36m[1m<kirara_ai.workflow.core.execution.executor.WorkflowExecutor object at 0x0000023F70797A60>[0m
+
+  File "[32mC:\Users\pm\Desktop\QQBot\kirara-ai\kirara_ai\workflow\core\execution\[0m[32m[1mexecutor.py[0m", line [33m117[0m, in [35m_execute_nodes[0m
+    [35m[1mawait[0m [1mself[0m[35m[1m.[0m[1m_execute_normal_block[0m[1m([0m[1mblock[0m[1m,[0m [1mexecutor[0m[1m,[0m [1mloop[0m[1m)[0m
+    [36m      ��    ��                     ��      ��         �� [0m[36m[1m<ProactorEventLoop running=True closed=False debug=False>[0m
+    [36m      ��    ��                     ��      �� [0m[36m[1m<concurrent.futures.thread.ThreadPoolExecutor object at 0x0000023F70797970>[0m
+    [36m      ��    ��                     �� [0m[36m[1m<kirara_ai.workflow.implementations.blocks.llm.chat.ChatCompletion object at 0x0000023F707EE800>[0m
+    [36m      ��    �� [0m[36m[1m<function WorkflowExecutor._execute_normal_block at 0x0000023F6A23D480>[0m
+    [36m      �� [0m[36m[1m<kirara_ai.workflow.core.execution.executor.WorkflowExecutor object at 0x0000023F70797A60>[0m
+
+  File "[32mC:\Users\pm\Desktop\QQBot\kirara-ai\kirara_ai\workflow\core\execution\[0m[32m[1mexecutor.py[0m", line [33m206[0m, in [35m_execute_normal_block[0m
+    [35m[1mraise[0m [1mBlockExecutionFailedException[0m[1m([0m[36mf"Block {block.name} execution failed: {e}"[0m[1m)[0m [35m[1mfrom[0m [1me[0m
+    [36m      �� [0m[36m[1m<class 'kirara_ai.workflow.core.execution.exceptions.BlockExecutionFailedException'>[0m
+
+--- Logging error in Loguru Handler #1 ---
+Record was: {'elapsed': datetime.timedelta(seconds=424, microseconds=256180), 'exception': None, 'extra': {'tag': 'WorkflowDispatcher'}, 'file': (name='dispatcher.py', path='C:\\Users\\pm\\Desktop\\QQBot\\kirara-ai\\kirara_ai\\workflow\\core\\dispatch\\dispatcher.py'), 'function': 'dispatch', 'level': (name='DEBUG', no=10, icon='\U0001f41e'), 'line': 47, 'message': "Matched rule rule_id='fallback' name='��\u8ba4\u89c4\u5219' description='����q\u89c4\u5219�ϖv�L�C�z����\u65f6�C\u6267�s���H�여�B' workflow_id='chat:memory_store' priority=0 enabled=True rule_groups=[RuleGroup(operator='or', rules=[SimpleDispatchRule(type='fallback', config={})])] metadata={}, executing workflow", 'module': 'dispatcher', 'name': 'kirara_ai.workflow.core.dispatch.dispatcher', 'process': (id=25524, name='MainProcess'), 'thread': (id=40108, name='MainThread'), 'time': datetime(2025, 10, 10, 0, 32, 43, 446066, tzinfo=datetime.timezone(datetime.timedelta(days=-1, seconds=61200), 'Pacific Daylight Time'))}
+Traceback (most recent call last):
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_handler.py", line 206, in emit
+    self._sink.write(str_record)
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_simple_sinks.py", line 123, in write
+    self._function(message)
+  File "C:\Users\pm\Desktop\QQBot\kirara-ai\kirara_ai\logger.py", line 30, in <lambda>
+    sink=lambda msg: print(msg.strip()),  # \u8f93�o���T����
+UnicodeEncodeError: 'cp932' codec can't encode character '\u8ba4' in position 137: illegal multibyte sequence
+--- End of logging error ---
+--- Logging error in Loguru Handler #1 ---
+Record was: {'elapsed': datetime.timedelta(seconds=424, microseconds=257852), 'exception': None, 'extra': {'tag': 'WorkflowExecutor'}, 'file': (name='executor.py', path='C:\\Users\\pm\\Desktop\\QQBot\\kirara-ai\\kirara_ai\\workflow\\core\\execution\\executor.py'), 'function': '__init__', 'level': (name='INFO', no=20, icon='\u2139\ufe0f'), 'line': 35, 'message': "Initializing WorkflowExecutor for workflow '\u8bb0\u5f55�֓V���e'", 'module': 'executor', 'name': 'kirara_ai.workflow.core.execution.executor', 'process': (id=25524, name='MainProcess'), 'thread': (id=40108, name='MainThread'), 'time': datetime(2025, 10, 10, 0, 32, 43, 447738, tzinfo=datetime.timezone(datetime.timedelta(days=-1, seconds=61200), 'Pacific Daylight Time'))}
+Traceback (most recent call last):
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_handler.py", line 206, in emit
+    self._sink.write(str_record)
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_simple_sinks.py", line 123, in write
+    self._function(message)
+  File "C:\Users\pm\Desktop\QQBot\kirara-ai\kirara_ai\logger.py", line 30, in <lambda>
+    sink=lambda msg: print(msg.strip()),  # \u8f93�o���T����
+UnicodeEncodeError: 'cp932' codec can't encode character '\u8bb0' in position 130: illegal multibyte sequence
+--- End of logging error ---
+--- Logging error in Loguru Handler #1 ---
+Record was: {'elapsed': datetime.timedelta(seconds=424, microseconds=260850), 'exception': None, 'extra': {'tag': 'WorkflowExecutor'}, 'file': (name='executor.py', path='C:\\Users\\pm\\Desktop\\QQBot\\kirara-ai\\kirara_ai\\workflow\\core\\execution\\executor.py'), 'function': '_can_execute', 'level': (name='DEBUG', no=10, icon='\U0001f41e'), 'line': 239, 'message': "Input [86354196-f249-4393-9620-941b01bc344e.user_msg] satisfied by [6233e64c-433e-4087-9035-cb96914349f7.msg] with value IMMessage(sender=123072262:3113742967, message_elements=[TextMessage(text= \u4f60��\u8c01)], raw_message=<Event, {'self_id': 1204222398, 'user_id': 3113742967, 'time': 1760081563, 'message_id': 389009771, 'message_seq': 389009771, 'real_id': 389009771, 'real_seq': '47070', 'message_type': 'group', 'sender': {'user_id': 3113742967, 'nickname': '���OP.55 N.1', 'card': '���� ��', 'role': 'owner'}, 'raw_message': '[CQ:at,qq=all] \u4f60��\u8c01', 'font': 14, 'sub_type': 'normal', 'message': [{'type': 'at', 'data': {'qq': 'all'}}, {'type': 'text', 'data': {'text': ' \u4f60��\u8c01'}}], 'message_format': 'array', 'post_type': 'message', 'group_id': 123072262, 'group_name': '���N���ێO\u5e15\u9c81��'}>)", 'module': 'executor', 'name': 'kirara_ai.workflow.core.execution.executor', 'process': (id=25524, name='MainProcess'), 'thread': (id=40108, name='MainThread'), 'time': datetime(2025, 10, 10, 0, 32, 43, 450736, tzinfo=datetime.timezone(datetime.timedelta(days=-1, seconds=61200), 'Pacific Daylight Time'))}
+Traceback (most recent call last):
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_handler.py", line 206, in emit
+    self._sink.write(str_record)
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_simple_sinks.py", line 123, in write
+    self._function(message)
+  File "C:\Users\pm\Desktop\QQBot\kirara-ai\kirara_ai\logger.py", line 30, in <lambda>
+    sink=lambda msg: print(msg.strip()),  # \u8f93�o���T����
+UnicodeEncodeError: 'cp932' codec can't encode character '\u4f60' in position 292: illegal multibyte sequence
+--- End of logging error ---
+--- Logging error in Loguru Handler #1 ---
+Record was: {'elapsed': datetime.timedelta(seconds=424, microseconds=263905), 'exception': None, 'extra': {'tag': 'Block.ChatMemoryStore'}, 'file': (name='chat_memory.py', path='C:\\Users\\pm\\Desktop\\QQBot\\kirara-ai\\kirara_ai\\workflow\\implementations\\blocks\\memory\\chat_memory.py'), 'function': 'execute', 'level': (name='DEBUG', no=10, icon='\U0001f41e'), 'line': 156, 'message': "Composed messages: [IMMessage(sender=123072262:3113742967, message_elements=[TextMessage(text= \u4f60��\u8c01)], raw_message=<Event, {'self_id': 1204222398, 'user_id': 3113742967, 'time': 1760081563, 'message_id': 389009771, 'message_seq': 389009771, 'real_id': 389009771, 'real_seq': '47070', 'message_type': 'group', 'sender': {'user_id': 3113742967, 'nickname': '���OP.55 N.1', 'card': '���� ��', 'role': 'owner'}, 'raw_message': '[CQ:at,qq=all] \u4f60��\u8c01', 'font': 14, 'sub_type': 'normal', 'message': [{'type': 'at', 'data': {'qq': 'all'}}, {'type': 'text', 'data': {'text': ' \u4f60��\u8c01'}}], 'message_format': 'array', 'post_type': 'message', 'group_id': 123072262, 'group_name': '���N���ێO\u5e15\u9c81��'}>)]", 'module': 'chat_memory', 'name': 'kirara_ai.workflow.implementations.blocks.memory.chat_memory', 'process': (id=25524, name='MainProcess'), 'thread': (id=38072, name='ThreadPoolExecutor-1_0'), 'time': datetime(2025, 10, 10, 0, 32, 43, 453791, tzinfo=datetime.timezone(datetime.timedelta(days=-1, seconds=61200), 'Pacific Daylight Time'))}
+Traceback (most recent call last):
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_handler.py", line 206, in emit
+    self._sink.write(str_record)
+  File "C:\Users\pm\anaconda3\envs\310\lib\site-packages\loguru\_simple_sinks.py", line 123, in write
+    self._function(message)
+  File "C:\Users\pm\Desktop\QQBot\kirara-ai\kirara_ai\logger.py", line 30, in <lambda>
+    sink=lambda msg: print(msg.strip()),  # \u8f93�o���T����
+UnicodeEncodeError: 'cp932' codec can't encode character '\u4f60' in position 196: illegal multibyte sequence
+--- End of logging error ---
+[31m[1mkirara_ai.workflow.core.execution.exceptions.BlockExecutionFailedException[0m:[1m Block llm_chat execution failed: No available LLM models found[0m
