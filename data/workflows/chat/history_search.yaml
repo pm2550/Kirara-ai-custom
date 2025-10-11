@@ -1,3 +1,4 @@
+id: chat:history_search
 name: 历史记录搜索
 description: 搜索历史聊天记录
 version: 1.0.0
@@ -57,35 +58,32 @@ blocks:
             days_ago = 30
         
         # 确定记忆文件路径
-        if sender.chat_type == 'group':
-            memory_file = Path('data/memory') / f'group_{sender.group_id}.json'
-        else:
-            memory_file = Path('data/memory') / f'c2c_{sender.user_id}.json'
+        # 全局扫描（群聊与私聊）
+        memory_root = Path('kirara-ai/data/memory')
+        candidates = []
+        if memory_root.exists():
+            for p in memory_root.iterdir():
+                if p.name.startswith('group_') or p.name.startswith('c2c_'):
+                    candidates.append(p)
         
         # 读取记忆文件
         results = []
-        if memory_file.exists():
-            with open(memory_file, 'r', encoding='utf-8') as f:
-                all_messages = json.load(f)
-            
-            # 计算时间阈值
-            cutoff_time = datetime.now() - timedelta(days=days_ago)
-            
-            # 搜索匹配的消息
-            for entry in all_messages:
-                try:
-                    msg_time = datetime.fromisoformat(entry['timestamp'])
+        cutoff_time = datetime.now() - timedelta(days=days_ago)
+        for memory_file in candidates:
+            try:
+                with open(memory_file, 'r', encoding='utf-8') as f:
+                    all_messages = json.load(f)
+                for entry in all_messages:
+                    msg_time = datetime.fromisoformat(entry.get('timestamp', datetime.now().isoformat()))
                     content = entry.get('content', '')
-                    
-                    # 时间过滤 + 关键词过滤
                     if msg_time > cutoff_time and keyword and keyword in content:
                         results.append({
                             'content': content,
-                            'time': entry['timestamp'],
+                            'time': entry.get('timestamp', ''),
                             'user': entry.get('sender', {}).get('display_name', '未知')
                         })
-                except Exception as e:
-                    continue
+            except Exception:
+                continue
         
         # 只返回最相关的 8 条
         results = results[-8:]

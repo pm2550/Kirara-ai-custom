@@ -81,38 +81,33 @@ blocks:
         from datetime import datetime, timedelta
         
         def execute(query, chat_sender):
-            # 确定 memory 文件路径
+            # 全局扫描 memory 目录（群聊与私聊都搜）
             memory_dir = "kirara-ai/data/memory"
-            if chat_sender.chat_type == "群聊":
-                file_name = f"group_{chat_sender.group_id}.json"
-            else:
-                file_name = f"c2c_{chat_sender.user_id}.json"
-            file_path = os.path.join(memory_dir, file_name)
-            
             results = []
-            if os.path.exists(file_path):
-                with open(file_path, "r", encoding="utf-8") as f:
-                    all_entries = json.load(f)
-                    
-                    # 只搜索最近30天
-                    time_range_start = datetime.now() - timedelta(days=30)
-                    
-                    for entry in all_entries:
-                        entry_timestamp = datetime.fromisoformat(entry["timestamp"])
-                        if entry_timestamp < time_range_start:
-                            continue
-                        
-                        # 关键词匹配
-                        content = entry.get("content", "")
-                        sender_name = entry.get("sender", {}).get("display_name", "")
-                        
-                        if query.lower() in content.lower() or query.lower() in sender_name.lower():
-                            results.append({
-                                "content": content,
-                                "user_name": sender_name,
-                                "timestamp": entry["timestamp"],
-                                "source": "keyword"
-                            })
+            if os.path.exists(memory_dir):
+                time_range_start = datetime.now() - timedelta(days=30)
+                for name in os.listdir(memory_dir):
+                    if not (name.startswith("group_") or name.startswith("c2c_")):
+                        continue
+                    file_path = os.path.join(memory_dir, name)
+                    try:
+                        with open(file_path, "r", encoding="utf-8") as f:
+                            all_entries = json.load(f)
+                        for entry in all_entries:
+                            entry_timestamp = datetime.fromisoformat(entry.get("timestamp", datetime.now().isoformat()))
+                            if entry_timestamp < time_range_start:
+                                continue
+                            content = entry.get("content", "")
+                            sender_name = entry.get("sender", {}).get("display_name", "")
+                            if query and (query.lower() in content.lower() or query.lower() in sender_name.lower()):
+                                results.append({
+                                    "content": content,
+                                    "user_name": sender_name,
+                                    "timestamp": entry.get("timestamp", ""),
+                                    "source": "keyword"
+                                })
+                    except Exception:
+                        continue
             
             return {
                 "keyword_results": results,
@@ -160,15 +155,11 @@ blocks:
                 
                 vector_manager = get_vector_manager()
                 
-                # 向量搜索
-                group_filter = None
-                if chat_sender.chat_type == "群聊":
-                    group_filter = chat_sender.group_id
-                
+                # 向量搜索（全局，不限群）
                 vector_results = vector_manager.search(
                     query=query,
                     n_results=10,
-                    group_filter=group_filter
+                    group_filter=None
                 )
                 
                 # 格式化结果

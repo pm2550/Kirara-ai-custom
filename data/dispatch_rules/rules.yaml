@@ -73,11 +73,14 @@
   priority: 15
   enabled: true
   rule_groups:
-  - operator: and
+  - operator: or
     rules:
     - type: chat_type
       config:
         chat_type: 群聊
+    - type: chat_type
+      config:
+        chat_type: 私聊
   - operator: or
     rules:
     - type: keyword

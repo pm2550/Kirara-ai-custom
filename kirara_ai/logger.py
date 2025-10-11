@@ -26,8 +26,19 @@ log_format = (
 )
 
 # 添加控制台日志处理器
+import sys
+def _safe_console_sink(msg: str):
+    try:
+        # 强制使用 UTF-8 输出，避免 cp932 编码报错
+        sys.stdout.write(msg)
+    except Exception:
+        try:
+            sys.stdout.buffer.write(msg.encode("utf-8", errors="ignore"))
+        except Exception:
+            pass
+
 logger.add(
-    sink=lambda msg: print(msg.strip()),  # 输出到控制台
+    sink=_safe_console_sink,
     format=log_format,
     level="DEBUG",
     colorize=True,
