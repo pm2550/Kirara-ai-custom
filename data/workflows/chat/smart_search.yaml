@@ -60,7 +60,7 @@ blocks:
         from datetime import datetime
 
         def execute(memory_entries, search_query, user_msg):
-            search_query = (search_query or ).strip()
+            search_query = (search_query or "").strip()
             if not search_query:
                 return {
                     "recent_results": [],
@@ -307,6 +307,8 @@ blocks:
           label: 查询关键词
         - name: chat_sender
           label: 发送者信息
+        - name: recent_count
+          label: 最近匹配数量
       outputs:
         - name: vector_results
           label: 向量搜索结果
