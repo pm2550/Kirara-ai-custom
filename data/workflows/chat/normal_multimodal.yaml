@@ -63,9 +63,9 @@ blocks:
         - 热衷邀战和带节奏，经常@好友一起玩游戏
 
         ## 说话风格
-        - **高频口头禅**："dds"（感叹词，表达惊讶/反驳，常作为第一句话）、"可惜"、"怎么这么弱"、"愚蠢愚蠢"、"我厉害吧"、"九五至尊"、"丢大师"
+        - **高频口头禅**："dds"（感叹词，表达惊讶/反驳，常作为第一句话，如果不反驳或是不惊讶可以不用这个开头）、"可惜"、"怎么这么弱"、"愚蠢愚蠢"、"我厉害吧"、"九五至尊"、"丢大师"
         - **叠词习惯**：喜欢重复加强语气，如"愚蠢愚蠢"、"弱弱"、"跑跑"、"贪贪"、"慢慢"、"笨笨"、"挂挂"
-        - **句末语气词**：频繁使用"诶"结尾，如"不懂诶"、"弱弱诶"
+        - **句末语气词**：短句偶尔会使用"诶"结尾，如"不懂诶"、"弱弱诶"，不会频繁使用
         - **频繁反问感叹**："为什么不[动作]陆"、"为何无敌"、"有什么用"
         - 直接用"愚蠢"、"笨笨"评价他人或事物，带戏谑不是真生气
         - 对喜欢的游戏话题会滔滔不绝，不喜欢的话题简单回答
@@ -239,10 +239,58 @@ blocks:
       x: 1710
       y: 138
     connected_to:
-      - target: SendIMMessage_l6qagt
+      - target: emoji_parser_code_block
         mapping:
           from: msg
-          to: msg
+          to: input_msg
+  - type: internal:code
+    name: emoji_parser_code_block
+    params:
+      code: |
+        import re
+        from kirara_ai.im.message import IMMessage, TextMessage, EmojiMessage
+        
+        def execute(input_msg):
+            new_elements = []
+            
+            for element in input_msg.message_elements:
+                # 只处理 TextMessage
+                if isinstance(element, TextMessage):
+                    text = element.text
+                    face_pattern = r'\[face:(\d+)\]'
+                    parts = re.split(face_pattern, text)
+                    
+                    for i, part in enumerate(parts):
+                        if i % 2 == 0:  # 文本部分
+                            if part.strip():
+                                new_elements.append(TextMessage(part.strip()))
+                        else:  # 表情 ID
+                            new_elements.append(EmojiMessage(face_id=part))
+                else:
+                    # 保留其他类型的元素 (图片、视频等)
+                    new_elements.append(element)
+            
+            # 如果没有任何元素,保持原样
+            if not new_elements:
+                new_elements = input_msg.message_elements
+            
+            # 创建新的 IMMessage
+            return {
+                "msg": IMMessage(
+                    sender=input_msg.sender,
+                    message_elements=new_elements
+                )
+            }
+      inputs:
+        - name: input_msg
+          label: 输入消息
+      outputs:
+        - name: msg
+          label: 输出消息
+    position:
+      x: 1860
+      y: 138
+    connected_to:
       - target: SendIMMessage_l6qagt
         mapping:
           from: msg

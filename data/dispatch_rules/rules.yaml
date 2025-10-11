@@ -67,9 +67,9 @@
         - 单抽
   metadata: {}
 - rule_id: history_search
-  name: 历史记录搜索
-  description: 当用户要求查询历史记录时触发
-  workflow_id: chat:history_search
+  name: 智能历史记录搜索
+  description: 当用户要求查询历史记录时触发 (关键词+向量融合)
+  workflow_id: chat:smart_search
   priority: 15
   enabled: true
   rule_groups:

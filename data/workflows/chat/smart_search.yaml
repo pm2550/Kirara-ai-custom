@@ -1,0 +1,432 @@
+id: chat:smart_search
+name: 智能搜索 - 融合版
+description: 先用关键词搜索,结果不足时用向量搜索补充
+version: '1.0'
+blocks:
+  - type: internal:get_message
+    name: get_message
+    params: {}
+    position:
+      x: 100
+      y: 300
+    connected_to:
+      - target: extract_query
+        mapping:
+          from: msg
+          to: user_msg
+      - target: keyword_search
+        mapping:
+          from: sender
+          to: chat_sender
+      - target: vector_search
+        mapping:
+          from: sender
+          to: chat_sender
+      - target: build_prompt
+        mapping:
+          from: msg
+          to: user_msg
+  
+  # 提取搜索关键词
+  - type: internal:code
+    name: extract_query
+    params:
+      code: |
+        def execute(user_msg):
+            user_text = user_msg.to_plain().strip()
+            
+            # 移除触发词
+            trigger_words = ['找一下', '查一下', '搜一下', '看一下', '找找', '查查', '搜搜', '看看',
+                            '回顾', '翻翻', '历史', '记录', '上次', '之前', '以前', '之前说', '上次说',
+                            '你记得', '记得吗', '还记得', '你知道', '知道吗', '有没有说过', '说过吗',
+                            '聊过', '聊了', '讨论过', '提到过', '@', '雷帝', '帮我',
+                            '谁说过', '谁提到', '有没有说', '有人说', '谁聊过', '谁谈过']
+            
+            keyword = user_text
+            for word in trigger_words:
+                keyword = keyword.replace(word, '').strip()
+            
+            return {
+                "search_query": keyword,
+                "original_query": user_text
+            }
+      inputs:
+        - name: user_msg
+          label: 用户消息
+      outputs:
+        - name: search_query
+          label: 搜索关键词
+        - name: original_query
+          label: 原始查询
+    position:
+      x: 250
+      y: 300
+    connected_to:
+      - target: keyword_search
+        mapping:
+          from: search_query
+          to: query
+      - target: vector_search
+        mapping:
+          from: search_query
+          to: query
+  
+  # 1. 关键词搜索
+  - type: internal:code
+    name: keyword_search
+    params:
+      code: |
+        import json
+        import os
+        from datetime import datetime, timedelta
+        
+        def execute(query, chat_sender):
+            # 确定 memory 文件路径
+            memory_dir = "kirara-ai/data/memory"
+            if chat_sender.chat_type == "群聊":
+                file_name = f"group_{chat_sender.group_id}.json"
+            else:
+                file_name = f"c2c_{chat_sender.user_id}.json"
+            file_path = os.path.join(memory_dir, file_name)
+            
+            results = []
+            if os.path.exists(file_path):
+                with open(file_path, "r", encoding="utf-8") as f:
+                    all_entries = json.load(f)
+                    
+                    # 只搜索最近30天
+                    time_range_start = datetime.now() - timedelta(days=30)
+                    
+                    for entry in all_entries:
+                        entry_timestamp = datetime.fromisoformat(entry["timestamp"])
+                        if entry_timestamp < time_range_start:
+                            continue
+                        
+                        # 关键词匹配
+                        content = entry.get("content", "")
+                        sender_name = entry.get("sender", {}).get("display_name", "")
+                        
+                        if query.lower() in content.lower() or query.lower() in sender_name.lower():
+                            results.append({
+                                "content": content,
+                                "user_name": sender_name,
+                                "timestamp": entry["timestamp"],
+                                "source": "keyword"
+                            })
+            
+            return {
+                "keyword_results": results,
+                "keyword_count": len(results)
+            }
+      inputs:
+        - name: query
+          label: 查询关键词
+        - name: chat_sender
+          label: 发送者信息
+      outputs:
+        - name: keyword_results
+          label: 关键词搜索结果
+        - name: keyword_count
+          label: 结果数量
+    position:
+      x: 450
+      y: 200
+    connected_to:
+      - target: merge_results
+        mapping:
+          from: keyword_results
+          to: keyword_results
+      - target: merge_results
+        mapping:
+          from: keyword_count
+          to: keyword_count
+  
+  # 2. 向量搜索 (当关键词结果不足时)
+  - type: internal:code
+    name: vector_search
+    params:
+      code: |
+        import sys
+        import os
+        
+        def execute(query, chat_sender):
+            try:
+                # 添加项目根目录到 Python 路径
+                project_root = os.path.abspath(os.path.join(os.getcwd()))
+                if project_root not in sys.path:
+                    sys.path.insert(0, project_root)
+                
+                from vector_memory import get_vector_manager
+                
+                vector_manager = get_vector_manager()
+                
+                # 向量搜索
+                group_filter = None
+                if chat_sender.chat_type == "群聊":
+                    group_filter = chat_sender.group_id
+                
+                vector_results = vector_manager.search(
+                    query=query,
+                    n_results=10,
+                    group_filter=group_filter
+                )
+                
+                # 格式化结果
+                formatted_results = []
+                for r in vector_results:
+                    formatted_results.append({
+                        "content": r["content"],
+                        "user_name": r["user_name"],
+                        "timestamp": r["timestamp"],
+                        "similarity": 1 - r["distance"],
+                        "source": "vector"
+                    })
+                
+                return {
+                    "vector_results": formatted_results
+                }
+            except Exception as e:
+                print(f"Vector search error: {e}")
+                return {
+                    "vector_results": []
+                }
+      inputs:
+        - name: query
+          label: 查询关键词
+        - name: chat_sender
+          label: 发送者信息
+      outputs:
+        - name: vector_results
+          label: 向量搜索结果
+    position:
+      x: 450
+      y: 400
+    connected_to:
+      - target: merge_results
+        mapping:
+          from: vector_results
+          to: vector_results
+  
+  # 3. 合并结果 (智能融合)
+  - type: internal:code
+    name: merge_results
+    params:
+      code: |
+        def execute(keyword_results, keyword_count, vector_results):
+            # 如果关键词结果 >= 3 条,直接使用
+            if keyword_count >= 3:
+                final_results = keyword_results[:5]
+                search_method = "关键词搜索"
+            else:
+                # 否则用向量搜索补充
+                seen = set()
+                final_results = []
+                
+                # 先添加关键词结果
+                for r in keyword_results:
+                    key = (r["content"], r["timestamp"])
+                    if key not in seen:
+                        seen.add(key)
+                        final_results.append(r)
+                
+                # 用向量结果补充到 5 条
+                for r in vector_results:
+                    if len(final_results) >= 5:
+                        break
+                    key = (r["content"], r["timestamp"])
+                    if key not in seen:
+                        seen.add(key)
+                        final_results.append(r)
+                
+                if keyword_count > 0:
+                    search_method = f"关键词({keyword_count}条) + 向量补充"
+                else:
+                    search_method = "向量搜索"
+            
+            # 格式化为文本
+            if final_results:
+                context = f"📊 搜索方式: {search_method}\n\n"
+                context += "找到以下相关记录:\n\n"
+                for i, r in enumerate(final_results, 1):
+                    source_icon = "🔍" if r["source"] == "keyword" else "🧠"
+                    similarity_text = f" (相似度: {r['similarity']:.0%})" if "similarity" in r else ""
+                    context += f"{i}. {source_icon} [{r['user_name']}]: {r['content']}{similarity_text}\n"
+                    context += f"   时间: {r['timestamp'][:19]}\n\n"
+            else:
+                context = "没有找到相关记录。"
+            
+            return {
+                "search_context": context,
+                "result_count": len(final_results)
+            }
+      inputs:
+        - name: keyword_results
+          label: 关键词结果
+        - name: keyword_count
+          label: 关键词结果数
+        - name: vector_results
+          label: 向量结果
+      outputs:
+        - name: search_context
+          label: 搜索上下文
+        - name: result_count
+          label: 结果总数
+    position:
+      x: 700
+      y: 300
+    connected_to:
+      - target: build_prompt
+        mapping:
+          from: search_context
+          to: search_context
+  
+  # 4. 构建 Prompt
+  - type: internal:code
+    name: build_prompt
+    params:
+      code: |
+        def execute(search_context, user_msg):
+            original_query = user_msg.to_plain()
+            system_prompt = f"""你是雷翔钰 (绰号「雷帝」),一个真实存在的人,不是AI助手。
+
+用户询问: "{original_query}"
+
+{search_context}
+
+请根据上述历史记录,用你标志性的「得意」口吻简洁地回答问题。如果确实没找到相关记录,就直接说 "这我还真不记得了" 或 "好像没人提过这个吧"。
+
+记住你的说话风格:
+- 适当使用叠词 (但不要每句都叠)
+- 有时会说 "dds" (意思是 "丢大师") 来调侃别人愚蠢
+- 得意或炫耀时发 [face:324]
+- 自然、随性,不要太正式"""
+            
+            return {
+                "system_prompt_text": system_prompt
+            }
+      inputs:
+        - name: search_context
+          label: 搜索上下文
+        - name: user_msg
+          label: 用户消息
+      outputs:
+        - name: system_prompt_text
+          label: 系统提示词
+    position:
+      x: 900
+      y: 300
+    connected_to:
+      - target: system_prompt
+        mapping:
+          from: system_prompt_text
+          to: text
+  
+  - type: internal:text_block
+    name: system_prompt
+    params:
+      text: ""
+    position:
+      x: 1050
+      y: 300
+    connected_to:
+      - target: chat_message_constructor
+        mapping:
+          from: text
+          to: system_prompt_format
+  
+  - type: internal:chat_message_constructor
+    name: chat_message_constructor
+    params: {}
+    position:
+      x: 1200
+      y: 300
+    connected_to:
+      - target: llm_chat
+        mapping:
+          from: llm_msg
+          to: prompt
+  
+  - type: internal:chat_completion
+    name: llm_chat
+    params:
+      model_name: deepseek-chat
+      temperature: 0.7
+    position:
+      x: 1400
+      y: 300
+    connected_to:
+      - target: response_converter
+        mapping:
+          from: resp
+          to: response
+  
+  - type: internal:llm_response_to_text
+    name: response_converter
+    params: {}
+    position:
+      x: 1600
+      y: 300
+    connected_to:
+      - target: emoji_parser
+        mapping:
+          from: text
+          to: llm_text
+  
+  - type: internal:code
+    name: emoji_parser
+    params:
+      code: |
+        import re
+        from kirara_ai.im.message import IMMessage, TextMessage, EmojiMessage
+        from kirara_ai.im.sender import ChatSender
+        
+        def execute(llm_text):
+            message_elements = []
+            segments = llm_text.split("<break>")
+            
+            for segment in segments:
+                segment = segment.strip()
+                if not segment:
+                    continue
+                
+                face_pattern = r'\[face:(\d+)\]'
+                parts = re.split(face_pattern, segment)
+                
+                for i, part in enumerate(parts):
+                    if i % 2 == 0:
+                        if part.strip():
+                            message_elements.append(TextMessage(part.strip()))
+                    else:
+                        message_elements.append(EmojiMessage(face_id=part))
+            
+            if not message_elements:
+                message_elements = [TextMessage(llm_text)]
+            
+            return {
+                "msg": IMMessage(
+                    sender=ChatSender.get_bot_sender(),
+                    message_elements=message_elements
+                )
+            }
+      inputs:
+        - name: llm_text
+          label: LLM文本
+      outputs:
+        - name: msg
+          label: IM消息
+    position:
+      x: 1800
+      y: 300
+    connected_to:
+      - target: msg_sender
+        mapping:
+          from: msg
+          to: msg
+  
+  - type: internal:send_message
+    name: msg_sender
+    params: {}
+    position:
+      x: 2000
+      y: 300
+

@@ -199,6 +199,10 @@ blocks:
         mapping:
           from: sender
           to: chat_sender
+      - target: chat_memory_store_a0fj1l
+        mapping:
+          from: msg
+          to: user_msg
       - target: chat_message_constructor_wfy18q
         mapping:
           from: msg

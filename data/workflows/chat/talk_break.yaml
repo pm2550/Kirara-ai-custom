@@ -29,9 +29,9 @@ blocks:
         - 热衷邀战和带节奏，经常@好友一起玩游戏
 
         ## 说话风格
-        - **高频口头禅**："dds"（感叹词，表达惊讶/反驳，常作为第一句话）、"可惜"、"怎么这么弱"、"愚蠢愚蠢"、"我厉害吧"、"九五至尊"、"丢大师"
+        - **高频口头禅**："dds"（感叹词，表达惊讶/反驳，常作为第一句话，如果不反驳或是不惊讶可以不用这个开头）、"可惜"、"怎么这么弱"、"愚蠢愚蠢"、"我厉害吧"、"九五至尊"、"丢大师"
         - **叠词习惯**：喜欢重复加强语气，如"愚蠢愚蠢"、"弱弱"、"跑跑"、"贪贪"、"慢慢"、"笨笨"、"挂挂"
-        - **句末语气词**：频繁使用"诶"结尾，如"不懂诶"、"弱弱诶"
+        - **句末语气词**：短句偶尔会使用"诶"结尾，如"不懂诶"、"弱弱诶"，不会频繁使用
         - **频繁反问感叹**："为什么不[动作]陆"、"为何无敌"、"有什么用"
         - 直接用"愚蠢"、"笨笨"评价他人或事物，带戏谑不是真生气
         - 对喜欢的游戏话题会滔滔不绝，不喜欢的话题简单回答
@@ -212,10 +212,65 @@ blocks:
       x: 1658
       y: 344
     connected_to:
-      - target: 6edd5c0c-a538-45ab-bb50-4c3a906bb1b1
+      - target: emoji_parser_code_block
         mapping:
           from: text
-          to: text
+          to: llm_text
+  - type: internal:code
+    name: emoji_parser_code_block
+    params:
+      code: |
+        import re
+        from kirara_ai.im.message import IMMessage, TextMessage, EmojiMessage
+        from kirara_ai.im.sender import ChatSender
+        
+        def execute(llm_text):
+            message_elements = []
+            
+            # 按 <break> 分段
+            segments = llm_text.split("<break>")
+            
+            for segment in segments:
+                segment = segment.strip()
+                if not segment:
+                    continue
+                
+                # 解析每段中的 [face:ID] 标签
+                face_pattern = r'\[face:(\d+)\]'
+                parts = re.split(face_pattern, segment)
+                
+                for i, part in enumerate(parts):
+                    if i % 2 == 0:  # 文本部分
+                        if part.strip():
+                            message_elements.append(TextMessage(part.strip()))
+                    else:  # 表情 ID
+                        message_elements.append(EmojiMessage(face_id=part))
+            
+            # 如果没有任何元素,添加空文本
+            if not message_elements:
+                message_elements = [TextMessage(llm_text)]
+            
+            # 创建并返回 IMMessage
+            return {
+                "msg": IMMessage(
+                    sender=ChatSender.get_bot_sender(),
+                    message_elements=message_elements
+                )
+            }
+      inputs:
+        - name: llm_text
+          label: LLM文本
+      outputs:
+        - name: msg
+          label: IM消息
+    position:
+      x: 1788
+      y: 347
+    connected_to:
+      - target: 6edd5c0c-a538-45ab-bb50-4c3a906bb1b1
+        mapping:
+          from: msg
+          to: msg
   - type: internal:text_to_im_message
     name: 6edd5c0c-a538-45ab-bb50-4c3a906bb1b1
     params:
