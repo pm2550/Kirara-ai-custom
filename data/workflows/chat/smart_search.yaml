@@ -26,6 +26,10 @@ blocks:
         mapping:
           from: msg
           to: user_msg
+      - target: chat_message_constructor
+        mapping:
+          from: msg
+          to: user_msg
   
   # 提取搜索关键词
   - type: internal:code
@@ -33,7 +37,7 @@ blocks:
     params:
       code: |
         def execute(user_msg):
-            user_text = user_msg.to_plain().strip()
+            user_text = getattr(user_msg, 'content', str(user_msg)).strip()
             
             # 移除触发词
             trigger_words = ['找一下', '查一下', '搜一下', '看一下', '找找', '查查', '搜搜', '看看',
@@ -270,6 +274,10 @@ blocks:
         mapping:
           from: search_context
           to: search_context
+      - target: chat_message_constructor
+        mapping:
+          from: search_context
+          to: memory_content
   
   # 4. 构建 Prompt
   - type: internal:code
@@ -277,24 +285,39 @@ blocks:
     params:
       code: |
         def execute(search_context, user_msg):
-            original_query = user_msg.to_plain()
-            system_prompt = f"""你是雷翔钰 (绰号「雷帝」),一个真实存在的人,不是AI助手。
+            import textwrap
 
-用户询问: "{original_query}"
+            original_query = getattr(user_msg, 'content', str(user_msg))
+            system_prompt = textwrap.dedent(
+                f"""
+                你是雷翔钰 (绰号「雷帝」),一个真实存在的人,不是AI助手。
 
-{search_context}
+                用户询问: "{original_query}"
 
-请根据上述历史记录,用你标志性的「得意」口吻简洁地回答问题。如果确实没找到相关记录,就直接说 "这我还真不记得了" 或 "好像没人提过这个吧"。
+                {search_context}
 
-记住你的说话风格:
-- 适当使用叠词 (但不要每句都叠)
-- 有时会说 "dds" (意思是 "丢大师") 来调侃别人愚蠢
-- 得意或炫耀时发 [face:324]
-- 自然、随性,不要太正式"""
-            
+                请根据上述历史记录,用你标志性的「得意」口吻简洁地回答问题。如果确实没找到相关记录,就直接说 "这我还真不记得了" 或 "好像没人提过这个吧"。
+
+                记住你的说话风格:
+                - 适当使用叠词 (但不要每句都叠)
+                - 有时会说 "dds" (意思是 "丢大师") 来调侃别人愚蠢
+                - 得意或炫耀时发 [face:324]
+                - 自然、随性,不要太正式
+                """
+            ).strip()
+
+            user_prompt = textwrap.dedent(
+                """
+                用户消息:
+                [QQ:{user_id}|QQ昵称:{user_qq_nickname}|群昵称:{user_group_card}]说：{user_msg}
+                """
+            ).strip()
+
             return {
-                "system_prompt_text": system_prompt
+                "system_prompt_text": system_prompt,
+                "user_prompt_text": user_prompt
             }
+
       inputs:
         - name: search_context
           label: 搜索上下文
@@ -303,27 +326,20 @@ blocks:
       outputs:
         - name: system_prompt_text
           label: 系统提示词
+        - name: user_prompt_text
+          label: 用户提示词
     position:
       x: 900
       y: 300
     connected_to:
-      - target: system_prompt
-        mapping:
-          from: system_prompt_text
-          to: text
-  
-  - type: internal:text_block
-    name: system_prompt
-    params:
-      text: ""
-    position:
-      x: 1050
-      y: 300
-    connected_to:
       - target: chat_message_constructor
         mapping:
-          from: text
+          from: system_prompt_text
           to: system_prompt_format
+      - target: chat_message_constructor
+        mapping:
+          from: user_prompt_text
+          to: user_prompt_format
   
   - type: internal:chat_message_constructor
     name: chat_message_constructor
@@ -420,4 +436,5 @@ blocks:
     position:
       x: 2000
       y: 300
+
 
