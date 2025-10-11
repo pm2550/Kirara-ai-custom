@@ -10,6 +10,10 @@ blocks:
       x: 100
       y: 300
     connected_to:
+      - target: recent_memory
+        mapping:
+          from: sender
+          to: chat_sender
       - target: extract_query
         mapping:
           from: msg
@@ -26,11 +30,107 @@ blocks:
         mapping:
           from: msg
           to: user_msg
+      - target: recent_history_search
+        mapping:
+          from: msg
+          to: user_msg
       - target: chat_message_constructor
         mapping:
           from: msg
           to: user_msg
   
+  # 最近对话检索
+  - type: internal:chat_memory_query
+    name: recent_memory
+    params:
+      scope_type: member
+    position:
+      x: 100
+      y: 450
+    connected_to:
+      - target: recent_history_search
+        mapping:
+          from: memory_content
+          to: memory_entries
+
+  - type: internal:code
+    name: recent_history_search
+    params:
+      code: |
+        from datetime import datetime
+
+        def execute(memory_entries, search_query, user_msg):
+            search_query = (search_query or ).strip()
+            if not search_query:
+                return {
+                    "recent_results": [],
+                    "recent_count": 0
+                }
+
+            results = []
+            seen = set()
+            entries = list(memory_entries or [])
+            display_name = getattr(getattr(user_msg, "sender", None), "display_name", "最近对话")
+            lowered_query = search_query.lower()
+
+            for entry in reversed(entries):
+                try:
+                    entry_text = str(entry).strip()
+                except Exception:
+                    continue
+                if not entry_text:
+                    continue
+                entry_key = entry_text.lower()
+                if entry_key in seen:
+                    continue
+                if lowered_query in entry_key:
+                    seen.add(entry_key)
+                    results.append({
+                        "content": entry_text,
+                        "user_name": display_name,
+                        "timestamp": datetime.now().isoformat(),
+                        "source": "recent"
+                    })
+                if len(results) >= 5:
+                    break
+
+            return {
+                "recent_results": results,
+                "recent_count": len(results)
+            }
+      inputs:
+        - name: memory_entries
+          label: 最近对话
+        - name: search_query
+          label: 搜索关键词
+        - name: user_msg
+          label: 用户消息
+      outputs:
+        - name: recent_results
+          label: 最近匹配结果
+        - name: recent_count
+          label: 最近匹配数量
+    position:
+      x: 350
+      y: 450
+    connected_to:
+      - target: merge_results
+        mapping:
+          from: recent_results
+          to: recent_results
+      - target: merge_results
+        mapping:
+          from: recent_count
+          to: recent_count
+      - target: keyword_search
+        mapping:
+          from: recent_count
+          to: recent_count
+      - target: vector_search
+        mapping:
+          from: recent_count
+          to: recent_count
+
   # 提取搜索关键词
   - type: internal:code
     name: extract_query
@@ -66,6 +166,10 @@ blocks:
       x: 250
       y: 300
     connected_to:
+      - target: recent_history_search
+        mapping:
+          from: search_query
+          to: search_query
       - target: keyword_search
         mapping:
           from: search_query
@@ -84,7 +188,13 @@ blocks:
         import os
         from datetime import datetime, timedelta
         
-        def execute(query, chat_sender):
+        def execute(query, chat_sender, recent_count):
+            if recent_count and recent_count > 0:
+                return {
+                    "keyword_results": [],
+                    "keyword_count": 0
+                }
+
             # 全局扫描 memory 目录（群聊与私聊都搜）
             memory_dir = "kirara-ai/data/memory"
             results = []
@@ -122,6 +232,8 @@ blocks:
           label: 查询关键词
         - name: chat_sender
           label: 发送者信息
+        - name: recent_count
+          label: 最近匹配数量
       outputs:
         - name: keyword_results
           label: 关键词搜索结果
@@ -148,7 +260,12 @@ blocks:
         import sys
         import os
         
-        def execute(query, chat_sender):
+        def execute(query, chat_sender, recent_count):
+            if recent_count and recent_count > 0:
+                return {
+                    "vector_results": []
+                }
+
             try:
                 # 添加项目根目录到 Python 路径
                 project_root = os.path.abspath(os.path.join(os.getcwd()))
@@ -207,54 +324,78 @@ blocks:
     name: merge_results
     params:
       code: |
-        def execute(keyword_results, keyword_count, vector_results):
-            # 如果关键词结果 >= 3 条,直接使用
-            if keyword_count >= 3:
+        def execute(recent_results, recent_count, keyword_results, keyword_count, vector_results):
+            recent_results = recent_results or []
+            keyword_results = keyword_results or []
+            vector_results = vector_results or []
+            recent_count = recent_count or 0
+            keyword_count = keyword_count or 0
+
+            if recent_count > 0:
+                final_results = recent_results[:5]
+                search_method = "最近对话"
+            elif keyword_count >= 3:
                 final_results = keyword_results[:5]
                 search_method = "关键词搜索"
             else:
-                # 否则用向量搜索补充
                 seen = set()
                 final_results = []
-                
-                # 先添加关键词结果
+
                 for r in keyword_results:
-                    key = (r["content"], r["timestamp"])
+                    key = (r.get("content"), r.get("timestamp"))
                     if key not in seen:
                         seen.add(key)
                         final_results.append(r)
-                
-                # 用向量结果补充到 5 条
+
+                if keyword_count > 0 and final_results:
+                    search_method = f"关键词({keyword_count}条)"
+                elif keyword_count > 0:
+                    search_method = f"关键词({keyword_count}条)"
+                else:
+                    search_method = "向量搜索"
+
                 for r in vector_results:
                     if len(final_results) >= 5:
                         break
-                    key = (r["content"], r["timestamp"])
+                    key = (r.get("content"), r.get("timestamp"))
                     if key not in seen:
                         seen.add(key)
                         final_results.append(r)
-                
-                if keyword_count > 0:
-                    search_method = f"关键词({keyword_count}条) + 向量补充"
-                else:
-                    search_method = "向量搜索"
-            
-            # 格式化为文本
+                        if keyword_count > 0:
+                            search_method = f"关键词({keyword_count}条) + 向量补充"
+
             if final_results:
                 context = f"📊 搜索方式: {search_method}\n\n"
                 context += "找到以下相关记录:\n\n"
                 for i, r in enumerate(final_results, 1):
-                    source_icon = "🔍" if r["source"] == "keyword" else "🧠"
-                    similarity_text = f" (相似度: {r['similarity']:.0%})" if "similarity" in r else ""
-                    context += f"{i}. {source_icon} [{r['user_name']}]: {r['content']}{similarity_text}\n"
-                    context += f"   时间: {r['timestamp'][:19]}\n\n"
+                    source = r.get("source")
+                    if source == "keyword":
+                        source_icon = "🔍"
+                    elif source == "vector":
+                        source_icon = "🧠"
+                    elif source == "recent":
+                        source_icon = "🕒"
+                    else:
+                        source_icon = "📄"
+                    similarity_text = ""
+                    if "similarity" in r and isinstance(r.get("similarity"), (int, float)):
+                        similarity_text = f" (相似度: {r['similarity']:.0%})"
+                    context += f"{i}. {source_icon} [{r.get('user_name', '匿名')}]: {r.get('content', '')}{similarity_text}\n"
+                    timestamp = r.get('timestamp', '') or ''
+                    context += f"   时间: {timestamp[:19]}\n\n"
             else:
                 context = "没有找到相关记录。"
-            
+
             return {
                 "search_context": context,
                 "result_count": len(final_results)
             }
+
       inputs:
+        - name: recent_results
+          label: 最近匹配结果
+        - name: recent_count
+          label: 最近匹配数量
         - name: keyword_results
           label: 关键词结果
         - name: keyword_count
@@ -296,7 +437,7 @@ blocks:
 
                 {search_context}
 
-                请根据上述历史记录,用你标志性的「得意」口吻简洁地回答问题。如果确实没找到相关记录,就直接说 "这我还真不记得了" 或 "好像没人提过这个吧"。
+                请根据上述历史记录,用你标志性的「得意」口吻简洁地回答问题。如果确实没找到相关记录,就直接说 "我不记得了" 或 "我忘了"。
 
                 记住你的说话风格:
                 - 适当使用叠词 (但不要每句都叠)
