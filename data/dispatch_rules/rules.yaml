@@ -66,6 +66,54 @@
         - 十连
         - 单抽
   metadata: {}
+- rule_id: history_search
+  name: 历史记录搜索
+  description: 当用户要求查询历史记录时触发
+  workflow_id: chat:history_search
+  priority: 15
+  enabled: true
+  rule_groups:
+  - operator: and
+    rules:
+    - type: chat_type
+      config:
+        chat_type: 群聊
+  - operator: or
+    rules:
+    - type: keyword
+      config:
+        keywords:
+        - 找一下
+        - 查一下
+        - 搜一下
+        - 看一下
+        - 找找
+        - 查查
+        - 搜搜
+        - 看看
+        - 回顾
+        - 翻翻
+        - 历史
+        - 记录
+        - 上次
+        - 之前
+        - 以前
+        - 之前说
+        - 上次说
+        - 你记得
+        - 记得吗
+        - 还记得
+        - 你知道
+        - 知道吗
+        - 有没有说过
+        - 说过吗
+        - 聊过
+        - 聊了
+        - 讨论过
+        - 提到过
+  metadata:
+    category: chat
+    permission: user
 - rule_id: system_help
   name: 帮助命令
   description: 显示帮助信息

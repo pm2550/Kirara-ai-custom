@@ -1,0 +1,173 @@
+name: 历史记录搜索
+description: 搜索历史聊天记录
+version: 1.0.0
+
+blocks:
+  # 1. 获取消息
+  - id: get_message
+    type: internal:get_message
+    outputs:
+      - msg
+      - sender
+
+  # 2. 提取用户消息文本
+  - id: msg_to_text
+    type: internal:im_message_to_text
+    inputs:
+      msg: get_message.msg
+    outputs:
+      - text
+
+  # 3. 搜索历史记录 (使用 CodeBlock)
+  - id: search_history
+    type: internal:code
+    params:
+      code: |
+        import json
+        import re
+        from pathlib import Path
+        from datetime import datetime, timedelta
+        
+        # 获取用户提问
+        user_text = inputs.get('user_text', '')
+        sender = inputs.get('sender')
+        
+        # 提取关键词 (去除触发词)
+
+        trigger_words = ['找一下', '查一下', '搜一下', '看一下', '找找', '查查', '搜搜', '看看', 
+                         '回顾', '翻翻', '历史', '记录', '上次', '之前', '以前', '之前说', '上次说',
+                         '你记得', '记得吗', '还记得', '你知道', '知道吗', '有没有说过', '说过吗',
+                         '聊过', '聊了', '讨论过', '提到过', '@', '雷帝', '帮我']
+        keyword = user_text
+        for tw in trigger_words:
+            keyword = keyword.replace(tw, '')
+        keyword = keyword.strip()
+        
+        # 提取时间范围
+        days_ago = 30  # 默认搜索最近30天
+        if '昨天' in user_text:
+            days_ago = 1
+        elif '前天' in user_text:
+            days_ago = 2
+        elif '上周' in user_text or '一周' in user_text:
+            days_ago = 7
+        elif '两周' in user_text:
+            days_ago = 14
+        elif '上个月' in user_text or '一个月' in user_text:
+            days_ago = 30
+        
+        # 确定记忆文件路径
+        if sender.chat_type == 'group':
+            memory_file = Path('data/memory') / f'group_{sender.group_id}.json'
+        else:
+            memory_file = Path('data/memory') / f'c2c_{sender.user_id}.json'
+        
+        # 读取记忆文件
+        results = []
+        if memory_file.exists():
+            with open(memory_file, 'r', encoding='utf-8') as f:
+                all_messages = json.load(f)
+            
+            # 计算时间阈值
+            cutoff_time = datetime.now() - timedelta(days=days_ago)
+            
+            # 搜索匹配的消息
+            for entry in all_messages:
+                try:
+                    msg_time = datetime.fromisoformat(entry['timestamp'])
+                    content = entry.get('content', '')
+                    
+                    # 时间过滤 + 关键词过滤
+                    if msg_time > cutoff_time and keyword and keyword in content:
+                        results.append({
+                            'content': content,
+                            'time': entry['timestamp'],
+                            'user': entry.get('sender', {}).get('display_name', '未知')
+                        })
+                except Exception as e:
+                    continue
+        
+        # 只返回最相关的 8 条
+        results = results[-8:]
+        
+        return {'search_results': results, 'keyword': keyword, 'days_ago': days_ago, 'result_count': len(results)}
+    inputs:
+      user_text: msg_to_text.text
+      sender: get_message.sender
+    outputs:
+      - search_results
+      - keyword
+      - days_ago
+      - result_count
+
+  # 4. 构造系统 Prompt
+  - id: system_prompt
+    type: internal:text_block
+    params:
+      text: |
+        你是雷翔钰(雷帝),现在要帮用户回顾历史聊天记录。
+        
+        搜索关键词: {{keyword}}
+        搜索时间范围: 最近 {{days_ago}} 天
+        找到记录数: {{result_count}} 条
+        
+        历史记录如下:
+        {{search_results}}
+        
+        请用雷帝的口吻总结这些记录,回答用户的提问。
+        
+        注意:
+        1. 如果没找到记录,就说"雷帝我翻遍了记录,没找到关于xxx的内容"
+        2. 如果找到了,就总结关键信息并回答
+        3. 保持雷帝的说话风格和人设
+        4. 使用 <break> 分隔多条消息
+
+  # 5. 构造用户 Prompt
+  - id: user_prompt
+    type: internal:text_block
+    params:
+      text: "用户问: {{user_msg}}"
+
+  # 6. 拼接 Prompt
+  - id: construct_prompt
+    type: internal:chat_message_constructor
+    inputs:
+      user_msg: msg_to_text.text
+      system_prompt: system_prompt.text
+      user_prompt: user_prompt.text
+    outputs:
+      - prompt
+
+  # 7. LLM 生成回答
+  - id: llm_chat
+    type: internal:chat_completion
+    params:
+      model_name: deepseek-chat
+      temperature: 1.2
+    inputs:
+      msg: construct_prompt.prompt
+    outputs:
+      - resp
+
+  # 8. 转换为 IM 消息
+  - id: llm_response_to_text
+    type: internal:llm_response_to_text
+    inputs:
+      resp: llm_chat.resp
+    outputs:
+      - text
+
+  - id: text_to_im_message
+    type: internal:text_to_im_message
+    inputs:
+      text: llm_response_to_text.text
+    outputs:
+      - msg
+
+  # 9. 发送回复
+  - id: send_response
+    type: internal:send_message
+    inputs:
+      msg: text_to_im_message.msg
+      sender: get_message.sender
+
