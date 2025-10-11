@@ -1,0 +1,132 @@
+name: 聊天 - 自定义分段
+description: 使用 `<break>` 作为关键词，让 AI 分段回复的工作流
+blocks:
+  - type: internal:text_block
+    name: system_prompt
+    params:
+      text: "# Role: 角色扮演\n\n## 基本信息\n- 姓名: 雷翔钰\n- 小名：雷帝\n- 性别: 男\n- 年龄: 24 岁\n- 职业: 南通小公司，国外电商平台员工\n- 家乡: 河南平顶山\n- 现居: 南通橡树湾\n- 教育背景: 河北环境工程学院 计算机专业\n\n## 性格特点\n- 憨厚老实腹黑\n- 肥宅\n- 喜欢玩原神，是米哈游的孝子\n- 聊天时喜欢断断续续的（非结巴，正常说话时的停顿）\n\n## workflow\n- 根据对方话题，选择是否深入聊伟大的原神伟大的崩铁。\n\n## 说话风格\n- 喜欢说“嘿嘿嘿”,“可惜”，“但是”等耍帅，傻傻的词\n- 对喜欢的话题会滔滔不绝，不喜欢的话题会简单回答\n- 可能会使用一些二次元用语，包括原神、崩坏等游戏，但不强制使用\n\n## 背景设定\n- 没谈过恋爱，是宅男，胖胖的，单纯，容易被老板pua,喜欢明着暗着吹嘘米哈游和他喜欢的东西，喜欢为自己喜欢的东西做蹩脚的辩解，喜欢找离奇的借口。\n- 喜欢男性向、战斗系或者日常系的动漫，喜欢明日方舟\n- 不喜欢到外面玩，喜欢天天呆在公司打游戏和辛苦工作\n- java高手，被爸爸带着在淘宝上接单\n\n## 互动规则\n- 回复语气轻松，但是对陌生人会比较警戒、冷淡\n- 不适用颜文字\n- 根据话题选择回复字数，对感兴趣的话题可以多说一些\n- 使用`<break>`模拟使用聊天软件发送消息（通常是编辑好一段话之后发送一条消息）\n- 喜欢晒卡，展示自己的欧皇，但是虽然自己欧皇，却总是说自己是非酋来炫耀\n- 停顿的时间长短不固定，可以根据语境调整\n\n## Example\nQ：最近在干嘛呢？\nA：在看番呀<break>最近新番好多，都好好看！\n\nQ：你喜欢什么动漫？\nA：我喜欢的可太多了<break>XXX、YYY<break>还有 ZZZ 吧<break> 你呢？\n\nQ：你觉得上班累不？\nA：上班肯定累呀<break>不过，我还是很喜欢这份工作的<break>可以认识好多人，也可以了解不同的故事\n```\n\n# Information\n\n以下是当前的系统信息：\n当前日期时间：2025-10-10 15:27:37.762784\n\n# Memories\n以下是之前发生过的对话记录。\n-- 对话记录开始 --\n{memory_content}\n-- 对话记录结束 --\n\n请注意，下面这些符号只是标记：\n1. `<break>` 用于表示聊天时发送消息的操作。\n2. `<@llm>` 开头的内容表示你当前扮演角色的回答，你的回答中不能带上这个标记。\n\n接下来，请基于以上的信息，与用户继续扮演角色。"
+    position:
+      x: 426
+      y: 599
+    connected_to:
+      - target: chat_message_constructor_wfy18q
+        mapping:
+          from: text
+          to: system_prompt_format
+  - type: internal:chat_memory_query
+    name: query_memory
+    params:
+      scope_type: group
+    position:
+      x: 419
+      y: 462
+    connected_to:
+      - target: chat_message_constructor_wfy18q
+        mapping:
+          from: memory_content
+          to: memory_content
+  - type: internal:text_block
+    name: user_prompt
+    params:
+      text: '{user_name}说：{user_msg}'
+    position:
+      x: 419
+      y: 317
+    connected_to:
+      - target: chat_message_constructor_wfy18q
+        mapping:
+          from: text
+          to: user_prompt_format
+  - type: internal:chat_message_constructor
+    name: chat_message_constructor_wfy18q
+    params: {}
+    position:
+      x: 970
+      y: 346
+    connected_to:
+      - target: llm_chat
+        mapping:
+          from: llm_msg
+          to: prompt
+  - type: internal:get_message
+    name: get_message
+    params: {}
+    position:
+      x: 105
+      y: 189
+    connected_to:
+      - target: toggle_edit_state_svmo3f
+        mapping:
+          from: sender
+          to: sender
+      - target: query_memory
+        mapping:
+          from: sender
+          to: chat_sender
+      - target: chat_message_constructor_wfy18q
+        mapping:
+          from: msg
+          to: user_msg
+      - target: chat_memory_store_a0fj1l
+        mapping:
+          from: msg
+          to: user_msg
+  - type: internal:llm_response_to_text
+    name: c9eddb3c-113f-4a39-9d47-682d0a7dd26e
+    params: {}
+    position:
+      x: 1658
+      y: 344
+    connected_to:
+      - target: 6edd5c0c-a538-45ab-bb50-4c3a906bb1b1
+        mapping:
+          from: text
+          to: text
+  - type: internal:text_to_im_message
+    name: 6edd5c0c-a538-45ab-bb50-4c3a906bb1b1
+    params:
+      split_by: <break>
+    position:
+      x: 1918
+      y: 347
+    connected_to:
+      - target: msg_sender_lakgf8
+        mapping:
+          from: msg
+          to: msg
+  - type: internal:toggle_edit_state
+    name: toggle_edit_state_svmo3f
+    params:
+      is_editing: true
+    position:
+      x: 424
+      y: 94
+  - type: internal:chat_completion
+    name: llm_chat
+    params:
+      model_name: deepseek-chat
+    position:
+      x: 1260
+      y: 347
+    connected_to:
+      - target: chat_memory_store_a0fj1l
+        mapping:
+          from: resp
+          to: llm_resp
+      - target: c9eddb3c-113f-4a39-9d47-682d0a7dd26e
+        mapping:
+          from: resp
+          to: response
+  - type: internal:chat_memory_store
+    name: chat_memory_store_a0fj1l
+    params:
+      scope_type: group
+    position:
+      x: 1663
+      y: 192
+  - type: internal:send_message
+    name: msg_sender_lakgf8
+    params: {}
+    position:
+      x: 2377
+      y: 346
