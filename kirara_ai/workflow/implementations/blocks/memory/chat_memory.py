@@ -1,3 +1,4 @@
+import threading
 from typing import Annotated, Any, Dict, List, Optional
 
 from kirara_ai.im.message import IMMessage
@@ -175,93 +176,96 @@ class ChatMemoryStore(Block):
         except Exception:
             pass
 
-        # 同步到向量库 (包含用户消息和雷帝回复)
+        # 异步同步到向量库 (包含用户消息和雷帝回复)
+        user_payload: Optional[Dict[str, Any]] = None
+        bot_payload: Optional[Dict[str, Any]] = None
         try:
-            # 本地日志
-            _log_file = r'C:\\Users\\pm\\Desktop\\QQBot\\vector_sync_file.log'
-            def _f_log(text: str) -> None:
+            if user_msg and user_msg.sender:
+                content_parts: List[str] = []
                 try:
-                    from datetime import datetime as _dt
-                    with open(_log_file, 'a', encoding='utf-8') as _f:
-                        _f.write(f"[{_dt.now().strftime('%H:%M:%S')}] {text}\n")
-                except Exception:
-                    pass
-            import sys
-            import os
-            # 添加项目根目录到 Python 路径
-            project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../../../..'))
-            if project_root not in sys.path:
-                sys.path.insert(0, project_root)
-            
-            from vector_memory import get_vector_manager
-            vector_manager = get_vector_manager()
-            _f_log('[VectorSync] Manager ready (project)')
-            
-            import hashlib
-            from datetime import datetime
-            
-            # 1. 存储用户消息
-            if user_msg:
-                sender = user_msg.sender
-                # 逐元素提取文本，避免 to_plain 差异
-                content_parts = []
-                try:
-                    for element in getattr(user_msg, 'message_elements', []) or []:
-                        if hasattr(element, 'text') and isinstance(element.text, str) and element.text.strip():
+                    for element in getattr(user_msg, "message_elements", []) or []:
+                        if (
+                            hasattr(element, "text")
+                            and isinstance(element.text, str)
+                            and element.text.strip()
+                        ):
                             content_parts.append(element.text.strip())
                 except Exception:
                     pass
                 content = " ".join(content_parts).strip() if content_parts else ""
-                timestamp = datetime.now().isoformat()
-                message_id = hashlib.md5(
-                    f"{sender.user_id}_{timestamp}_{content}".encode()
-                ).hexdigest()
-                
                 if content:
-                    _f_log(f"[VectorSync] USER add_message id={message_id} len={len(content)}")
-                    vector_manager.add_message(
-                        message_id=message_id,
-                        content=content,
-                        user_id=sender.user_id,
-                        user_name=sender.display_name,
-                        group_id=sender.group_id or "private",
-                        timestamp=timestamp
-                    )
-                    _f_log("[VectorSync] USER synced OK (project)")
-            
-            # 2. 存储雷帝回复
+                    user_payload = {
+                        "content": content,
+                        "user_id": user_msg.sender.user_id,
+                        "user_name": user_msg.sender.display_name,
+                        "group_id": user_msg.sender.group_id or "private",
+                    }
             if llm_resp and llm_resp.message:
-                # 提取纯文本内容
                 bot_content = ""
                 for element in llm_resp.message.content:
-                    if hasattr(element, 'text'):
+                    if hasattr(element, "text"):
                         bot_content += element.text + " "
                 bot_content = bot_content.strip()
-                _f_log(f"[VectorSync] BOT content_len={len(bot_content)} (project)")
-                
-                if bot_content:  # 只有在有文本内容时才存储
-                    bot_timestamp = datetime.now().isoformat()
-                    bot_message_id = hashlib.md5(
-                        f"bot_{bot_timestamp}_{bot_content}".encode()
-                    ).hexdigest()
-                    
-                    # 获取群组信息
+                if bot_content:
                     group_id = "private"
                     if user_msg and user_msg.sender:
                         group_id = user_msg.sender.group_id or "private"
-                    
-                    _f_log(f"[VectorSync] BOT add_message id={bot_message_id}")
-                    vector_manager.add_message(
-                        message_id=bot_message_id,
-                        content=bot_content,
-                        user_id="1204222398",  # 雷帝的 QQ 号
-                        user_name="雷帝",
-                        group_id=group_id,
-                        timestamp=bot_timestamp
+                    bot_payload = {
+                        "content": bot_content,
+                        "group_id": group_id,
+                    }
+        except Exception as exc:
+            self.logger.warning(f"Failed to prepare vector payload: {exc}")
+
+        if user_payload or bot_payload:
+            def _sync_vector(user_data: Optional[Dict[str, Any]], bot_data: Optional[Dict[str, Any]]):
+                try:
+                    import hashlib
+                    import os
+                    import sys
+                    from datetime import datetime
+
+                    project_root = os.path.abspath(
+                        os.path.join(os.path.dirname(__file__), "../../../../../..")
                     )
-                    _f_log("[VectorSync] BOT synced OK (project)")
-                
-        except Exception as e:
-            self.logger.warning(f"Failed to sync to vector DB: {e}")
+                    if project_root not in sys.path:
+                        sys.path.insert(0, project_root)
+
+                    from vector_memory import get_vector_manager
+
+                    vector_manager = get_vector_manager()
+
+                    if user_data:
+                        timestamp = datetime.now().isoformat()
+                        message_id = hashlib.md5(
+                            f"{user_data['user_id']}_{timestamp}_{user_data['content']}".encode()
+                        ).hexdigest()
+                        vector_manager.add_message(
+                            message_id=message_id,
+                            content=user_data["content"],
+                            user_id=user_data["user_id"],
+                            user_name=user_data["user_name"],
+                            group_id=user_data["group_id"],
+                            timestamp=timestamp,
+                        )
+                    if bot_data:
+                        timestamp = datetime.now().isoformat()
+                        message_id = hashlib.md5(
+                            f"bot_{timestamp}_{bot_data['content']}".encode()
+                        ).hexdigest()
+                        vector_manager.add_message(
+                            message_id=message_id,
+                            content=bot_data["content"],
+                            user_id="1204222398",
+                            user_name="雷帝",
+                            group_id=bot_data["group_id"],
+                            timestamp=timestamp,
+                        )
+                except Exception as e:
+                    self.logger.warning(f"Failed to sync to vector DB: {e}")
+
+            threading.Thread(
+                target=_sync_vector, args=(user_payload, bot_payload), daemon=True
+            ).start()
 
         return {}
