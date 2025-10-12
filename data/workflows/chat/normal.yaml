@@ -161,7 +161,7 @@ blocks:
   - type: internal:chat_memory_query
     name: query_memory
     params:
-      scope_type: group
+      scope_type: member
     position:
       x: 419
       y: 462
@@ -309,7 +309,7 @@ blocks:
   - type: internal:chat_memory_store
     name: chat_memory_store_a0fj1l
     params:
-      scope_type: group
+      scope_type: member
     position:
       x: 1663
       y: 192
