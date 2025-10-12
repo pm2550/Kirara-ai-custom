@@ -226,14 +226,53 @@ blocks:
       x: 1658
       y: 344
     connected_to:
-      - target: 6edd5c0c-a538-45ab-bb50-4c3a906bb1b1
+      - target: emoji_parser_code_block
         mapping:
           from: text
-          to: text
-  - type: internal:text_to_im_message
-    name: 6edd5c0c-a538-45ab-bb50-4c3a906bb1b1
+          to: llm_text
+  - type: internal:code
+    name: emoji_parser_code_block
     params:
-      split_by: <break>
+      code: |
+        import re
+        from kirara_ai.im.message import IMMessage, TextMessage, EmojiMessage
+        from kirara_ai.im.sender import ChatSender
+
+        def execute(llm_text):
+            message_elements = []
+
+            segments = llm_text.split("<break>")
+
+            for segment in segments:
+                segment = segment.strip()
+                if not segment:
+                    continue
+
+                face_pattern = r'\[face:(\d+)\]'
+                parts = re.split(face_pattern, segment)
+
+                for i, part in enumerate(parts):
+                    if i % 2 == 0:
+                        if part.strip():
+                            message_elements.append(TextMessage(part.strip()))
+                    else:
+                        message_elements.append(EmojiMessage(face_id=part))
+
+            if not message_elements:
+                message_elements = [TextMessage(llm_text)]
+
+            return {
+                "msg": IMMessage(
+                    sender=ChatSender.get_bot_sender(),
+                    message_elements=message_elements
+                )
+            }
+      inputs:
+        - name: llm_text
+          label: LLM文本
+      outputs:
+        - name: msg
+          label: IM消息
     position:
       x: 1918
       y: 347

@@ -273,18 +273,6 @@ blocks:
       x: 1788
       y: 347
     connected_to:
-      - target: 6edd5c0c-a538-45ab-bb50-4c3a906bb1b1
-        mapping:
-          from: msg
-          to: msg
-  - type: internal:text_to_im_message
-    name: 6edd5c0c-a538-45ab-bb50-4c3a906bb1b1
-    params:
-      split_by: <break>
-    position:
-      x: 1918
-      y: 347
-    connected_to:
       - target: msg_sender_lakgf8
         mapping:
           from: msg
