@@ -217,6 +217,17 @@ class ChatMemoryStore(Block):
         except Exception as exc:
             self.logger.warning(f"Failed to prepare vector payload: {exc}")
 
+        _log_file = r"C:\Users\pm\Desktop\QQBot\vector_sync_file.log"
+
+        def _f_log(text: str) -> None:
+            try:
+                from datetime import datetime as _dt
+
+                with open(_log_file, "a", encoding="utf-8") as _f:
+                    _f.write(f"[{_dt.now().strftime('%H:%M:%S')}] [VectorSync] {text}\n")
+            except Exception:
+                pass
+
         if user_payload or bot_payload:
             def _sync_vector(user_data: Optional[Dict[str, Any]], bot_data: Optional[Dict[str, Any]]):
                 try:
@@ -235,11 +246,16 @@ class ChatMemoryStore(Block):
 
                     vector_manager = get_vector_manager()
 
+                    _f_log("Manager ready (async thread)")
+
                     if user_data:
                         timestamp = datetime.now().isoformat()
                         message_id = hashlib.md5(
                             f"{user_data['user_id']}_{timestamp}_{user_data['content']}".encode()
                         ).hexdigest()
+                        _f_log(
+                            f"USER add_message id={message_id} len={len(user_data['content'])}"
+                        )
                         vector_manager.add_message(
                             message_id=message_id,
                             content=user_data["content"],
@@ -248,11 +264,15 @@ class ChatMemoryStore(Block):
                             group_id=user_data["group_id"],
                             timestamp=timestamp,
                         )
+                        _f_log("USER synced OK (async thread)")
                     if bot_data:
                         timestamp = datetime.now().isoformat()
                         message_id = hashlib.md5(
                             f"bot_{timestamp}_{bot_data['content']}".encode()
                         ).hexdigest()
+                        _f_log(
+                            f"BOT add_message id={message_id} len={len(bot_data['content'])}"
+                        )
                         vector_manager.add_message(
                             message_id=message_id,
                             content=bot_data["content"],
@@ -261,8 +281,10 @@ class ChatMemoryStore(Block):
                             group_id=bot_data["group_id"],
                             timestamp=timestamp,
                         )
+                        _f_log("BOT synced OK (async thread)")
                 except Exception as e:
                     self.logger.warning(f"Failed to sync to vector DB: {e}")
+                    _f_log(f"ERROR {e}")
 
             threading.Thread(
                 target=_sync_vector, args=(user_payload, bot_payload), daemon=True
