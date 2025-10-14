@@ -349,14 +349,14 @@ blocks:
                 formatted_results = []
                 for r in vector_results:
                     user_name = r.get("user_name", "")
-                    if user_name in {"雷帝", "隐秘的阿雷", "雷猪猪"}:
-                        continue
+                    is_bot = user_name in {"雷帝", "隐秘的阿雷", "雷猪猪"}
                     formatted_results.append({
                         "content": r["content"],
                         "user_name": r["user_name"],
                         "timestamp": r["timestamp"],
                         "similarity": 1 - r["distance"],
-                        "source": "vector"
+                        "source": "vector",
+                        "is_bot": is_bot
                     })
                 
                 return {
@@ -398,38 +398,61 @@ blocks:
             recent_count = recent_count or 0
             keyword_count = keyword_count or 0
 
+            def split_bot(items):
+                user_items = []
+                bot_items = []
+                for item in items:
+                    if item.get("is_bot"):
+                        bot_items.append(item)
+                    else:
+                        user_items.append(item)
+                return user_items, bot_items
+
+            def dedup_append(target, source, seen, limit=5):
+                for entry in source:
+                    if len(target) >= limit:
+                        break
+                    key = (entry.get("content"), entry.get("timestamp"), entry.get("is_bot", False))
+                    if key in seen:
+                        continue
+                    seen.add(key)
+                    target.append(entry)
+
+            recent_user, recent_bot = split_bot(recent_results)
+            keyword_user, keyword_bot = split_bot(keyword_results)
+            vector_user, vector_bot = split_bot(vector_results)
+
+            final_results = []
+            search_method = "没有结果"
+            seen = set()
+
             if recent_count > 0:
-                final_results = recent_results[:5]
+                dedup_append(final_results, recent_user, seen)
+                dedup_append(final_results, recent_bot, seen)
                 search_method = "最近对话"
-            elif keyword_count >= 3:
-                final_results = keyword_results[:5]
+            elif keyword_count >= 3 and keyword_user:
+                dedup_append(final_results, keyword_user, seen)
+                dedup_append(final_results, keyword_bot, seen)
                 search_method = "关键词搜索"
             else:
-                seen = set()
-                final_results = []
-
-                for r in keyword_results:
-                    key = (r.get("content"), r.get("timestamp"))
-                    if key not in seen:
-                        seen.add(key)
-                        final_results.append(r)
-
+                search_method = "向量搜索"
+                dedup_append(final_results, keyword_user, seen)
                 if keyword_count > 0 and final_results:
                     search_method = f"关键词({keyword_count}条)"
                 elif keyword_count > 0:
                     search_method = f"关键词({keyword_count}条)"
-                else:
-                    search_method = "向量搜索"
 
-                for r in vector_results:
-                    if len(final_results) >= 5:
-                        break
-                    key = (r.get("content"), r.get("timestamp"))
-                    if key not in seen:
-                        seen.add(key)
-                        final_results.append(r)
-                        if keyword_count > 0:
-                            search_method = f"关键词({keyword_count}条) + 向量补充"
+                dedup_append(final_results, vector_user, seen)
+
+                if len(final_results) < 5:
+                    dedup_append(final_results, keyword_bot, seen)
+                if len(final_results) < 5:
+                    dedup_append(final_results, vector_bot, seen)
+
+                if keyword_count > 0 and any(r.get("source") == "vector" for r in final_results):
+                    search_method = f"关键词({keyword_count}条) + 向量补充"
+
+            final_results = final_results[:5]
 
             if final_results:
                 context = f"📊 搜索方式: {search_method}\n\n"
