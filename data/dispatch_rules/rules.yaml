@@ -114,6 +114,16 @@
         - 聊了
         - 讨论过
         - 提到过
+        - 是谁
+        - 是什么
+        - 在哪里
+        - 谁
+        - 哪个
+        - 什么
+        - 哪
+        - 如何
+        - 评价
+        - 刚刚
   metadata:
     category: chat
     permission: user
