@@ -232,9 +232,8 @@ blocks:
         from kirara_ai.im.sender import ChatSender
         
         def execute(llm_text):
-            message_elements = []
+            messages = []
             
-            # 按 <break> 分段
             segments = llm_text.split("<break>")
             
             for segment in segments:
@@ -242,42 +241,51 @@ blocks:
                 if not segment:
                     continue
                 
-                # 解析每段中的 [face:ID] 标签
+                elements = []
                 face_pattern = r'\[face:(\d+)\]'
                 parts = re.split(face_pattern, segment)
                 
                 for i, part in enumerate(parts):
-                    if i % 2 == 0:  # 文本部分
-                        if part.strip():
-                            message_elements.append(TextMessage(part.strip()))
-                    else:  # 表情 ID
-                        message_elements.append(EmojiMessage(face_id=part))
+                    if i % 2 == 0:
+                        text_part = part.strip()
+                        if text_part:
+                            elements.append(TextMessage(text_part))
+                    else:
+                        elements.append(EmojiMessage(face_id=part))
+                
+                if elements:
+                    messages.append(
+                        IMMessage(
+                            sender=ChatSender.get_bot_sender(),
+                            message_elements=elements
+                        )
+                    )
             
-            # 如果没有任何元素,添加空文本
-            if not message_elements:
-                message_elements = [TextMessage(llm_text)]
+            if not messages:
+                messages = [
+                    IMMessage(
+                        sender=ChatSender.get_bot_sender(),
+                        message_elements=[TextMessage(llm_text.strip())]
+                    )
+                ]
             
-            # 创建并返回 IMMessage
             return {
-                "msg": IMMessage(
-                    sender=ChatSender.get_bot_sender(),
-                    message_elements=message_elements
-                )
+                "msgs": messages
             }
       inputs:
         - name: llm_text
           label: LLM文本
       outputs:
-        - name: msg
-          label: IM消息
+        - name: msgs
+          label: IM消息列表
     position:
       x: 1788
       y: 347
     connected_to:
       - target: msg_sender_lakgf8
         mapping:
-          from: msg
-          to: msg
+          from: msgs
+          to: msgs
   - type: internal:toggle_edit_state
     name: toggle_edit_state_svmo3f
     params:
@@ -309,7 +317,7 @@ blocks:
     position:
       x: 1663
       y: 192
-  - type: internal:send_message
+  - type: internal:send_message_batch
     name: msg_sender_lakgf8
     params: {}
     position:

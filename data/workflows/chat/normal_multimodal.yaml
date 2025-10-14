@@ -258,51 +258,49 @@ blocks:
         from kirara_ai.im.message import IMMessage, TextMessage, EmojiMessage
         
         def execute(input_msg):
-            new_elements = []
+            messages = []
+            
+            def add_message(elements):
+                if elements:
+                    messages.append(IMMessage(sender=input_msg.sender, message_elements=elements))
             
             for element in input_msg.message_elements:
-                # 只处理 TextMessage
                 if isinstance(element, TextMessage):
-                    text = element.text
+                    text = element.text or ""
                     face_pattern = r'\[face:(\d+)\]'
                     parts = re.split(face_pattern, text)
                     
                     for i, part in enumerate(parts):
-                        if i % 2 == 0:  # 文本部分
-                            if part.strip():
-                                new_elements.append(TextMessage(part.strip()))
-                        else:  # 表情 ID
-                            new_elements.append(EmojiMessage(face_id=part))
+                        if i % 2 == 0:
+                            text_part = part.strip()
+                            if text_part:
+                                add_message([TextMessage(text_part)])
+                        else:
+                            add_message([EmojiMessage(face_id=part)])
                 else:
-                    # 保留其他类型的元素 (图片、视频等)
-                    new_elements.append(element)
+                    add_message([element])
             
-            # 如果没有任何元素,保持原样
-            if not new_elements:
-                new_elements = input_msg.message_elements
+            if not messages:
+                messages = [input_msg]
             
-            # 创建新的 IMMessage
             return {
-                "msg": IMMessage(
-                    sender=input_msg.sender,
-                    message_elements=new_elements
-                )
+                "msgs": messages
             }
       inputs:
         - name: input_msg
           label: 输入消息
       outputs:
-        - name: msg
-          label: 输出消息
+        - name: msgs
+          label: 输出消息列表
     position:
       x: 1860
       y: 138
     connected_to:
       - target: SendIMMessage_l6qagt
         mapping:
-          from: msg
-          to: msg
-  - type: internal:send_message
+          from: msgs
+          to: msgs
+  - type: internal:send_message_batch
     name: SendIMMessage_l6qagt
     params: {}
     position:

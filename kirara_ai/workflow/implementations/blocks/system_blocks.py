@@ -10,7 +10,7 @@ from kirara_ai.workflow.implementations.blocks.system.basic import (CodeBlock, C
 
 from .game.dice import DiceRoll
 from .game.gacha import GachaSimulator
-from .im.messages import AppendIMMessage, GetIMMessage, IMMessageToText, SendIMMessage, TextToIMMessage
+from .im.messages import AppendIMMessage, GetIMMessage, IMMessageToText, SendIMMessage, SendIMMessageBatch, TextToIMMessage
 from .im.states import ToggleEditState
 from .llm.chat import ChatCompletion, ChatCompletionWithTools, ChatMessageConstructor, ChatResponseConverter
 from .memory.chat_memory import ChatMemoryQuery, ChatMemoryStore
@@ -30,6 +30,7 @@ def register_system_blocks(registry: BlockRegistry):
     # IM 相关 blocks
     registry.register("get_message", "internal", GetIMMessage, "IM: 获取最新消息")
     registry.register("send_message", "internal", SendIMMessage, "IM: 发送消息")
+    registry.register("send_message_batch", "internal", SendIMMessageBatch, "IM: 批量发送消息")
     registry.register(
         "toggle_edit_state", "internal", ToggleEditState, "IM: 切换编辑状态"
     )

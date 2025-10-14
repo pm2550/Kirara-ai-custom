@@ -550,7 +550,9 @@ blocks:
                 - 热衷邀战和带节奏，经常@好友一起玩游戏
 
                 ## 说话风格
-                - **口头禅（根据语境选用，绝不是每句都用）**："dds"（只有在惊讶或反驳时才喊）、"可惜"(不认同时才说)、"怎么这么弱"、"太愚蠢了"、"我厉害吧"、"九五至尊"、"丢大师"、"我出现了"、"我失踪了"、"呼哈哈哈哈"、"呼呼呼"、"真愚蠢"、"弱弱"、"笨笨"、"我什么都不会"、"我只会吃，还会睡"、"我将在[时间]后失踪"；不要机械地每轮都用同样两三句开场，必须贴合语境选择
+                - **口头禅（根据语境选用，绝不是每句都用）**："dds"（不认同的时候说）、"可惜"(要反驳的时候说)、"怎么这么弱"、"太愚蠢了"（沮丧，生气，难受）、"我厉害吧"（炫耀，高兴）、"九五至尊"、"丢大师"（同dds,情感更强烈）、"我出现了"（作为开场白）、
+                "我失踪了"(希望有人找他说话或者不想继续讨论)、"呼哈哈哈哈"（非常高兴，炫耀，喜悦）、"呼呼呼"（弱一点的兴奋，一般是做完一件事之后的满足和开心）、"真愚蠢"（生气，愤怒）、"弱弱"（评价别人）、"笨笨"（评价别人）、"我什么都不会"（非常沮丧）、"我什么都不会"（非常沮丧）、
+                "我只会吃，还会睡"（自暴自弃）、"我将在[时间]后失踪"（希望赶紧有人找他说话）；不要机械地每轮都用同样两三句开场，必须贴合语境选择
                 - **叠词习惯**：喜欢重复加强语气，如"猪猪、"弱弱"、"跑跑"、"贪贪"、"慢慢"、"笨笨"、"挂挂"
                 - **句末语气词**：短句偶尔会使用"诶"结尾，如"不懂诶"、"弱弱诶"，不会频繁使用
                 - **频繁反问感叹**："为什么不[动作]陆"、"为何无敌"、"有什么用"
@@ -799,7 +801,7 @@ blocks:
         from kirara_ai.im.sender import ChatSender
         
         def execute(llm_text):
-            message_elements = []
+            messages = []
             segments = llm_text.split("<break>")
             
             for segment in segments:
@@ -807,42 +809,54 @@ blocks:
                 if not segment:
                     continue
                 
+                elements = []
                 face_pattern = r'\[face:(\d+)\]'
                 parts = re.split(face_pattern, segment)
                 
                 for i, part in enumerate(parts):
                     if i % 2 == 0:
-                        if part.strip():
-                            message_elements.append(TextMessage(part.strip()))
+                        text = part.strip()
+                        if text:
+                            elements.append(TextMessage(text))
                     else:
-                        message_elements.append(EmojiMessage(face_id=part))
+                        elements.append(EmojiMessage(face_id=part))
+                
+                if elements:
+                    messages.append(
+                        IMMessage(
+                            sender=ChatSender.get_bot_sender(),
+                            message_elements=elements
+                        )
+                    )
             
-            if not message_elements:
-                message_elements = [TextMessage(llm_text)]
+            if not messages:
+                messages = [
+                    IMMessage(
+                        sender=ChatSender.get_bot_sender(),
+                        message_elements=[TextMessage(llm_text.strip())]
+                    )
+                ]
             
             return {
-                "msg": IMMessage(
-                    sender=ChatSender.get_bot_sender(),
-                    message_elements=message_elements
-                )
+                "msgs": messages
             }
       inputs:
         - name: llm_text
           label: LLM文本
       outputs:
-        - name: msg
-          label: IM消息
+        - name: msgs
+          label: IM消息列表
     position:
       x: 1800
       y: 300
     connected_to:
-      - target: msg_sender
+      - target: msg_sender_batch
         mapping:
-          from: msg
-          to: msg
+          from: msgs
+          to: msgs
   
-  - type: internal:send_message
-    name: msg_sender
+  - type: internal:send_message_batch
+    name: msg_sender_batch
     params: {}
     position:
       x: 2000

@@ -1,4 +1,5 @@
 import asyncio
+import random
 from typing import Annotated, Any, Dict, List, Optional
 
 from kirara_ai.im.adapter import IMAdapter
@@ -62,6 +63,72 @@ class SendIMMessage(Block):
             asyncio.AbstractEventLoop
         )
         loop.create_task(adapter.send_message(msg, target or src_msg.sender))
+        return {"ok": True}
+
+
+class SendIMMessageBatch(Block):
+    """批量发送 IM 消息"""
+
+    name = "msg_sender_batch"
+    inputs = {
+        "msgs": Input("msgs", "IM 消息列表", List[IMMessage], "要发送的消息列表"),
+        "target": Input(
+            "target",
+            "发送对象",
+            ChatSender,
+            "要发送给谁，如果填空则默认发送给消息的发送者",
+            nullable=True,
+        ),
+    }
+    outputs = {}
+    container: DependencyContainer
+
+    def __init__(
+        self,
+        im_name: Annotated[Optional[str], ParamMeta(label="聊天平台适配器名称", options_provider=im_adapter_options_provider)] = None,
+        interval_ms: Annotated[Optional[int], ParamMeta(label="逐条发送基础间隔 (毫秒)")] = 900,
+        jitter_ms: Annotated[Optional[int], ParamMeta(label="附加随机延迟上限 (毫秒)")] = 400,
+    ):
+        self.im_name = im_name
+        self.interval_ms = max(interval_ms or 0, 0)
+        self.jitter_ms = max(jitter_ms or 0, 0)
+
+    def execute(
+        self, msgs: List[IMMessage], target: Optional[ChatSender] = None
+    ) -> Dict[str, Any]:
+        if isinstance(msgs, IMMessage):
+            msgs = [msgs]
+        elif not isinstance(msgs, list):
+            msgs = msgs or []
+
+        if not msgs:
+            return {"ok": True}
+
+        src_msg = self.container.resolve(IMMessage)
+        if not self.im_name:
+            adapter = self.container.resolve(IMAdapter)
+        else:
+            adapter = self.container.resolve(
+                IMManager).get_adapter(self.im_name)
+        loop: asyncio.AbstractEventLoop = self.container.resolve(
+            asyncio.AbstractEventLoop
+        )
+        recipient = target or src_msg.sender
+        base_interval = self.interval_ms / 1000.0
+        jitter_interval = self.jitter_ms / 1000.0
+
+        async def _send_all():
+            for idx, msg in enumerate(msgs):
+                if not isinstance(msg, IMMessage):
+                    continue
+                if idx > 0 and (base_interval > 0 or jitter_interval > 0):
+                    delay = base_interval
+                    if jitter_interval > 0:
+                        delay += random.uniform(0, jitter_interval)
+                    await asyncio.sleep(delay)
+                await adapter.send_message(msg, recipient)
+
+        loop.create_task(_send_all())
         return {"ok": True}
 
 # IMMessage 转纯文本
