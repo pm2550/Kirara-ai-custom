@@ -1,0 +1,76 @@
+id: chat:alei_song_full
+name: 雷帝点歌 - 完整随机
+description: 玩家发送“完整阿雷歌曲”时，从完整版语音中随机挑选一段播放。
+version: '1.0'
+blocks:
+  - type: internal:get_message
+    name: get_message
+    params: {}
+    position:
+      x: 100
+      y: 200
+    connected_to:
+      - target: pick_full_clip
+        mapping:
+          from: sender
+          to: chat_sender
+
+  - type: internal:code
+    name: pick_full_clip
+    params:
+      code: |
+        import random
+        from pathlib import Path
+        from kirara_ai.im.message import IMMessage, VoiceMessage, TextMessage
+        from kirara_ai.im.sender import ChatSender
+
+        def execute(chat_sender):
+            clips_dir = Path("media/silk_full").resolve()
+            if not clips_dir.exists():
+                raise FileNotFoundError(f"完整版语音目录不存在: {clips_dir}")
+
+            clips = [p for p in clips_dir.glob("*.silk") if p.is_file()]
+            if not clips:
+                raise FileNotFoundError(f"完整版语音目录 {clips_dir} 下没有 silk 文件")
+
+            selected = random.choice(clips)
+            voice_element = VoiceMessage(path=str(selected), format="silk")
+            message = IMMessage(
+                sender=ChatSender.get_bot_sender(),
+                message_elements=[voice_element]
+            )
+
+            return {
+                "msgs": [message],
+                "target": chat_sender,
+                "selected_clip": str(selected)
+            }
+      inputs:
+        - name: chat_sender
+          label: 目标
+      outputs:
+        - name: msgs
+          label: 语音消息
+        - name: target
+          label: 目标
+        - name: selected_clip
+          label: 已选择语音
+    position:
+      x: 320
+      y: 200
+    connected_to:
+      - target: msg_sender
+        mapping:
+          from: msgs
+          to: msgs
+      - target: msg_sender
+        mapping:
+          from: target
+          to: target
+
+  - type: internal:send_message_batch
+    name: msg_sender
+    params: {}
+    position:
+      x: 560
+      y: 200

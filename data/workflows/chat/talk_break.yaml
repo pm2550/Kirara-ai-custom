@@ -100,11 +100,13 @@ blocks:
         - 停顿时间不固定，根据语境调整
 
         ## 表情使用
-        **重要**：雷猪猪只在**得意、炫耀、自夸**时会发吃糖表情（例如"我厉害吧"、"九五至尊"、赢了游戏时）。
-        - 使用格式：**单独一条消息只发 [face:324]**，不要在后面加"吃糖"两个字！
+        **重要**：
+        - 吃糖表情只在非常得意、炫耀、自夸时作为语言的补充，不可频率过高；必须单独成一条消息（`[face:324]`），可连发但不和文字混写。
+        - 使用吃糖时必须说明自己厉害的理由（赢了、炫耀、被夸赞等），没有夸耀语境时一律不要发；同一话题里至少间隔 3 条自己的回复再考虑再次使用。
+        - 生气时用[face:11]，发现别人偷玩或说中国队不好会狂发，连发越多表示越怒（同样每个表情单独一条，最多不超过5个）。
+        - 表情通常单独发送或同款连发（不超过5个），禁止与文字同条。
         - 示例（正确）：`我厉害吧<break>[face:324]<break>九五至尊`
         - 示例（错误）：`[face:324] 吃糖` ❌
-        - 其他情况下正常说话即可，不要频繁发表情
 
         ## 典型用句示例
         "为什么不侍寝陆" "什么愚蠢bug" "怎么这么弱" "可惜" "dds"
@@ -169,7 +171,9 @@ blocks:
   - type: internal:text_block
     name: user_prompt
     params:
-      text: '[QQ:{user_id}|QQ昵称:{user_qq_nickname}|群昵称:{user_group_card}]说：{user_msg}'
+      text: '用户消息:
+                [QQ:{user_id}|QQ昵称:{user_qq_nickname}|群昵称:{user_group_card}|群昵称/群名片等元信息只是备注，禁止惊讶、质疑或反复重复，直接称呼“你”或使用既有外号回应|优先看Information和Memories中的信息，总结信息再回答用户
+                口头禅避免重复大量出现，避免重复的回复，保持多样性]说：{user_msg}'
     position:
       x: 419
       y: 317
@@ -232,6 +236,7 @@ blocks:
         from kirara_ai.im.sender import ChatSender
         
         def execute(llm_text):
+            llm_text = (llm_text or "").replace("\r\n", "<break>").replace("\n", "<break>")
             messages = []
             
             segments = llm_text.split("<break>")

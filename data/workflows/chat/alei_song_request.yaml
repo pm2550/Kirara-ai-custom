@@ -1,0 +1,114 @@
+id: chat:alei_song_request
+name: 雷帝点歌 - 指定歌曲
+description: 解析“点歌：xxx”消息，根据歌名播放对应语音。
+version: '1.0'
+blocks:
+  - type: internal:get_message
+    name: get_message
+    params: {}
+    position:
+      x: 100
+      y: 220
+    connected_to:
+      - target: handle_request
+        mapping:
+          from: sender
+          to: chat_sender
+      - target: handle_request
+        mapping:
+          from: msg
+          to: user_msg
+
+  - type: internal:code
+    name: handle_request
+    params:
+      code: |
+        from pathlib import Path
+        import re
+        from kirara_ai.im.message import IMMessage, VoiceMessage, TextMessage
+        from kirara_ai.im.sender import ChatSender
+
+        SONG_LIBRARY = {
+            "雷猪猪之歌": ("media/silk_full/leizhuzhu_full.silk", "雷猪猪之歌"),
+            "大家一起雷猪猪": ("media/silk_full/leizhuzhu_full.silk", "雷猪猪之歌"),
+            "陆陆宝宝打雷了": ("media/silk_full/alei_extra_full.silk", "陆陆宝宝打雷了"),
+            "陆陆宝宝打雷": ("media/silk_full/alei_extra_full.silk", "陆陆宝宝打雷了"),
+        }
+
+        def normalize(text: str) -> str:
+            return text.strip().replace(" ", "")
+
+        def execute(chat_sender, user_msg):
+            content = getattr(user_msg, "content", "") or ""
+            content = content.strip()
+            match = re.search(r"点歌[:：]\s*(.+)", content, re.IGNORECASE)
+            if not match:
+                message = IMMessage(
+                    sender=ChatSender.get_bot_sender(),
+                    message_elements=[TextMessage("唱啥？格式是：点歌：歌名")]
+                )
+                return {"msgs": [message], "target": chat_sender}
+
+            song_name_raw = match.group(1).strip()
+            song_key = normalize(song_name_raw)
+
+            selected = None
+            for name, (path, display) in SONG_LIBRARY.items():
+                if normalize(name) == song_key:
+                    selected = (Path(path).resolve(), display)
+                    break
+
+            if not selected:
+                options = sorted({info[1] for info in SONG_LIBRARY.values()})
+                tips = "\\n".join([f"- {opt}" for opt in options])
+                message = IMMessage(
+                    sender=ChatSender.get_bot_sender(),
+                    message_elements=[
+                        TextMessage(f"没找到《{song_name_raw}》，可选歌单：\\n{tips}")
+                    ]
+                )
+                return {"msgs": [message], "target": chat_sender}
+
+            path, display = selected
+            if not path.exists():
+                message = IMMessage(
+                    sender=ChatSender.get_bot_sender(),
+                    message_elements=[TextMessage(f"语音文件缺失：{path}")]
+                )
+                return {"msgs": [message], "target": chat_sender}
+
+            voice = VoiceMessage(path=str(path), format="silk")
+            message = IMMessage(
+                sender=ChatSender.get_bot_sender(),
+                message_elements=[voice]
+            )
+            return {"msgs": [message], "target": chat_sender}
+      inputs:
+        - name: chat_sender
+          label: 目标
+        - name: user_msg
+          label: 用户消息
+      outputs:
+        - name: msgs
+          label: 语音或提示
+        - name: target
+          label: 目标
+    position:
+      x: 360
+      y: 220
+    connected_to:
+      - target: msg_sender
+        mapping:
+          from: msgs
+          to: msgs
+      - target: msg_sender
+        mapping:
+          from: target
+          to: target
+
+  - type: internal:send_message_batch
+    name: msg_sender
+    params: {}
+    position:
+      x: 620
+      y: 220

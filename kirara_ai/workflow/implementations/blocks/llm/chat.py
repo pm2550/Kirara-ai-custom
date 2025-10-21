@@ -210,7 +210,8 @@ class ChatResponseConverter(Block):
         for part in resp.message.content:
             if isinstance(part, LLMChatTextContent):
                 # 通过 <break> 将回答分为不同的 TextMessage
-                for element in part.text.split("<break>"):
+                text = part.text.replace("\r\n", "<break>").replace("\n", "<break>")
+                for element in text.split("<break>"):
                     if element.strip():
                         message_elements.append(TextMessage(element.strip()))
             elif isinstance(part, LLMChatImageContent):

@@ -1,0 +1,68 @@
+id: chat:alei_song_catalog
+name: 雷帝点歌 - 歌曲目录
+description: 玩家请求“阿雷歌曲目录”时，返回可用歌曲列表。
+version: '1.0'
+blocks:
+  - type: internal:get_message
+    name: get_message
+    params: {}
+    position:
+      x: 100
+      y: 200
+    connected_to:
+      - target: build_catalog
+        mapping:
+          from: sender
+          to: chat_sender
+
+  - type: internal:code
+    name: build_catalog
+    params:
+      code: |
+        from kirara_ai.im.message import IMMessage, TextMessage
+        from kirara_ai.im.sender import ChatSender
+
+        SONG_DISPLAY = [
+            "雷猪猪之歌",
+            "陆陆宝宝打雷了",
+        ]
+
+        def execute(chat_sender):
+            lines = ["雷帝歌单："]
+            for idx, title in enumerate(SONG_DISPLAY, start=1):
+                lines.append(f"{idx}. {title}")
+            message = IMMessage(
+                sender=ChatSender.get_bot_sender(),
+                message_elements=[TextMessage("\n".join(lines))]
+            )
+            return {
+                "msgs": [message],
+                "target": chat_sender
+            }
+      inputs:
+        - name: chat_sender
+          label: 目标
+      outputs:
+        - name: msgs
+          label: 目录消息
+        - name: target
+          label: 目标
+    position:
+      x: 320
+      y: 200
+    connected_to:
+      - target: msg_sender
+        mapping:
+          from: msgs
+          to: msgs
+      - target: msg_sender
+        mapping:
+          from: target
+          to: target
+
+  - type: internal:send_message_batch
+    name: msg_sender
+    params: {}
+    position:
+      x: 560
+      y: 200

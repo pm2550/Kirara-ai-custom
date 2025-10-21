@@ -37,12 +37,94 @@
     category: chat
     permission: user
     temperature: 0.9
+- rule_id: chat_alei_song
+  name: 雷帝点歌
+  description: 玩家发送“阿雷歌曲”时随机播放语音
+  workflow_id: chat:alei_song
+  priority: 15
+  enabled: true
+  rule_groups:
+  - operator: or
+    rules:
+    - type: regex
+      config:
+        pattern: ^阿雷歌曲$
+  - operator: or
+    rules:
+    - type: chat_type
+      config:
+        chat_type: 群聊
+  metadata:
+    category: chat
+    permission: user
+- rule_id: chat_alei_song_full
+  name: 雷帝点歌（完整版）
+  description: 玩家发送“完整阿雷歌曲”时随机播放完整版语音
+  workflow_id: chat:alei_song_full
+  priority: 25
+  enabled: true
+  rule_groups:
+  - operator: or
+    rules:
+    - type: keyword
+      config:
+        keywords:
+        - 完整阿雷歌曲
+  - operator: or
+    rules:
+    - type: chat_type
+      config:
+        chat_type: 群聊
+  metadata:
+    category: chat
+    permission: user
+- rule_id: chat_alei_song_catalog
+  name: 雷帝点歌目录
+  description: 返回阿雷歌曲列表
+  workflow_id: chat:alei_song_catalog
+  priority: 20
+  enabled: true
+  rule_groups:
+  - operator: or
+    rules:
+    - type: keyword
+      config:
+        keywords:
+        - 阿雷歌曲目录
+  - operator: or
+    rules:
+    - type: chat_type
+      config:
+        chat_type: 群聊
+  metadata:
+    category: chat
+    permission: user
+- rule_id: chat_alei_song_request
+  name: 雷帝点歌（指定歌曲）
+  description: 解析“点歌：歌名”并播放对应歌曲
+  workflow_id: chat:alei_song_request
+  priority: 20
+  enabled: true
+  rule_groups:
+  - operator: or
+    rules:
+    - type: regex
+      config:
+        pattern: ^点歌[:：].+
+  - operator: or
+    rules:
+    - type: chat_type
+      config:
+        chat_type: 群聊
+  metadata:
+    category: chat
+    permission: user
 - rule_id: game_dice
   name: 骰子
   description: 骰子游戏，支持 XdY 格式
   workflow_id: game:dice
   priority: 5
-  enabled: true
+  enabled: false
   rule_groups:
   - operator: or
     rules:
@@ -55,7 +137,7 @@
   description: 抽卡模拟器
   workflow_id: game:gacha
   priority: 5
-  enabled: true
+  enabled: false
   rule_groups:
   - operator: or
     rules:
@@ -124,6 +206,7 @@
         - 如何
         - 评价
         - 刚刚
+        - 为何
   metadata:
     category: chat
     permission: user
@@ -147,7 +230,7 @@
   description: 清空当前对话的记忆
   workflow_id: system:clear_memory
   priority: 10
-  enabled: true
+  enabled: false
   rule_groups:
   - operator: or
     rules:
