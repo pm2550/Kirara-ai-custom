@@ -1,53 +1,16 @@
+# Kirara AI - Custom Configuration
 
-<p align="center">
-  <h2 align="center">Kirara AI</h2>
-  <p align="center">
-    一款支持主流大语言模型、主流聊天平台的聊天的机器人！
-    <br/>
-    <br/>
-    <a href="https://kirara-docs.app.lss233.com/"><strong>» 查看项目手册 »</strong></a>
-    <br/>
-  </p>
-</p>
+This is my custom configuration for Kirara AI.
 
-<p align="center">
-  <a href="https://github.com/lss233/kirara-ai/stargazers"><img src="https://img.shields.io/github/stars/lss233/kirara-ai?color=F8B195&amp;logo=github&amp;style=for-the-badge" alt="Github stars"></a>
-  <a href="https://pypi.org/project/kirara-ai/"><img src="https://img.shields.io/pypi/v/kirara-ai?color=F67280&amp;logo=pypi&amp;logoColor=white&amp;style=for-the-badge" alt="PyPI"></a>
-  <a href="./LICENSE"><img src="https://img.shields.io/github/license/lss233/kirara-ai?&amp;color=C06C84&amp;style=for-the-badge" alt="License"></a>
-</p>
+## About
 
-<p align="center">
-  <a href="https://github.com/lss233/kirara-ai/actions/workflows/docker-latest.yml"><img src="https://img.shields.io/github/actions/workflow/status/lss233/kirara-ai/docker-latest.yml?color=6C5B7B&amp;logo=docker&amp;logoColor=white&amp;style=for-the-badge" alt="Docker build latest"></a>
-  <a href="https://hub.docker.com/r/lss233/kirara-ai/"><img src="https://img.shields.io/docker/pulls/lss233/kirara-agent-framework?color=355C7D&amp;logo=docker&amp;logoColor=white&amp;style=for-the-badge" alt="Docker Pulls"></a>
-  <a href="https://codecov.io/gh/lss233/kirara-ai"><img alt="Codecov" src="https://img.shields.io/codecov/c/gh/lss233/kirara-ai?color=A8E6CE&amp;logo=codecov&amp;logoColor=white&amp;style=for-the-badge"></a>
-  <img alt="Mypy checked" src="https://img.shields.io/badge/Mypy-checked-DCEDC2?style=for-the-badge&amp;logo=python&amp;logoColor=white">
-</p>
+This repository contains my personal setup and configurations for the Kirara AI chatbot.
 
-*** 
+**Original Project:** [lss233/kirara-ai](https://github.com/lss233/kirara-ai)
 
-![cover](https://raw.githubusercontent.com/Haibersut/cnblog/refs/heads/main/230783378-34ddb86a-c8d3-47a6-baa5-86e39200b258.jpg)
+## Usage
 
-*** 
-
-## 🌟 社区交流
-
-加入我们的社区，获取最新项目动态、视频教程、问题答疑和技术交流！
-
-* QQ 交流群:
-  * [二群](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=S1R4eIlODtyKZsEKfWxb2-nOIHELbeJY&authKey=kAftCAALE8OJgwQnArrD6zPtncCAaY456QgUXT3l2OMJ57NwRXRkhv4KL7DzOLzs&noverify=0&group_code=373254418)（已满）
-  * [三群](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=urlhCH8y7Ro2S-iXt63X4s5eILUny4Iw&authKey=ejiwoNa4Yez6IMLyf2vj%2FeRiC1frdFrNNekbRfaPnSQbcD7bgebo5y5A7rPaRKBq&noverify=0&group_code=533109074)（已满）
-  * [四群](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=Ibiu6EmXof30Fa7MJ5j8nJFwaUGTf5bM&authKey=YKx5a%2BK5qnWkk5VlsxxDfYl0nCrKSekQm%2FoLQVqr%2FcO%2FQY2S6N24XdI23XugBrF0&noverify=0&group_code=799737883)（已满）
-  * [五群](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=lDkVPDAeiz6M-ig9cdS9tqhSH6_topox&authKey=B%2FRPYVUjk3dYPw5D4o6C2TpqeoKTG0nXEiKDCG%2Bh4JYY2RPqDQGt37SGl32j0hHw&noverify=0&group_code=805081636)
-  * [六群](https://qm.qq.com/q/UpvYm3jccg)
-
-
-> **提问前请先查看**: 加入群组前，请先查看[项目问题列表](https://github.com/lss233/kirara-ai/issues)，看是否能解决你的问题。
-> 
-> 如需提问，请准备好问题描述、**完整日志**和相关配置文件，以便我们更好地帮助你。  
-> 进群请备注：GitHub
-
-* [机器人调试群](https://jq.qq.com/?_wv=1027&k=TBX8Saq7) - 这里有多个 QQ 机器人供体验，不解答技术问题。
-* [开发者交流群](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=lisyXibhUj93DgIZptQu3VZ4ka3F5-rW&authKey=PBCzRQX4Zei%2BB6n5Tdyp9p5bqcF0tLBlfGANT4dSSKQIFYR66WwaZSMEDahWo%2FzZ&noverify=0&group_code=701933732) - 欢迎参与 Kirara AI 及生态开发 / 对大模型应用有兴趣的开发者加入，一起交流学习。
+Refer to the [official documentation](https://kirara-docs.app.lss233.com/) for setup and usage instructions.
 
 ## 📷 功能展示
 
