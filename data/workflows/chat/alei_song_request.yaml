@@ -23,16 +23,33 @@ blocks:
     name: handle_request
     params:
       code: |
-        from pathlib import Path
+        import pathlib
         import re
         from kirara_ai.im.message import IMMessage, VoiceMessage, TextMessage
         from kirara_ai.im.sender import ChatSender
 
+        def _resolve_media_path(*parts):
+            project_media = pathlib.Path.cwd() / "media"
+            if project_media.exists():
+                return (project_media / pathlib.Path(*parts)).resolve()
+
+            try:
+                current = pathlib.Path(__file__).resolve()
+            except NameError:
+                current = pathlib.Path.cwd()
+
+            for parent in [current, *current.parents]:
+                media_root = parent / "media"
+                if media_root.exists():
+                    return (media_root / pathlib.Path(*parts)).resolve()
+
+            return (project_media / pathlib.Path(*parts)).resolve()
+
         SONG_LIBRARY = {
-            "雷猪猪之歌": ("media/silk_full/leizhuzhu_full.silk", "雷猪猪之歌"),
-            "大家一起雷猪猪": ("media/silk_full/leizhuzhu_full.silk", "雷猪猪之歌"),
-            "陆陆宝宝打雷了": ("media/silk_full/alei_extra_full.silk", "陆陆宝宝打雷了"),
-            "陆陆宝宝打雷": ("media/silk_full/alei_extra_full.silk", "陆陆宝宝打雷了"),
+            "雷猪猪之歌": (_resolve_media_path("silk_full", "leizhuzhu_full.silk"), "雷猪猪之歌"),
+            "大家一起雷猪猪": (_resolve_media_path("silk_full", "leizhuzhu_full.silk"), "雷猪猪之歌"),
+            "陆陆宝宝打雷了": (_resolve_media_path("silk_full", "alei_extra_full.silk"), "陆陆宝宝打雷了"),
+            "陆陆宝宝打雷": (_resolve_media_path("silk_full", "alei_extra_full.silk"), "陆陆宝宝打雷了"),
         }
 
         def normalize(text: str) -> str:
@@ -55,7 +72,7 @@ blocks:
             selected = None
             for name, (path, display) in SONG_LIBRARY.items():
                 if normalize(name) == song_key:
-                    selected = (Path(path).resolve(), display)
+                    selected = (path, display)
                     break
 
             if not selected:

@@ -29,3 +29,4 @@ uv.lock
 **/test-workflow-new.yaml
 **/test_password.hash
 **/media/
+models/

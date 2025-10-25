@@ -20,12 +20,29 @@ blocks:
     params:
       code: |
         import random
-        from pathlib import Path
+        import pathlib
         from kirara_ai.im.message import IMMessage, VoiceMessage, TextMessage
         from kirara_ai.im.sender import ChatSender
 
+        def _resolve_media_path(*parts):
+            project_media = pathlib.Path.cwd() / "media"
+            if project_media.exists():
+                return (project_media / pathlib.Path(*parts)).resolve()
+
+            try:
+                current = pathlib.Path(__file__).resolve()
+            except NameError:
+                current = pathlib.Path.cwd()
+
+            for parent in [current, *current.parents]:
+                media_root = parent / "media"
+                if media_root.exists():
+                    return (media_root / pathlib.Path(*parts)).resolve()
+
+            return (project_media / pathlib.Path(*parts)).resolve()
+
         def execute(chat_sender):
-            clips_dir = Path("media/silk_full").resolve()
+            clips_dir = _resolve_media_path("silk_full")
             if not clips_dir.exists():
                 raise FileNotFoundError(f"完整版语音目录不存在: {clips_dir}")
 

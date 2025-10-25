@@ -105,35 +105,35 @@ class CodeBlock(Block):
     def execute(self, **kwargs: Any) -> Dict[str, Any]: # 使用 Any 兼容各种输入类型
         logger = get_logger("Block.Code")
 
-        exec_globals = globals().copy()
-        exec_locals: Dict[str, Any] = {}
+        # 使用同一个字典作为 globals 和 locals，确保导入的模块在所有作用域中都可用
+        exec_namespace: Dict[str, Any] = globals().copy()
 
         logger.debug(f"Executing code definition:\n{self.code}")
         try:
-            exec(self.code, exec_globals, exec_locals)
+            exec(self.code, exec_namespace, exec_namespace)
         except Exception as e:
             logger.error(f"Error during code definition execution: {e}", exc_info=True)
             raise RuntimeError(f"Error in provided code definition: {e}") from e
 
-        if 'execute' not in exec_locals or not callable(exec_locals['execute']):
+        if 'execute' not in exec_namespace or not callable(exec_namespace['execute']):
             raise ValueError("Provided code must define a callable function named 'execute'")
         
-        exec_locals['__input_kwargs__'] = kwargs
-        exec_globals.update(exec_locals)
+        # 准备执行用户函数
+        exec_namespace['__input_kwargs__'] = kwargs
         call_code = "__result__ = execute(**__input_kwargs__)"
 
         logger.debug(f"Executing function call: execute(**{list(kwargs.keys())})")
         try:
-            exec(call_code, exec_globals, exec_locals)
+            exec(call_code, exec_namespace, exec_namespace)
         except Exception as e:
             logger.error(f"Error during user function 'execute' execution: {e}", exc_info=True)
             raise RuntimeError(f"Error during execution of user function 'execute': {e}") from e
 
-        if '__result__' not in exec_locals:
+        if '__result__' not in exec_namespace:
              # 如果 exec(call_code) 成功但没有 __result__，说明有内部问题
              logger.error("Internal error: Result '__result__' not found after executing user code call.")
              raise RuntimeError("Failed to retrieve result from user code execution.")
 
-        result = exec_locals['__result__']
+        result = exec_namespace['__result__']
 
         return result
