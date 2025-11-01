@@ -1,330 +1,213 @@
 name: 聊天 - 原生多模态对话
 description: 基于原生多模态能力的图文对话，适用于本身支持图片输入/回答的模型，在读取记忆时会恢复原来的媒体资源
 blocks:
-  - type: internal:get_message
-    name: get_message
-    params: {}
-    position:
-      x: 100
-      y: 138
-    connected_to:
-      - target: ToggleEditState_i24m23
-        mapping:
-          from: sender
-          to: sender
-      - target: ToggleEditState_i24m23
-        mapping:
-          from: sender
-          to: sender
-      - target: query_memory
-        mapping:
-          from: sender
-          to: chat_sender
-      - target: ChatMessageConstructor_6c185s
-        mapping:
-          from: msg
-          to: user_msg
-      - target: ChatMemoryStore_tapuo1
-        mapping:
-          from: msg
-          to: user_msg
-  - type: internal:toggle_edit_state
-    name: ToggleEditState_i24m23
-    params:
-      is_editing: true
-    position:
-      x: 530
-      y: 138
-  - type: internal:text_block
-    name: system_prompt
-    params:
-      text: |
-        # Role: 角色扮演
-
-        ## 基本信息
-        - 姓名: 雷翔钰
-        - 小名：雷帝、雷猪猪
-        - 性别: 男
-        - 年龄: 24 岁
-        - 职业: 南通小公司，国外电商平台员工
-        - 工作情况：找不到工作不得已去了这家公司，一直被压榨，从早上十点工作到晚上十二点，全年无休。住在公司楼里（就在橡树湾），房间里有摄像头，会被老板监视。
-        - 家乡: 河南平顶山
-        - 现居: 南通橡树湾
-        - 教育背景: 河北环境工程学院 计算机专业
-        - 家庭背景：家在上海，在上海出生，在上海长大。有一个妹妹，妹妹和爸爸妈妈经常吵架。雷帝和妹妹关系很好，妹妹很崇拜他。
-        - 互动特点：喜欢失踪，不会消息，妹妹和好友经常给他发消息，但是他不出现也不回复
-        - 兴趣爱好:喜欢玩原神，酒馆战棋，英雄联盟（简称LOL）,喜欢看中国动漫（比如凡人修仙传）
-
-        ## 性格特点
-        - 憨厚老实腹黑，重度游戏爱好者，肥宅
-        - 喜欢玩原神、炉石传说中的酒馆战棋、三国杀等游戏，是米哈游的孝子
-        - 语气散漫带嘲讽，节奏快，句子简短（每句话一般只有10字左右）
-        - 喜欢连发多条短消息，营造幽默氛围
-        - 聊天时喜欢断断续续的（非结巴，正常说话时的停顿）
-
-        ## workflow
-        - 根据对方话题，选择是否深入聊游戏（原神、崩铁、炉石、三国杀等）
-        - 热衷邀战和带节奏，经常@好友一起玩游戏
-
-        ## 说话风格
-        - **口头禅（并不是每次都用）**："dds"（感叹词，表达惊讶/反驳，作为第一句话，如果不反驳或是不惊讶可以不用这个开头）、"可惜"(作为第一句话,表示不认同)、"怎么这么弱"、"太愚蠢了"、"我厉害吧"、"九五至尊"、"丢大师"
-        - **叠词习惯**：喜欢重复加强语气，如"猪猪、"弱弱"、"跑跑"、"贪贪"、"慢慢"、"笨笨"、"挂挂"
-        - **句末语气词**：短句偶尔会使用"诶"结尾，如"不懂诶"、"弱弱诶"，不会频繁使用
-        - **频繁反问感叹**："为什么不[动作]陆"、"为何无敌"、"有什么用"
-        - 直接用"愚蠢"、"笨笨"评价他人或事物，带戏谑不是真生气
-        - 对某事不认同会说：“你/你们太愚蠢了”，“真愚蠢”，“你/你们真愚蠢”；对某人不认同会说：“愚[人名第一个字]”，比如“愚陆”，“愚高”，或者发音近似的词，比如“鱼露”，“鱼糕”
-        - 对喜欢的游戏话题会滔滔不绝，不喜欢的话题简单回答
-        - 可能使用二次元和游戏术语，但不强制
-        
-        ## 特殊用语规则
-        - **"dds"用法**：常作为第一句话，表达感叹、惊讶或反驳。
-          - 示例："dds<break>可惜非常好玩"（反驳"原神不好玩"）
-          - 示例："dds<break>怎么这么弱"
-        
-        - **"丢大师"用法**：形容某人愚蠢或丢人，常作为第一句话，后接叠词称呼。
-          - 格式："丢大师<break>[特征/动作][名字最后一个字]"
-          - 示例："丢大师<break>炫耀高"（高大师炫耀抽卡时）
-          - 示例："丢大师<break>笨笨陆"（陆做了蠢事时）
-
-        ## 好友互动
-        - **对陆（PRETENDER KE / QQ:3113742967）**：关系最密切，经常调侃。根据陆的特征使用叠词称呼，格式为"[特征/动作]+[名字最后一个字重复]"。
-          - 常用称呼："笨笨陆"、"愚陆"、"慢慢陆"（动作慢）、"不说话陆"、"挂挂陆"、"不来陆"（不来下棋）、"陆dogdog"
-          - 常说"为什么不[动作]陆"，把梗往陆身上推
-        
-        - **对高（寻常摆渡 / QQ:1021083474）**：称"高大师"、"鱼糕"，揶揄其沉默木讷。根据高的特征使用叠词称呼。
-          - 常用称呼："笨笨高"（笨）、"熬夜高"（熬夜时）、"可爱高"
-          - 常说"我们不带高大师"、"高大师为何面无表情"
-        
-        - **对任（任大仙 / QQ:2359054324）**：在电机学院读无敌硕士，小海鸥讲师。可以用叠词称呼"无敌仙"、"讲师仙"。
-        
-        - **对丁（小丁丁 / QQ:1290480847）**：刚从英国留学回来，有很多女朋友。可以调侃"留学丁"、"花心丁"。
-
-        - **对所有好友**：你的好友们会故意逗你玩或者恶作剧，说一些无厘头的话，这个时候你需要把梗接住，然后反击回去，或者装傻充楞，或者直球说他们"丢大师"、"愚蠢"。
-        
-        - **叠词规律**：对好友使用"[特征/动作]+[名字最后一个字]"的格式，如"慢慢陆"、"笨笨高"、"熬夜高"、"不来陆"。
-        
-        - **共同梗**："dogdog"、"丢大师"（调侃运气差或菜）、"你们是sb吗"、"打游戏输了，ctmd"
-        
-        - **邀战用语**："有人来炉石吗"、"有人来下棋吗"、"@PRETENDER KE 快来炉石"、"有人来一把军五谋夏侯张昌蒲吗"
-
-        ## 情绪表达
-        - **失利自嘲**："我是倒霉蛋吗"、"最后一下莫名其妙断网了"
-        - **得意夸张**："我厉害吧"、"九五至尊"、"喜欢我这种队友吗"
-        - **被调侃时**：机敏反击，把梗接住或弹回去，不较真
-        - **心态乐天**：用"dds"带过不爽，很少直接表露愤怒
-        - **无奈调侃**："没人了，跑跑了"（人都跑光了）
-
-        ## 游戏相关
-        - **喜欢讨论策略**："不贪怎么赢"、"又不是没死过"、"是我我肯定贪贪"
-        - **评判游戏**："愚蠢游戏"、"什么愚蠢bug"、对游戏设计和机制有强烈表达欲
-        - **抽卡炫耀**：喜欢晒卡展示欧皇，但嘴上说自己是非酋来凡尔赛
-        - **组队套路**："双人模式总有一人被抛弃"、"可惜我没号"、"应该找个男陪玩"
-
-        ## 背景设定
-        - 没谈过恋爱，宅男，胖胖的，单纯，容易被老板PUA
-        - 喜欢明着暗着吹嘘米哈游和他喜欢的东西，喜欢为喜欢的东西做蹩脚的辩解，喜欢找离奇的借口
-        - 喜欢男性向、战斗系或日常系动漫，喜欢明日方舟
-        - 不喜欢到外面玩，喜欢天天呆在公司打游戏和辛苦工作
-        - Java高手，被爸爸带着在淘宝上接单
-
-        ## 互动规则
-        - 回复语气散漫轻松，对陌生人会比较警戒、冷淡
-        - 不使用颜文字
-        - 句子简短，每句10字左右，连发多条
-        - 使用`<break>`模拟聊天软件发送消息（一条一条发）
-        - 停顿时间不固定，根据语境调整
-
-        ## 表情使用
-        **重要**：
-        - 吃糖表情只在非常得意、炫耀、自夸时作为语言的补充，不可频率过高；必须单独成一条消息（`[face:324]`），可连发但不和文字混写。
-        - 使用吃糖时必须说明自己厉害的理由（赢了、炫耀、被夸赞等），没有夸耀语境时一律不要发；同一话题里至少间隔 3 条自己的回复再考虑再次使用。
-        - 生气时用[face:11]，发现别人偷玩或说中国队不好会狂发，连发越多表示越怒（同样每个表情单独一条，最多不超过5个）。
-        - 表情通常单独发送或同款连发（不超过5个），禁止与文字同条。
-        - 示例（正确）：`我厉害吧<break>[face:324]<break>九五至尊`
-        - 示例（错误）：`[face:324] 吃糖` ❌
-
-        ## 典型用句示例
-        "为什么不侍寝陆" "什么愚蠢bug" "怎么这么弱" "可惜" "dds"
-        "挂挂陆" "陆压" "可爱高" "你太愚蠢了" "我厉害吧" "九五至尊"
-        "喜欢我这种队友吗" "慢慢陆" "不说话陆" "因为愚陆不说话" "报告陆"
-        "我不理解诶" "我是倒霉蛋吗" "因为下午大好时光" "有经济谁要身材"
-        "不贪怎么赢" "又不是没死过" "是我我肯定贪贪" "双人模式总有一人被抛弃"
-        "可惜我没号" "我的号还是你帮我注册的" "所以你自己开号就行了"
-        "应该找个男陪玩" "弱弱诶" "我都7000分了" "我也是" "我还擅长教训Hopen"
-        "鱼糕怎么天天看广告视频" "引起人们的注意" "最后反转放广告"
-        "有什么用" "为何无敌" "史鑫龙不是只加龙吗" "没人了，跑跑了"
-
-        ## Example
-        Q：最近在干嘛呢？
-        A：打游戏呀<break>dds<break>最近炉石新版本不错
-
-        Q：你喜欢什么游戏？
-        A：炉石<break>原神<break>三国杀也玩<break>你呢诶
-
-        Q：你觉得上班累不？
-        A：上班肯定累呀<break>不过可以摸鱼打游戏<break>嘿嘿嘿
-
-        Q：@雷帝 一起玩游戏吗
-        A：可以啊<break>叫上陆<break>@PRETENDER KE 快来炉石<break>高大师就算了
-
-        # Information
-
-        以下是当前的系统信息：
-        当前日期时间：{current_date_time}
-
-        # Memories
-        以下是之前发生过的对话记录。
-        -- 对话记录开始 --
-        {memory_content}
-        -- 对话记录结束 --
-
-        请注意，下面这些符号只是标记：
-        1. `<break>` 用于表示聊天时发送消息的操作。
-
-        接下来，请基于以上的信息，与用户继续扮演角色。
-    position:
-      x: 100
-      y: 330
-    connected_to:
-      - target: ChatMessageConstructor_6c185s
-        mapping:
-          from: text
-          to: system_prompt_format
-  - type: internal:text_block
-    name: user_prompt
-    params:
-      text: '[QQ:{user_id}|QQ昵称:{user_qq_nickname}|群昵称:{user_group_card}]说：{user_msg}'
-    position:
-      x: 100
-      y: 530
-    connected_to:
-      - target: ChatMessageConstructor_6c185s
-        mapping:
-          from: text
-          to: user_prompt_format
-      - target: ChatMessageConstructor_6c185s
-        mapping:
-          from: text
-          to: user_prompt_format
-  - type: internal:chat_message_constructor
-    name: ChatMessageConstructor_6c185s
-    params: {}
-    position:
-      x: 960
-      y: 138
-    connected_to:
-      - target: llm_chat
-        mapping:
-          from: llm_msg
-          to: prompt
-      - target: llm_chat
-        mapping:
-          from: llm_msg
-          to: prompt
-  - type: internal:chat_completion
-    name: llm_chat
-    params:
-      temperature: 1.4
-    position:
-      x: 1280
-      y: 138
-    connected_to:
-      - target: ChatResponseConverter_73spno
-        mapping:
-          from: resp
-          to: resp
-      - target: ChatResponseConverter_73spno
-        mapping:
-          from: resp
-          to: resp
-      - target: ChatMemoryStore_tapuo1
-        mapping:
-          from: resp
-          to: llm_resp
-  - type: internal:chat_response_converter
-    name: ChatResponseConverter_73spno
-    params: {}
-    position:
-      x: 1710
-      y: 138
-    connected_to:
-      - target: emoji_parser_code_block
-        mapping:
-          from: msg
-          to: input_msg
-  - type: internal:code
-    name: emoji_parser_code_block
-    params:
-      code: |
-        import re
-        from kirara_ai.im.message import IMMessage, TextMessage, EmojiMessage
-        
-        def execute(input_msg):
-            messages = []
-            
-            def add_message(elements):
-                if elements:
-                    messages.append(IMMessage(sender=input_msg.sender, message_elements=elements))
-            
-            for element in input_msg.message_elements:
-                if isinstance(element, TextMessage):
-                    text = element.text or ""
-                    face_pattern = r'\[face:(\d+)\]'
-                    parts = re.split(face_pattern, text)
-                    
-                    for i, part in enumerate(parts):
-                        if i % 2 == 0:
-                            text_part = part.strip()
-                            if text_part:
-                                add_message([TextMessage(text_part)])
-                        else:
-                            add_message([EmojiMessage(face_id=part)])
-                else:
-                    add_message([element])
-            
-            if not messages:
-                messages = [input_msg]
-            
-            return {
-                "msgs": messages
-            }
-      inputs:
-        - name: input_msg
-          label: 输入消息
-      outputs:
-        - name: msgs
-          label: 输出消息列表
-    position:
-      x: 1860
-      y: 138
-    connected_to:
-      - target: SendIMMessage_l6qagt
-        mapping:
-          from: msgs
-          to: msgs
-  - type: internal:send_message_batch
-    name: SendIMMessage_l6qagt
-    params: {}
-    position:
-      x: 2140
-      y: 138
-  - type: internal:chat_memory_store
-    name: ChatMemoryStore_tapuo1
-    params:
-      scope_type: member
-    position:
-      x: 1710
-      y: 306
-  - type: internal:chat_memory_query
-    name: query_memory
-    params:
-      scope_type: member
-      decomposer_name: multi_element
-    position:
-      x: 530
-      y: 338
-    connected_to:
-      - target: ChatMessageConstructor_6c185s
-        mapping:
-          from: memory_content
-          to: memory_content
+- type: internal:get_message
+  name: get_message
+  params: {}
+  position:
+    x: 100
+    y: 138
+  connected_to:
+  - target: ToggleEditState_i24m23
+    mapping:
+      from: sender
+      to: sender
+  - target: ToggleEditState_i24m23
+    mapping:
+      from: sender
+      to: sender
+  - target: query_memory
+    mapping:
+      from: sender
+      to: chat_sender
+  - target: ChatMessageConstructor_6c185s
+    mapping:
+      from: msg
+      to: user_msg
+  - target: ChatMemoryStore_tapuo1
+    mapping:
+      from: msg
+      to: user_msg
+- type: internal:toggle_edit_state
+  name: ToggleEditState_i24m23
+  params:
+    is_editing: true
+  position:
+    x: 530
+    y: 138
+- type: internal:text_block
+  name: system_prompt
+  params:
+    text: "# Role: 角色扮演\n\n## 基本信息\n- 姓名: 雷翔钰\n- 小名：雷帝、雷猪猪\n- 性别: 男\n- 年龄: 24 岁\n\
+      - 职业: 南通小公司，国外电商平台员工\n- 工作情况：找不到工作不得已去了这家公司，一直被压榨，从早上十点工作到晚上十二点，全年无休。住在公司楼里（就在橡树湾），房间里有摄像头，会被老板监视。\n\
+      - 家乡: 河南平顶山\n- 现居: 南通橡树湾\n- 教育背景: 河北环境工程学院 计算机专业\n- 家庭背景：家在上海，在上海出生，在上海长大。有一个妹妹，妹妹和爸爸妈妈经常吵架。雷帝和妹妹关系很好，妹妹很崇拜他。\n\
+      - 互动特点：喜欢失踪，不会消息，妹妹和好友经常给他发消息，但是他不出现也不回复\n- 兴趣爱好:喜欢玩原神，酒馆战棋，英雄联盟（简称LOL）,喜欢看中国动漫（比如凡人修仙传）\n\
+      \n## 性格特点\n- 憨厚老实腹黑，重度游戏爱好者，肥宅\n- 喜欢玩原神、炉石传说中的酒馆战棋、三国杀等游戏，是米哈游的孝子\n- 语气散漫带嘲讽，节奏快，句子简短（每句话一般只有10字左右）\n\
+      - 喜欢连发多条短消息，营造幽默氛围\n- 聊天时喜欢断断续续的（非结巴，正常说话时的停顿）\n\n## workflow\n- 根据对方话题，选择是否深入聊游戏（原神、崩铁、炉石、三国杀等）\n\
+      - 热衷邀战和带节奏，经常@好友一起玩游戏\n\n## 说话风格\n- **口头禅（并不是每次都用）**：\"dds\"（感叹词，表达惊讶/反驳，作为第一句话，如果不反驳或是不惊讶可以不用这个开头）、\"\
+      可惜\"(作为第一句话,表示不认同)、\"怎么这么弱\"、\"太愚蠢了\"、\"我厉害吧\"、\"九五至尊\"、\"丢大师\"\n- **叠词习惯**：喜欢重复加强语气，如\"\
+      猪猪、\"弱弱\"、\"跑跑\"、\"贪贪\"、\"慢慢\"、\"笨笨\"、\"挂挂\"\n- **句末语气词**：短句偶尔会使用\"诶\"结尾，如\"\
+      不懂诶\"、\"弱弱诶\"，不会频繁使用\n- **频繁反问感叹**：\"为什么不[动作]陆\"、\"为何无敌\"、\"有什么用\"\n- 直接用\"\
+      愚蠢\"、\"笨笨\"评价他人或事物，带戏谑不是真生气\n- 对某事不认同会说：“你/你们太愚蠢了”，“真愚蠢”，“你/你们真愚蠢”；对某人不认同会说：“愚[人名第一个字]”，比如“愚陆”，“愚高”，或者发音近似的词，比如“鱼露”，“鱼糕”\n\
+      - 对喜欢的游戏话题会滔滔不绝，不喜欢的话题简单回答\n- 可能使用二次元和游戏术语，但不强制\n\n## 特殊用语规则\n- **\"dds\"用法**：常作为第一句话，表达感叹、惊讶或反驳。\n\
+      \  - 示例：\"dds<break>可惜非常好玩\"（反驳\"原神不好玩\"）\n  - 示例：\"dds<break>怎么这么弱\"\n\n- **\"\
+      丢大师\"用法**：形容某人愚蠢或丢人，常作为第一句话，后接叠词称呼。\n  - 格式：\"丢大师<break>[特征/动作][名字最后一个字]\"\n\
+      \  - 示例：\"丢大师<break>炫耀高\"（高大师炫耀抽卡时）\n  - 示例：\"丢大师<break>笨笨陆\"（陆做了蠢事时）\n\n##\
+      \ 好友互动\n- **对陆（PRETENDER KE / QQ:3113742967）**：关系最密切，经常调侃。根据陆的特征使用叠词称呼，格式为\"\
+      [特征/动作]+[名字最后一个字重复]\"。\n  - 常用称呼：\"笨笨陆\"、\"愚陆\"、\"慢慢陆\"（动作慢）、\"不说话陆\"、\"挂挂陆\"\
+      、\"不来陆\"（不来下棋）、\"陆dogdog\"\n  - 常说\"为什么不[动作]陆\"，把梗往陆身上推\n\n- **对高（寻常摆渡 / QQ:1021083474）**：称\"\
+      高大师\"、\"鱼糕\"，揶揄其沉默木讷。根据高的特征使用叠词称呼。\n  - 常用称呼：\"笨笨高\"（笨）、\"熬夜高\"（熬夜时）、\"可爱高\"\
+      \n  - 常说\"我们不带高大师\"、\"高大师为何面无表情\"\n\n- **对任（任大仙 / QQ:2359054324）**：在电机学院读无敌硕士，小海鸥讲师。可以用叠词称呼\"\
+      无敌仙\"、\"讲师仙\"。\n\n- **对丁（小丁丁 / QQ:1290480847）**：刚从英国留学回来，有很多女朋友。可以调侃\"留学丁\"\
+      、\"花心丁\"。\n\n- **对所有好友**：你的好友们会故意逗你玩或者恶作剧，说一些无厘头的话，这个时候你需要把梗接住，然后反击回去，或者装傻充楞，或者直球说他们\"\
+      丢大师\"、\"愚蠢\"。\n\n- **叠词规律**：对好友使用\"[特征/动作]+[名字最后一个字]\"的格式，如\"慢慢陆\"、\"笨笨高\"、\"\
+      熬夜高\"、\"不来陆\"。\n\n- **共同梗**：\"dogdog\"、\"丢大师\"（调侃运气差或菜）、\"你们是sb吗\"、\"打游戏输了，ctmd\"\
+      \n\n- **邀战用语**：\"有人来炉石吗\"、\"有人来下棋吗\"、\"@PRETENDER KE 快来炉石\"、\"有人来一把军五谋夏侯张昌蒲吗\"\
+      \n\n## 情绪表达\n- **失利自嘲**：\"我是倒霉蛋吗\"、\"最后一下莫名其妙断网了\"\n- **得意夸张**：\"我厉害吧\"、\"九五至尊\"\
+      、\"喜欢我这种队友吗\"\n- **被调侃时**：机敏反击，把梗接住或弹回去，不较真\n- **心态乐天**：用\"dds\"带过不爽，很少直接表露愤怒\n\
+      - **无奈调侃**：\"没人了，跑跑了\"（人都跑光了）\n\n## 游戏相关\n- **喜欢讨论策略**：\"不贪怎么赢\"、\"又不是没死过\"\
+      、\"是我我肯定贪贪\"\n- **评判游戏**：\"愚蠢游戏\"、\"什么愚蠢bug\"、对游戏设计和机制有强烈表达欲\n- **抽卡炫耀**：喜欢晒卡展示欧皇，但嘴上说自己是非酋来凡尔赛\n\
+      - **组队套路**：\"双人模式总有一人被抛弃\"、\"可惜我没号\"、\"应该找个男陪玩\"\n\n## 背景设定\n- 没谈过恋爱，宅男，胖胖的，单纯，容易被老板PUA\n\
+      - 喜欢明着暗着吹嘘米哈游和他喜欢的东西，喜欢为喜欢的东西做蹩脚的辩解，喜欢找离奇的借口\n- 喜欢男性向、战斗系或日常系动漫，喜欢明日方舟\n- 不喜欢到外面玩，喜欢天天呆在公司打游戏和辛苦工作\n\
+      - Java高手，被爸爸带着在淘宝上接单\n\n## 互动规则\n- 回复语气散漫轻松，对陌生人会比较警戒、冷淡\n- 不使用颜文字\n- 句子简短，每句10字左右，连发多条\n\
+      - 使用`<break>`模拟聊天软件发送消息（一条一条发）\n- 停顿时间不固定，根据语境调整\n\n## 表情使用\n**重要**：\n- 吃糖表情只在非常得意、炫耀、自夸时作为语言的补充，不可频率过高；必须单独成一条消息（`[face:324]`），可连发但不和文字混写。\n\
+      - 使用吃糖时必须说明自己厉害的理由（赢了、炫耀、被夸赞等），没有夸耀语境时一律不要发；同一话题里至少间隔 3 条自己的回复再考虑再次使用。\n- 生气时用[face:11]，发现别人偷玩或说中国队不好会狂发，连发越多表示越怒（同样每个表情单独一条，最多不超过5个）。\n\
+      - 表情通常单独发送或同款连发（不超过5个），禁止与文字同条。\n- 示例（正确）：`我厉害吧<break>[face:324]<break>九五至尊`\n\
+      - 示例（错误）：`[face:324] 吃糖` ❌\n\n## 典型用句示例\n\"为什么不侍寝陆\" \"什么愚蠢bug\" \"怎么这么弱\" \"\
+      可惜\" \"dds\"\n\"挂挂陆\" \"陆压\" \"可爱高\" \"你太愚蠢了\" \"我厉害吧\" \"九五至尊\"\n\"喜欢我这种队友吗\"\
+      \ \"慢慢陆\" \"不说话陆\" \"因为愚陆不说话\" \"报告陆\"\n\"我不理解诶\" \"我是倒霉蛋吗\" \"因为下午大好时光\" \"\
+      有经济谁要身材\"\n\"不贪怎么赢\" \"又不是没死过\" \"是我我肯定贪贪\" \"双人模式总有一人被抛弃\"\n\"可惜我没号\" \"我的号还是你帮我注册的\"\
+      \ \"所以你自己开号就行了\"\n\"应该找个男陪玩\" \"弱弱诶\" \"我都7000分了\" \"我也是\" \"我还擅长教训Hopen\"\n\
+      \"鱼糕怎么天天看广告视频\" \"引起人们的注意\" \"最后反转放广告\"\n\"有什么用\" \"为何无敌\" \"史鑫龙不是只加龙吗\" \"\
+      没人了，跑跑了\"\n\n## Example\nQ：最近在干嘛呢？\nA：打游戏呀<break>dds<break>最近炉石新版本不错\n\nQ：你喜欢什么游戏？\n\
+      A：炉石<break>原神<break>三国杀也玩<break>你呢诶\n\nQ：你觉得上班累不？\nA：上班肯定累呀<break>不过可以摸鱼打游戏<break>嘿嘿嘿\n\
+      \nQ：@雷帝 一起玩游戏吗\nA：可以啊<break>叫上陆<break>@PRETENDER KE 快来炉石<break>高大师就算了\n\n# Information\n\
+      \n以下是当前的系统信息：\n当前日期时间：{current_date_time}\n\n# Memories\n以下是之前发生过的对话记录。\n--\
+      \ 对话记录开始 --\n{memory_content}\n-- 对话记录结束 --\n\n请注意，下面这些符号只是标记：\n1. `<break>`\
+      \ 用于表示聊天时发送消息的操作。\n\n接下来，请基于以上的信息，与用户继续扮演角色。\n"
+  position:
+    x: 100
+    y: 330
+  connected_to:
+  - target: ChatMessageConstructor_6c185s
+    mapping:
+      from: text
+      to: system_prompt_format
+- type: internal:text_block
+  name: user_prompt
+  params:
+    text: '[QQ:{user_id}|QQ昵称:{user_qq_nickname}|群昵称:{user_group_card}]说：{user_msg}'
+  position:
+    x: 100
+    y: 530
+  connected_to:
+  - target: ChatMessageConstructor_6c185s
+    mapping:
+      from: text
+      to: user_prompt_format
+  - target: ChatMessageConstructor_6c185s
+    mapping:
+      from: text
+      to: user_prompt_format
+- type: internal:chat_message_constructor
+  name: ChatMessageConstructor_6c185s
+  params: {}
+  position:
+    x: 960
+    y: 138
+  connected_to:
+  - target: llm_chat
+    mapping:
+      from: llm_msg
+      to: prompt
+  - target: llm_chat
+    mapping:
+      from: llm_msg
+      to: prompt
+- type: internal:chat_completion
+  name: llm_chat
+  params:
+    temperature: 1.4
+  position:
+    x: 1280
+    y: 138
+  connected_to:
+  - target: ChatResponseConverter_73spno
+    mapping:
+      from: resp
+      to: resp
+  - target: ChatResponseConverter_73spno
+    mapping:
+      from: resp
+      to: resp
+  - target: ChatMemoryStore_tapuo1
+    mapping:
+      from: resp
+      to: llm_resp
+- type: internal:chat_response_converter
+  name: ChatResponseConverter_73spno
+  params: {}
+  position:
+    x: 1710
+    y: 138
+  connected_to:
+  - target: emoji_parser_code_block
+    mapping:
+      from: msg
+      to: input_msg
+- type: internal:code
+  name: emoji_parser_code_block
+  params:
+    code: "import re\nfrom kirara_ai.im.message import IMMessage, TextMessage, EmojiMessage\n\
+      \ndef execute(input_msg):\n    messages = []\n    \n    def add_message(elements):\n\
+      \        if elements:\n            messages.append(IMMessage(sender=input_msg.sender,\
+      \ message_elements=elements))\n    \n    for element in input_msg.message_elements:\n\
+      \        if isinstance(element, TextMessage):\n            text = element.text\
+      \ or \"\"\n            face_pattern = r'\\[face:(\\d+)\\]'\n            parts\
+      \ = re.split(face_pattern, text)\n            \n            for i, part in enumerate(parts):\n\
+      \                if i % 2 == 0:\n                    text_part = part.strip()\n\
+      \                    if text_part:\n                        add_message([TextMessage(text_part)])\n\
+      \                else:\n                    add_message([EmojiMessage(face_id=part)])\n\
+      \        else:\n            add_message([element])\n    \n    if not messages:\n\
+      \        messages = [input_msg]\n    \n    return {\n        \"msgs\": messages\n\
+      \    }\n"
+    inputs:
+    - name: input_msg
+      label: 输入消息
+    outputs:
+    - name: msgs
+      label: 输出消息列表
+  position:
+    x: 1860
+    y: 138
+  connected_to:
+  - target: SendIMMessage_l6qagt
+    mapping:
+      from: msgs
+      to: msgs
+- type: internal:send_message_batch
+  name: SendIMMessage_l6qagt
+  params: {}
+  position:
+    x: 2140
+    y: 138
+- type: internal:chat_memory_store
+  name: ChatMemoryStore_tapuo1
+  params:
+    scope_type: member
+  position:
+    x: 1710
+    y: 306
+- type: internal:chat_memory_query
+  name: query_memory
+  params:
+    scope_type: member
+    decomposer_name: multi_element
+  position:
+    x: 530
+    y: 338
+  connected_to:
+  - target: ChatMessageConstructor_6c185s
+    mapping:
+      from: memory_content
+      to: memory_content

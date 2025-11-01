@@ -3,129 +3,84 @@ name: 雷帝点歌 - 指定歌曲
 description: 解析“点歌：xxx”消息，根据歌名播放对应语音。
 version: '1.0'
 blocks:
-  - type: internal:get_message
-    name: get_message
-    params: {}
-    position:
-      x: 100
-      y: 220
-    connected_to:
-      - target: handle_request
-        mapping:
-          from: sender
-          to: chat_sender
-      - target: handle_request
-        mapping:
-          from: msg
-          to: user_msg
-
-  - type: internal:code
-    name: handle_request
-    params:
-      code: |
-        import pathlib
-        import re
-        from kirara_ai.im.message import IMMessage, VoiceMessage, TextMessage
-        from kirara_ai.im.sender import ChatSender
-
-        def _resolve_media_path(*parts):
-            project_media = pathlib.Path.cwd() / "media"
-            if project_media.exists():
-                return (project_media / pathlib.Path(*parts)).resolve()
-
-            try:
-                current = pathlib.Path(__file__).resolve()
-            except NameError:
-                current = pathlib.Path.cwd()
-
-            for parent in [current, *current.parents]:
-                media_root = parent / "media"
-                if media_root.exists():
-                    return (media_root / pathlib.Path(*parts)).resolve()
-
-            return (project_media / pathlib.Path(*parts)).resolve()
-
-        SONG_LIBRARY = {
-            "雷猪猪之歌": (_resolve_media_path("silk_full", "leizhuzhu_full.silk"), "雷猪猪之歌"),
-            "大家一起雷猪猪": (_resolve_media_path("silk_full", "leizhuzhu_full.silk"), "雷猪猪之歌"),
-            "陆陆宝宝打雷了": (_resolve_media_path("silk_full", "alei_extra_full.silk"), "陆陆宝宝打雷了"),
-            "陆陆宝宝打雷": (_resolve_media_path("silk_full", "alei_extra_full.silk"), "陆陆宝宝打雷了"),
-        }
-
-        def normalize(text: str) -> str:
-            return text.strip().replace(" ", "")
-
-        def execute(chat_sender, user_msg):
-            content = getattr(user_msg, "content", "") or ""
-            content = content.strip()
-            match = re.search(r"点歌[:：]\s*(.+)", content, re.IGNORECASE)
-            if not match:
-                message = IMMessage(
-                    sender=ChatSender.get_bot_sender(),
-                    message_elements=[TextMessage("唱啥？格式是：点歌：歌名")]
-                )
-                return {"msgs": [message], "target": chat_sender}
-
-            song_name_raw = match.group(1).strip()
-            song_key = normalize(song_name_raw)
-
-            selected = None
-            for name, (path, display) in SONG_LIBRARY.items():
-                if normalize(name) == song_key:
-                    selected = (path, display)
-                    break
-
-            if not selected:
-                options = sorted({info[1] for info in SONG_LIBRARY.values()})
-                tips = "\\n".join([f"- {opt}" for opt in options])
-                message = IMMessage(
-                    sender=ChatSender.get_bot_sender(),
-                    message_elements=[
-                        TextMessage(f"没找到《{song_name_raw}》，可选歌单：\\n{tips}")
-                    ]
-                )
-                return {"msgs": [message], "target": chat_sender}
-
-            path, display = selected
-            if not path.exists():
-                message = IMMessage(
-                    sender=ChatSender.get_bot_sender(),
-                    message_elements=[TextMessage(f"语音文件缺失：{path}")]
-                )
-                return {"msgs": [message], "target": chat_sender}
-
-            voice = VoiceMessage(path=str(path), format="silk")
-            message = IMMessage(
-                sender=ChatSender.get_bot_sender(),
-                message_elements=[voice]
-            )
-            return {"msgs": [message], "target": chat_sender}
-      inputs:
-        - name: chat_sender
-          label: 目标
-        - name: user_msg
-          label: 用户消息
-      outputs:
-        - name: msgs
-          label: 语音或提示
-        - name: target
-          label: 目标
-    position:
-      x: 360
-      y: 220
-    connected_to:
-      - target: msg_sender
-        mapping:
-          from: msgs
-          to: msgs
-      - target: msg_sender
-        mapping:
-          from: target
-          to: target
-
-  - type: internal:send_message_batch
-    name: msg_sender
-    params: {}
-    position:
-      x: 620
-      y: 220
+- type: internal:get_message
+  name: get_message
+  params: {}
+  position:
+    x: 100
+    y: 220
+  connected_to:
+  - target: handle_request
+    mapping:
+      from: sender
+      to: chat_sender
+  - target: handle_request
+    mapping:
+      from: msg
+      to: user_msg
+- type: internal:code
+  name: handle_request
+  params:
+    code: "import pathlib\nimport re\nfrom kirara_ai.im.message import IMMessage,\
+      \ VoiceMessage, TextMessage\nfrom kirara_ai.im.sender import ChatSender\n\n\
+      def _resolve_media_path(*parts):\n    project_media = pathlib.Path.cwd() / \"\
+      media\"\n    if project_media.exists():\n        return (project_media / pathlib.Path(*parts)).resolve()\n\
+      \n    try:\n        current = pathlib.Path(__file__).resolve()\n    except NameError:\n\
+      \        current = pathlib.Path.cwd()\n\n    for parent in [current, *current.parents]:\n\
+      \        media_root = parent / \"media\"\n        if media_root.exists():\n\
+      \            return (media_root / pathlib.Path(*parts)).resolve()\n\n    return\
+      \ (project_media / pathlib.Path(*parts)).resolve()\n\nSONG_LIBRARY = {\n   \
+      \ \"雷猪猪之歌\": (_resolve_media_path(\"silk_full\", \"leizhuzhu_full.silk\"), \"\
+      雷猪猪之歌\"),\n    \"大家一起雷猪猪\": (_resolve_media_path(\"silk_full\", \"leizhuzhu_full.silk\"\
+      ), \"雷猪猪之歌\"),\n    \"陆陆宝宝打雷了\": (_resolve_media_path(\"silk_full\", \"alei_extra_full.silk\"\
+      ), \"陆陆宝宝打雷了\"),\n    \"陆陆宝宝打雷\": (_resolve_media_path(\"silk_full\", \"alei_extra_full.silk\"\
+      ), \"陆陆宝宝打雷了\"),\n}\n\ndef normalize(text: str) -> str:\n    return text.strip().replace(\"\
+      \ \", \"\")\n\ndef execute(chat_sender, user_msg):\n    content = getattr(user_msg,\
+      \ \"content\", \"\") or \"\"\n    content = content.strip()\n    match = re.search(r\"\
+      点歌[:：]\\s*(.+)\", content, re.IGNORECASE)\n    if not match:\n        message\
+      \ = IMMessage(\n            sender=ChatSender.get_bot_sender(),\n          \
+      \  message_elements=[TextMessage(\"唱啥？格式是：点歌：歌名\")]\n        )\n        return\
+      \ {\"msgs\": [message], \"target\": chat_sender}\n\n    song_name_raw = match.group(1).strip()\n\
+      \    song_key = normalize(song_name_raw)\n\n    selected = None\n    for name,\
+      \ (path, display) in SONG_LIBRARY.items():\n        if normalize(name) == song_key:\n\
+      \            selected = (path, display)\n            break\n\n    if not selected:\n\
+      \        options = sorted({info[1] for info in SONG_LIBRARY.values()})\n   \
+      \     tips = \"\\\\n\".join([f\"- {opt}\" for opt in options])\n        message\
+      \ = IMMessage(\n            sender=ChatSender.get_bot_sender(),\n          \
+      \  message_elements=[\n                TextMessage(f\"没找到《{song_name_raw}》，可选歌单：\\\
+      \\n{tips}\")\n            ]\n        )\n        return {\"msgs\": [message],\
+      \ \"target\": chat_sender}\n\n    path, display = selected\n    if not path.exists():\n\
+      \        message = IMMessage(\n            sender=ChatSender.get_bot_sender(),\n\
+      \            message_elements=[TextMessage(f\"语音文件缺失：{path}\")]\n        )\n\
+      \        return {\"msgs\": [message], \"target\": chat_sender}\n\n    voice\
+      \ = VoiceMessage(path=str(path), format=\"silk\")\n    message = IMMessage(\n\
+      \        sender=ChatSender.get_bot_sender(),\n        message_elements=[voice]\n\
+      \    )\n    return {\"msgs\": [message], \"target\": chat_sender}\n"
+    inputs:
+    - name: chat_sender
+      label: 目标
+    - name: user_msg
+      label: 用户消息
+    outputs:
+    - name: msgs
+      label: 语音或提示
+    - name: target
+      label: 目标
+  position:
+    x: 360
+    y: 220
+  connected_to:
+  - target: msg_sender
+    mapping:
+      from: msgs
+      to: msgs
+  - target: msg_sender
+    mapping:
+      from: target
+      to: target
+- type: internal:send_message_batch
+  name: msg_sender
+  params: {}
+  position:
+    x: 620
+    y: 220
