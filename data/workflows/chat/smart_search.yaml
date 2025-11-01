@@ -62,18 +62,18 @@ blocks:
     mapping:
       from: memory_content
       to: memory_entries
-      - target: prepare_summary_context
-        mapping:
-          from: memory_content
-          to: memory_entries
-      - target: extract_query
-        mapping:
-          from: memory_content
-          to: context_entries
-      - target: summary_message_constructor
-        mapping:
-          from: memory_content
-          to: memory_content
+  - target: prepare_summary_context
+    mapping:
+      from: memory_content
+      to: memory_entries
+  - target: extract_query
+    mapping:
+      from: memory_content
+      to: context_entries
+  - target: summary_message_constructor
+    mapping:
+      from: memory_content
+      to: memory_content
 - type: internal:code
   name: prepare_summary_context
   params:
