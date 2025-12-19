@@ -4,11 +4,14 @@ from typing import Annotated, Any, Dict, List, Optional
 from kirara_ai.im.message import IMMessage
 from kirara_ai.im.sender import ChatSender
 from kirara_ai.ioc.container import DependencyContainer
+from kirara_ai.llm.format.request import LLMChatMessage, LLMChatRequest
 from kirara_ai.llm.format.response import LLMChatResponse
 from kirara_ai.logger import get_logger
 from kirara_ai.memory.composes.base import ComposableMessageType
 from kirara_ai.memory.memory_manager import MemoryManager
+from kirara_ai.memory.summary_manager import HistorySummaryManager
 from kirara_ai.memory.registry import ComposerRegistry, DecomposerRegistry, ScopeRegistry
+from kirara_ai.llm.llm_manager import LLMManager
 from kirara_ai.workflow.core.block import Block, Input, Output, ParamMeta
 
 
@@ -174,6 +177,55 @@ class ChatMemoryStore(Block):
             pass
 
         self.memory_manager.store(self.scope, memory_entries, self.extra_identifier)
+
+        # 自动生成历史摘要（失败不影响主流程）
+        try:
+            summary_manager = HistorySummaryManager()
+            sender_obj = user_msg.sender if user_msg else None
+            scope_key = self.scope.get_scope_key(sender_obj) if sender_obj else ""
+            if self.extra_identifier:
+                scope_key = f"{self.extra_identifier}-{scope_key}"
+
+            all_entries = self.memory_manager.query(self.scope, sender_obj, self.extra_identifier) if sender_obj else []
+            if scope_key and summary_manager.should_regenerate(scope_key, len(all_entries)):
+                prompt_text = summary_manager.build_summary_prompt(all_entries)
+
+                system_prompt = (
+                    "你是一个对话历史摘要助手。请阅读用户提供的历史对话记录，生成一份简洁的摘要。\n"
+                    "要求：\n"
+                    "1. 总结关键话题、重要信息和情感基调\n"
+                    "2. 保留人物关系、重要事实和时间线\n"
+                    "3. 控制在 200 字以内\n"
+                    "4. 使用第三人称客观描述\n"
+                    "5. 按时间或话题分段\n"
+                    "6. 不要添加自己的评论或解释\n"
+                    "7. 保留对理解上下文重要的细节"
+                )
+
+                llm = self.container.resolve(LLMManager).get_llm("deepseek-chat")
+                if llm:
+                    req = LLMChatRequest(
+                        messages=[
+                            LLMChatMessage(role="system", content=[{"type": "text", "text": system_prompt}]),
+                            LLMChatMessage(role="user", content=[{"type": "text", "text": prompt_text[:4000]}]),
+                        ],
+                        model="deepseek-chat",
+                        temperature=0.3,
+                    )
+                    resp = llm.chat(req)
+                    summary_text = ""
+                    if resp and resp.message and resp.message.content:
+                        parts = []
+                        for element in resp.message.content:
+                            if hasattr(element, "text") and isinstance(element.text, str):
+                                parts.append(element.text)
+                            elif isinstance(element, dict) and "text" in element:
+                                parts.append(str(element.get("text", "")))
+                        summary_text = "\n".join([p.strip() for p in parts if p.strip()])
+                    if summary_text:
+                        summary_manager.save_summary(scope_key, summary_text, len(all_entries))
+        except Exception:
+            pass
 
         # 本地文件探针: store 后
         try:
