@@ -78,7 +78,14 @@ class ChatMemoryQuery(Block):
             self.decomposer_name)
 
         entries = self.memory_manager.query(self.scope, chat_sender, self.extra_identifier)
-        memory_content = self.decomposer.decompose(entries)
+        
+        # 构建 context，包含 scope_key 用于摘要功能
+        scope_key = self.scope.get_scope_key(chat_sender)
+        if self.extra_identifier:
+            scope_key = f"{self.extra_identifier}-{scope_key}"
+        
+        context = {"scope_key": scope_key}
+        memory_content = self.decomposer.decompose(entries, context)
         return {"memory_content": memory_content}
 
 

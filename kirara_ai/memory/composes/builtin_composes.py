@@ -60,18 +60,17 @@ class DefaultMemoryDecomposer(MemoryDecomposer):
     def __init__(self):
         self.strategy = None
     
-    def decompose(self, entries: List[MemoryEntry]) -> List[ComposableMessageType]:
+    def decompose(self, entries: List[MemoryEntry], context: Optional[Dict[str, Any]] = None) -> List[ComposableMessageType]:
         # 延迟初始化，确保 container 已被设置
         if self.strategy is None:
             self.strategy = DefaultDecomposerStrategy()
         
-        # 使用上下文传递参数
-        context = {
-            "empty_message": self.empty_message
-        }
+        # 使用上下文传递参数；兼容外部传入的 context
+        ctx = context or {}
+        ctx.setdefault("empty_message", self.empty_message)
         
         # 使用策略解析记忆条目
-        return self.strategy.decompose(entries, context)
+        return self.strategy.decompose(entries, ctx)
 
 
 class MultiElementDecomposer(MemoryDecomposer):
