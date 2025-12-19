@@ -91,6 +91,10 @@ blocks:
     mapping:
       from: memory_content
       to: memory_content
+  - target: ocr_message_constructor
+    mapping:
+      from: memory_content
+      to: memory_content
 - type: internal:text_block
   name: user_prompt
   params:
@@ -133,13 +137,222 @@ blocks:
     mapping:
       from: msg
       to: user_msg
-  - target: chat_message_constructor_wfy18q
-    mapping:
-      from: msg
-      to: user_msg
   - target: chat_memory_store_a0fj1l
     mapping:
       from: msg
+      to: user_msg
+  - target: extract_images
+    mapping:
+      from: msg
+      to: msg
+  - target: ocr_message_constructor
+    mapping:
+      from: msg
+      to: user_msg
+
+- type: internal:code
+  name: extract_images
+  params:
+    code: |
+      from kirara_ai.im.message import ImageMessage
+
+      def execute(msg):
+          image_urls = []
+          if msg and getattr(msg, "message_elements", None):
+              for element in msg.message_elements:
+                  if isinstance(element, ImageMessage):
+                      if element.url:
+                          image_urls.append(element.url)
+                      elif element.path:
+                          image_urls.append(element.path)
+                      elif element.media_id:
+                          image_urls.append(f"media_id:{element.media_id}")
+
+          user_text = getattr(msg, "content", "") or ""
+          return {
+              "image_urls": image_urls,
+              "has_images": bool(image_urls),
+          "user_text": user_text,
+          "msg": msg,
+          }
+    inputs:
+    - name: msg
+      label: 输入消息
+    outputs:
+    - name: image_urls
+      label: 图片URL列表
+    - name: has_images
+      label: 是否含图片
+    - name: user_text
+      label: 用户文本
+    - name: msg
+      label: 原始消息
+  position:
+    x: 160
+    y: 360
+  connected_to:
+  - target: prepare_ocr_prompt
+    mapping:
+      from: image_urls
+      to: image_urls
+  - target: prepare_ocr_prompt
+    mapping:
+      from: user_text
+      to: user_text
+  - target: merge_user_text
+    mapping:
+      from: has_images
+      to: has_images
+  - target: merge_user_text
+    mapping:
+      from: user_text
+      to: user_text
+  - target: merge_user_text
+    mapping:
+      from: msg
+      to: orig_msg
+
+- type: internal:code
+  name: prepare_ocr_prompt
+  params:
+    code: |
+      def execute(image_urls, user_text):
+          image_urls = image_urls or []
+          if not image_urls:
+              return {
+                  "ocr_user_prompt": "",
+                  "user_text": user_text or "",
+              }
+
+          lines = [f"{idx+1}. {url}" for idx, url in enumerate(image_urls[:4])]
+          prompt = (
+            "请阅读以下图片（URL可访问），提取图片文字；若无文字则简要描述主要内容。"
+            "每张图片不超过50字，按序号逐条输出，最多4张。\n"
+            "图片列表:\n" + "\n".join(lines)
+          )
+
+          return {
+              "ocr_user_prompt": prompt,
+              "user_text": user_text or "",
+          }
+    inputs:
+    - name: image_urls
+      label: 图片URL列表
+    - name: user_text
+      label: 用户文本
+    outputs:
+    - name: ocr_user_prompt
+      label: OCR用户提示
+    - name: user_text
+      label: 用户文本透传
+  position:
+    x: 360
+    y: 360
+  connected_to:
+  - target: ocr_message_constructor
+    mapping:
+      from: ocr_user_prompt
+      to: user_prompt_format
+  - target: merge_user_text
+    mapping:
+      from: user_text
+      to: user_text
+
+- type: internal:text_block
+  name: ocr_system_prompt
+  params:
+    text: "你是OCR助手，读取用户提供的图片URL，提取图片中的文字或关键信息。\n输出简洁中文，不超过50字；若无文字则简要描述主要内容；不添油加醋，不推测隐私。"
+  position:
+    x: 360
+    y: 500
+  connected_to:
+  - target: ocr_message_constructor
+    mapping:
+      from: text
+      to: system_prompt_format
+
+- type: internal:chat_message_constructor
+  name: ocr_message_constructor
+  params: {}
+  position:
+    x: 640
+    y: 430
+  connected_to:
+  - target: ocr_llm
+    mapping:
+      from: llm_msg
+      to: prompt
+
+- type: internal:chat_completion
+  name: ocr_llm
+  params:
+    model_name: gpt-4o-mini
+    temperature: 0.1
+  position:
+    x: 860
+    y: 430
+  connected_to:
+  - target: ocr_text
+    mapping:
+      from: resp
+      to: response
+
+- type: internal:llm_response_to_text
+  name: ocr_text
+  params: {}
+  position:
+    x: 1080
+    y: 430
+  connected_to:
+  - target: merge_user_text
+    mapping:
+      from: text
+      to: ocr_text
+
+- type: internal:code
+  name: merge_user_text
+  params:
+    code: |
+      from kirara_ai.im.message import IMMessage, TextMessage
+
+      def execute(user_text, ocr_text, has_images, orig_msg=None):
+          user_text = user_text or ""
+          ocr_text = (ocr_text or "").strip()
+
+          if has_images:
+              if ocr_text:
+                  merged = f"{user_text}\n[图片OCR]: {ocr_text}".strip()
+              else:
+                  merged = f"{user_text}\n[图片OCR]: (未识别到文字)".strip()
+          else:
+              merged = user_text
+
+          # Build new IMMessage preserving sender; do not carry images to text model
+          sender = getattr(orig_msg, "sender", None) if orig_msg is not None else None
+          final_msg = IMMessage(sender=sender, message_elements=[TextMessage(merged)])
+
+          return {
+              "final_user_msg": final_msg
+          }
+    inputs:
+    - name: user_text
+      label: 用户文本
+    - name: ocr_text
+      label: OCR文本
+    - name: has_images
+      label: 是否含图片
+    - name: orig_msg
+      label: 原始消息
+    outputs:
+    - name: final_user_msg
+      label: 最终用户消息
+  position:
+    x: 1280
+    y: 360
+  connected_to:
+  - target: chat_message_constructor_wfy18q
+    mapping:
+      from: final_user_msg
       to: user_msg
 - type: internal:llm_response_to_text
   name: c9eddb3c-113f-4a39-9d47-682d0a7dd26e

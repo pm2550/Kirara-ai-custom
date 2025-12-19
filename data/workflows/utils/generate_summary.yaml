@@ -125,7 +125,7 @@ blocks:
       要求：
       1. 总结关键话题、重要信息和情感基调
       2. 保留人物关系、重要事实和时间线
-      3. 控制在 800 字以内
+      3. 控制在 200 字以内
       4. 使用第三人称客观描述
       5. 按时间或话题分段
       6. 不要添加自己的评论或解释
@@ -145,7 +145,7 @@ blocks:
     code: |
       def execute(old_content):
           # 仅传递纯历史内容，不再额外添加提示语
-          return {"user_prompt": old_content[:8000]}
+          return {"user_prompt": old_content[:2000]}
     inputs:
     - name: old_content
       label: 对话内容
