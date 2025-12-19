@@ -1,0 +1,95 @@
+name: 历史摘要助手
+description: 生成历史对话的压缩摘要
+blocks:
+- type: internal:code
+  name: check_summary_needed
+  params:
+    code: |
+      def execute(memory_entries):
+          """检查是否需要生成摘要"""
+          entries = list(memory_entries or [])
+          entry_count = len(entries)
+          
+          # 当历史记录超过 80 条时触发摘要
+          SUMMARY_THRESHOLD = 80
+          needs_summary = entry_count > SUMMARY_THRESHOLD
+          
+          return {
+              "needs_summary": needs_summary,
+              "entry_count": entry_count
+          }
+    inputs:
+    - name: memory_entries
+      label: 历史记录
+    outputs:
+    - name: needs_summary
+      label: 是否需要摘要
+    - name: entry_count
+      label: 记录数量
+  position:
+    x: 100
+    y: 100
+
+- type: internal:code
+  name: prepare_old_entries
+  params:
+    code: |
+      def execute(memory_entries, needs_summary):
+          """准备需要摘要的旧记录"""
+          if not needs_summary:
+              return {"old_context": ""}
+          
+          entries = list(memory_entries or [])
+          # 取最老的 40 条
+          old_entries = entries[:40]
+          
+          lines = []
+          for entry in old_entries:
+              try:
+                  entry_text = str(entry).strip()
+                  if entry_text:
+                      lines.append(entry_text)
+              except Exception:
+                  continue
+          
+          return {"old_context": "\n".join(lines)}
+    inputs:
+    - name: memory_entries
+      label: 历史记录
+    - name: needs_summary
+      label: 是否需要摘要
+    outputs:
+    - name: old_context
+      label: 旧对话内容
+  position:
+    x: 300
+    y: 100
+
+- type: internal:text_block
+  name: summary_system_prompt
+  params:
+    text: |
+      你是一个对话历史摘要助手。请阅读以下历史对话记录，生成一份简洁的摘要。
+      
+      要求：
+      1. 总结关键话题、重要信息和情感基调
+      2. 保留人物关系和重要事实
+      3. 控制在 500 字以内
+      4. 使用第三人称客观描述
+      5. 不要添加自己的评论或解释
+  position:
+    x: 500
+    y: 100
+
+- type: internal:text_block
+  name: summary_user_prompt
+  params:
+    text: |
+      请为以下对话生成摘要：
+      
+      {old_context}
+      
+      摘要：
+  position:
+    x: 500
+    y: 200

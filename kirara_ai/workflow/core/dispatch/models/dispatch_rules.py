@@ -1,6 +1,6 @@
 from typing import Any, Dict, List, Literal, Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from kirara_ai.im.message import IMMessage
 from kirara_ai.ioc.container import DependencyContainer
@@ -20,6 +20,21 @@ class RuleGroup(BaseModel):
     operator: Literal["and", "or"] = "or"
     rules: List[SimpleDispatchRule]
 
+class BurstRateLimitConfig(BaseModel):
+    """配置在一个窗口内允许的触发次数"""
+
+    window_seconds: float = Field(default=10.0, ge=0.0)
+    max_triggers: int = Field(default=1, ge=1)
+
+
+class RateLimitConfig(BaseModel):
+    """调度规则频率限制配置"""
+
+    per_sender_seconds: Optional[float] = Field(default=None, ge=0.0)
+    per_chat_seconds: Optional[float] = Field(default=None, ge=0.0)
+    burst: Optional[BurstRateLimitConfig] = None
+
+
 class CombinedDispatchRule(BaseModel):
     """组合调度规则，支持复杂的规则组合"""
     rule_id: str
@@ -30,6 +45,7 @@ class CombinedDispatchRule(BaseModel):
     enabled: bool = True
     rule_groups: List[RuleGroup]  # 规则组之间是 AND 关系
     metadata: Dict[str, Any] = {}
+    rate_limit: Optional[RateLimitConfig] = None
 
     def match(self, message: IMMessage, workflow_registry: WorkflowRegistry, container: DependencyContainer) -> bool:
         """

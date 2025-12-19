@@ -215,6 +215,12 @@
   metadata:
     category: chat
     permission: user
+  rate_limit:
+    per_sender_seconds: 15
+    per_chat_seconds: 8
+    burst:
+      window_seconds: 20
+      max_triggers: 2
 - rule_id: system_help
   name: 帮助命令
   description: 显示帮助信息

@@ -11,6 +11,7 @@ from kirara_ai.workflow.core.workflow.base import Workflow
 from kirara_ai.workflow.core.workflow.registry import WorkflowRegistry
 
 from .exceptions import WorkflowNotFoundException
+from .rate_limit import RateLimitGuard
 
 
 class WorkflowDispatcher:
@@ -23,6 +24,7 @@ class WorkflowDispatcher:
         # 从容器获取注册表
         self.workflow_registry = container.resolve(WorkflowRegistry)
         self.dispatch_registry = container.resolve(DispatchRuleRegistry)
+        self.rate_limit_guard = RateLimitGuard()
 
     def register_rule(self, rule: CombinedDispatchRule):
         """注册一个调度规则"""
@@ -42,6 +44,13 @@ class WorkflowDispatcher:
 
             for rule in active_rules:
                 if rule.match(message, self.workflow_registry, scoped_container):
+                    if rule.rate_limit and self.rate_limit_guard.should_block(rule.rule_id, message, rule.rate_limit):
+                        self.logger.debug(
+                            "Rule %s skipped due to rate limit (sender=%s)",
+                            rule.rule_id,
+                            getattr(message.sender, "display_name", message.sender),
+                        )
+                        continue
                     scoped_container.register(DispatchRule, rule)
                     try:
                         self.logger.debug(f"Matched rule {rule}, executing workflow")

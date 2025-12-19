@@ -74,13 +74,17 @@ blocks:
     mapping:
       from: memory_content
       to: memory_content
+  - target: chat_message_constructor
+    mapping:
+      from: memory_content
+      to: memory_content
 - type: internal:code
   name: prepare_summary_context
   params:
-    code: "from collections import deque\n\ndef _clean_text(text: str) -> str:\n \
+    code: "from collections import deque\n\nMAX_CONTEXT_LINES = 40\n\ndef _clean_text(text: str) -> str:\n \
       \   return \" \".join((text or \"\").replace(\"<break>\", \" \").replace(\"\\\
       n\", \" \").split())\n\ndef execute(user_msg, memory_entries):\n    context_lines\
-      \ = deque(maxlen=6)\n\n    sender = getattr(user_msg, \"sender\", None)\n  \
+      \ = deque(maxlen=MAX_CONTEXT_LINES)\n\n    sender = getattr(user_msg, \"sender\", None)\n  \
       \  display_name = getattr(sender, \"display_name\", \"\") or \"用户\"\n    user_text\
       \ = getattr(user_msg, \"content\", \"\") or \"\"\n    normalized_current = _clean_text(user_text)\n\
       \    if normalized_current:\n        context_lines.append(f\"{display_name}:\
@@ -170,7 +174,7 @@ blocks:
     code: "from datetime import datetime\n\ndef execute(memory_entries, search_query,\
       \ user_msg):\n    search_query = (search_query or \"\").strip()\n    entries\
       \ = list(memory_entries or [])\n    display_name = getattr(getattr(user_msg,\
-      \ \"sender\", None), \"display_name\", \"最近对话\")\n    fallback_limit = 5\n\n\
+      \ \"sender\", None), \"display_name\", \"最近对话\")\n    fallback_limit = 30\n\n\
       \    def build_entry(content, is_bot):\n        return {\n            \"content\"\
       : content,\n            \"user_name\": \"雷帝\" if is_bot else display_name,\n\
       \            \"timestamp\": datetime.now().isoformat(),\n            \"source\"\
@@ -195,7 +199,7 @@ blocks:
       \ if len(parts) > 1 else \"\"\n\n        if user_text and lowered_query in user_text.lower():\n\
       \            user_matches.append(build_entry(user_text, False))\n        if\
       \ bot_text and lowered_query in bot_text.lower():\n            bot_matches.append(build_entry(bot_text,\
-      \ True))\n\n        if len(user_matches) >= 5:\n            break\n\n    results\
+      \ True))\n\n        if len(user_matches) >= 30:\n            break\n\n    results\
       \ = user_matches[:5]\n    if len(results) < 5:\n        results.extend(bot_matches[:\
       \ 5 - len(results)])\n\n    return {\n        \"recent_results\": results,\n\
       \        \"recent_count\": len(user_matches)\n    }\n"
@@ -402,7 +406,7 @@ blocks:
       \        user_items = []\n        bot_items = []\n        for item in items:\n\
       \            if item.get(\"is_bot\"):\n                bot_items.append(item)\n\
       \            else:\n                user_items.append(item)\n        return\
-      \ user_items, bot_items\n\n    def dedup_append(target, source, seen, limit=5):\n\
+      \ user_items, bot_items\n\n    def dedup_append(target, source, seen, limit=30):\n\
       \        for entry in source:\n            if len(target) >= limit:\n      \
       \          break\n            key = (entry.get(\"content\"), entry.get(\"timestamp\"\
       ), entry.get(\"is_bot\", False))\n            if key in seen:\n            \
@@ -420,10 +424,10 @@ blocks:
       \n        elif keyword_count > 0:\n            search_method = f\"关键词({keyword_count}条)\"\
       \n\n        dedup_append(final_results, vector_user, seen)\n\n        if len(final_results)\
       \ < 5:\n            dedup_append(final_results, keyword_bot, seen)\n       \
-      \ if len(final_results) < 5:\n            dedup_append(final_results, vector_bot,\
+      \ if len(final_results) < 30:\n            dedup_append(final_results, vector_bot,\
       \ seen)\n\n        if keyword_count > 0 and any(r.get(\"source\") == \"vector\"\
       \ for r in final_results):\n            search_method = f\"关键词({keyword_count}条)\
-      \ + 向量补充\"\n\n    final_results = final_results[:5]\n\n    if final_results:\n\
+      \ + 向量补充\"\n\n    final_results = final_results[:30]\n\n    if final_results:\n\
       \        context = f\"\U0001F4CA 搜索方式: {search_method}\\n\\n\"\n        context\
       \ += \"找到以下相关记录:\\n\\n\"\n        for i, r in enumerate(final_results, 1):\n\
       \            source = r.get(\"source\")\n            if source == \"keyword\"\
@@ -462,10 +466,6 @@ blocks:
     mapping:
       from: search_context
       to: search_context
-  - target: chat_message_constructor
-    mapping:
-      from: search_context
-      to: memory_content
 - type: internal:code
   name: build_prompt
   params:
