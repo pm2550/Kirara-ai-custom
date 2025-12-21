@@ -21,6 +21,27 @@
     category: chat
     permission: user
     temperature: 0.7
+- rule_id: chat_group_image
+  name: 群聊图片对话
+  description: 群聊中仅发图片时也触发聊天
+  workflow_id: chat:normal
+  priority: 6
+  enabled: true
+  rule_groups:
+  - operator: or
+    rules:
+    - type: regex
+      config:
+        pattern: "^\\[ImageMessage"
+  - operator: or
+    rules:
+    - type: chat_type
+      config:
+        chat_type: 群聊
+  metadata:
+    category: chat
+    permission: user
+    temperature: 0.7
 - rule_id: chat_creative
   name: 私聊AI对话
   description: 私聊时直接发送内容触发对话
