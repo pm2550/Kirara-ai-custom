@@ -21,6 +21,12 @@
     category: chat
     permission: user
     temperature: 0.7
+  rate_limit:
+    per_sender_seconds: 10
+    per_chat_seconds: 5
+    burst:
+      window_seconds: 30
+      max_triggers: 3
 - rule_id: chat_group_image
   name: 群聊图片对话
   description: 群聊中仅发图片时也触发聊天
@@ -42,6 +48,12 @@
     category: chat
     permission: user
     temperature: 0.7
+  rate_limit:
+    per_sender_seconds: 10
+    per_chat_seconds: 5
+    burst:
+      window_seconds: 30
+      max_triggers: 3
 - rule_id: chat_creative
   name: 私聊AI对话
   description: 私聊时直接发送内容触发对话
@@ -58,6 +70,12 @@
     category: chat
     permission: user
     temperature: 0.9
+  rate_limit:
+    per_sender_seconds: 8
+    per_chat_seconds: 5
+    burst:
+      window_seconds: 30
+      max_triggers: 4
 - rule_id: chat_alei_song
   name: 雷帝点歌
   description: 玩家发送“阿雷歌曲”时随机播放语音
