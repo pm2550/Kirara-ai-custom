@@ -210,7 +210,9 @@ class ChatResponseConverter(Block):
         for part in resp.message.content:
             if isinstance(part, LLMChatTextContent):
                 # 通过 <break> 将回答分为不同的 TextMessage
-                text = part.text.replace("\r\n", "<break>").replace("\n", "<break>")
+                # 先把模型可能错误输出的 <br> 替换成 <break>
+                text = part.text.replace("<br>", "<break>")
+                text = text.replace("\r\n", "<break>").replace("\n", "<break>")
                 for element in text.split("<break>"):
                     if element.strip():
                         message_elements.append(TextMessage(element.strip()))
