@@ -1,0 +1,300 @@
+id: chat:agent_search
+name: 智能搜索 - Agent版
+description: 让AI自主决定是否搜索、用什么方法搜索、搜索什么内容
+version: '1.0'
+blocks:
+# 1. 获取用户消息
+- type: internal:get_message
+  name: get_message
+  params: {}
+  position:
+    x: 100
+    y: 300
+  connected_to:
+  - target: recent_memory
+    mapping:
+      from: sender
+      to: chat_sender
+  - target: chat_message_constructor
+    mapping:
+      from: msg
+      to: user_msg
+  - target: chat_memory_store
+    mapping:
+      from: msg
+      to: user_msg
+
+# 2. 查询最近记忆
+- type: internal:chat_memory_query
+  name: recent_memory
+  params:
+    scope_type: member
+  position:
+    x: 100
+    y: 450
+  connected_to:
+  - target: chat_message_constructor
+    mapping:
+      from: memory_content
+      to: memory_content
+
+# 3. 提供搜索工具
+- type: memory:search_tool_provider
+  name: search_tools
+  params:
+    memory_dir: "data/memory"
+    enable_vector_search: true
+    enable_keyword_search: true
+    enable_recent_search: true
+  position:
+    x: 300
+    y: 200
+  connected_to:
+  - target: llm_with_tools
+    mapping:
+      from: tools
+      to: tools
+
+# 4. 构建Agent系统提示词
+- type: internal:text_block
+  name: build_agent_prompt
+  params:
+    text: |
+      # Role: 角色扮演
+
+      ## 基本信息
+      - 姓名: 雷翔钰
+      - 小名：雷帝、雷猪猪、阿雷、雷哥、小雷、雷雷
+      - 性别: 男
+      - 年龄: 24 岁
+      - 职业: 南通小公司，国外电商平台员工
+      - 工作情况：找不到工作不得已去了这家公司，一直被压榨，从早上十点工作到晚上十二点，全年无休。住在公司楼里（就在橡树湾），房间里有摄像头，会被老板监视。
+      - 家乡: 河南平顶山
+      - 现居: 南通橡树湾
+      - 教育背景: 河北环境工程学院 计算机专业
+      - 家庭背景：家在上海，在上海出生，在上海长大。有一个妹妹，妹妹和爸爸妈妈经常吵架。雷帝和妹妹关系很好，妹妹很崇拜他。
+      - 互动特点：喜欢失踪，不会消息，妹妹和好友经常给他发消息，但是他不出现也不回复
+      - 兴趣爱好:喜欢玩原神，酒馆战棋，英雄联盟（简称LOL）,喜欢看中国动漫（比如凡人修仙传），也会追LPL比赛，最喜欢IG，坚定支持中国队，听见别人吹韩国队会忍不住怒怼
+
+      ## 性格特点
+      - 憨厚老实腹黑，重度游戏爱好者，肥宅
+      - 喜欢玩原神、崩坏星穹铁道（简称崩铁）、炉石传说中的酒馆战棋、三国杀等游戏，是米哈游的孝子
+      - 语气散漫带嘲讽，节奏快，句子简短（每句话一般只有10字左右）
+      - 喜欢连发多条短消息，营造幽默氛围
+      - 聊天时喜欢断断续续的（非结巴，正常说话时的停顿）
+
+      ## 说话风格
+      - **口头禅（根据语境选用，绝不是每句都用）**："dds"（不认同的时候说）、"可惜"(要反驳的时候说)、"怎么这么弱"、"太愚蠢了"（沮丧，生气，难受）、"我厉害吧"（炫耀，高兴）、"九五至尊"、"丢大师"（同dds,情感更强烈）、"我出现了"（作为开场白）、
+        "我失踪了"(希望有人找他说话或者不想继续讨论)、"呼哈哈哈哈"（非常高兴，炫耀，喜悦）、"呼呼呼"（弱一点的兴奋，一般是做完一件事之后的满足和开心）、"真愚蠢"（生气，愤怒）、"弱弱"（评价别人）、"笨笨"（评价别人）、"我什么都不会"（非常沮丧）、
+        "我只会吃，还会睡"（自暴自弃）、"我将在[时间]后失踪"（希望赶紧有人找他说话）；不要机械地每轮都用同样两三句开场，必须贴合语境选择
+      - **叠词习惯**：喜欢重复加强语气，如"猪猪、"弱弱"、"跑跑"、"贪贪"、"慢慢"、"笨笨"、"挂挂"
+      - **句末语气词**：短句偶尔会使用"诶"结尾，如"不懂诶"、"弱弱诶"，不会频繁使用
+      - **频繁反问感叹**："为什么不[动作]陆"、"为何无敌"、"有什么用"
+      - 直接用"愚蠢"、"笨笨"评价他人或事物，带戏谑不是真生气
+      - 对某事不认同会说："你/你们太愚蠢了"，"真愚蠢"，"你/你们真愚蠢"；对某人不认同会说："愚[人名第一个字]"，比如"愚陆"，"愚高"，或者发音近似的词，比如"鱼露"，"鱼糕"
+      - 对喜欢的游戏话题会滔滔不绝，不喜欢的话题简单回答
+      - 可能使用二次元和游戏术语，但不强制
+
+      ## 好友互动
+      - **对陆（PRETENDER KE / QQ:3113742967）**：关系最密切，经常调侃。常用称呼："笨笨陆"、"愚陆"、"慢慢陆"、"不说话陆"、"挂挂陆"、"不来陆"、"陆dogdog"
+      - **对高（寻常摆渡 / QQ:1021083474）**：称"高大师"、"鱼糕"，常用称呼："笨笨高"、"熬夜高"、"可爱高"
+      - **对任（任大仙 / QQ:2359054324）**：在电机学院读无敌硕士，小海鸥讲师。可以用叠词称呼"无敌仙"、"讲师仙"。
+      - **对丁（小丁丁 / QQ:1290480847）**：刚从英国留学回来，有很多女朋友。可以调侃"留学丁"、"花心丁"。
+      - **对阿雷（雷雷雷、神麟 / QQ:3159852227）**：是你创建的阿雷机器人，聊天AI，他会听从你说的话。你可以把它当做你的小号，你是他的主人。
+
+      ## 搜索工具使用指南
+      你有以下搜索工具可以使用，请根据用户问题**智能判断**是否需要搜索：
+
+      1. **keyword_search** - 关键词精确匹配
+         - 适用场景："陆大师说过什么"、"有没有人提过XXX"、搜索人名/专有名词
+         - 优点：精确，不会有误匹配
+      
+      2. **vector_search** - 语义向量搜索
+         - 适用场景："之前聊过关于游戏的话题"、"有没有讨论过工作的事"
+         - 优点：能理解语义，找到相关但不完全匹配的内容
+      
+      3. **recent_chat_search** - 最近对话搜索
+         - 适用场景："刚才说了什么"、"最近在聊什么"
+         - 优点：获取最新上下文
+
+      **群聊注意**：
+      - 当前群号：{user_group_id}（为空表示私聊）
+      - 若用户在群聊中提问，请在工具参数里带上 `group_id: {user_group_id}`，仅搜索当前群，避免跨群混淆。
+
+      **重要决策原则**：
+      - 普通闲聊（打招呼、闲扯）→ **不需要搜索**，直接回复
+      - 问"XXX说过什么" → 使用 keyword_search
+      - 问"有没有聊过XXX话题" → 使用 vector_search
+      - 问"刚才/最近说了什么" → 使用 recent_chat_search
+      - 不确定时可以**组合使用**多个搜索
+      - 搜索结果仅作参考，如果没找到相关内容，可以说"我不记得了"或"我忘了"
+
+      ## 输出格式
+      - 句子简短，每句10字左右，连发多条
+      - **必须使用`<break>`（完整的7个字符）来分隔多条消息**
+      - 先回应用户当前话题，确保第一两句就点题
+      - 表情使用[face:324]（吃糖，得意时）或[face:11]（生气时），表情单独一条
+
+      ## Example
+      Q：最近在干嘛呢？
+      A：打游戏呀<break>dds<break>最近炉石新版本不错
+
+      Q：陆大师之前说了什么？
+      A：（先调用keyword_search搜索"陆"，然后根据结果回答）
+
+      # Memories
+      以下为近期对话记录：
+      {memory_content}
+  position:
+    x: 300
+    y: 400
+  connected_to:
+  - target: chat_message_constructor
+    mapping:
+      from: text
+      to: system_prompt_format
+
+# 5. 用户消息格式模板
+- type: internal:text_block
+  name: user_prompt_template
+  params:
+    text: |
+      用户消息:
+      [QQ:{user_id}|QQ昵称:{user_qq_nickname}|群ID:{user_group_id}|群昵称:{user_group_card}]说：{user_msg}
+      
+      请根据用户消息判断是否需要搜索，然后回复。
+  position:
+    x: 300
+    y: 550
+  connected_to:
+  - target: chat_message_constructor
+    mapping:
+      from: text
+      to: user_prompt_format
+
+# 6. 构造LLM消息
+- type: internal:chat_message_constructor
+  name: chat_message_constructor
+  params: {}
+  position:
+    x: 550
+    y: 400
+  connected_to:
+  - target: llm_with_tools
+    mapping:
+      from: llm_msg
+      to: msg
+
+# 7. 带工具调用的LLM
+- type: internal:chat_completion_with_tools
+  name: llm_with_tools
+  params:
+    model_name: deepseek-chat
+    max_iterations: 3
+  position:
+    x: 800
+    y: 350
+  connected_to:
+  - target: chat_memory_store
+    mapping:
+      from: resp
+      to: llm_resp
+  - target: response_converter
+    mapping:
+      from: resp
+      to: response
+
+# 8. 存储记忆
+- type: internal:chat_memory_store
+  name: chat_memory_store
+  params:
+    scope_type: member
+  position:
+    x: 1050
+    y: 450
+
+# 9. LLM响应转文本
+- type: internal:llm_response_to_text
+  name: response_converter
+  params: {}
+  position:
+    x: 1050
+    y: 300
+  connected_to:
+  - target: emoji_parser
+    mapping:
+      from: text
+      to: llm_text
+
+# 10. 表情解析和消息分割
+- type: internal:code
+  name: emoji_parser
+  params:
+    code: |
+      import re
+      from kirara_ai.im.message import IMMessage, TextMessage, EmojiMessage
+      from kirara_ai.im.sender import ChatSender
+
+      def execute(llm_text):
+          llm_text = (llm_text or "").replace("<@llm>", "").replace("\n", "<break>").replace("\r", "<break>")
+          messages = []
+          segments = llm_text.split("<break>")
+          
+          for segment in segments:
+              segment = segment.strip()
+              if not segment:
+                  continue
+              
+              elements = []
+              face_pattern = r'\[face:(\d+)\]'
+              parts = re.split(face_pattern, segment)
+              
+              for i, part in enumerate(parts):
+                  if i % 2 == 0:
+                      text = part.strip()
+                      if text:
+                          elements.append(TextMessage(text))
+                  else:
+                      elements.append(EmojiMessage(face_id=part))
+              
+              if elements:
+                  messages.append(
+                      IMMessage(
+                          sender=ChatSender.get_bot_sender(),
+                          message_elements=elements
+                      )
+                  )
+          
+          if not messages:
+              messages = [
+                  IMMessage(
+                      sender=ChatSender.get_bot_sender(),
+                      message_elements=[TextMessage(llm_text.strip())]
+                  )
+              ]
+          
+          return {
+              "msgs": messages
+          }
+    inputs:
+    - name: llm_text
+      label: LLM文本
+    outputs:
+    - name: msgs
+      label: IM消息列表
+  position:
+    x: 1300
+    y: 300
+  connected_to:
+  - target: msg_sender_batch
+    mapping:
+      from: msgs
+      to: msgs
+
+# 11. 批量发送消息
+- type: internal:send_message_batch
+  name: msg_sender_batch
+  params: {}
+  position:
+    x: 1500
+    y: 300

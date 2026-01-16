@@ -4,6 +4,7 @@ from kirara_ai.workflow.implementations.blocks.llm.basic import LLMResponseToTex
 from kirara_ai.workflow.implementations.blocks.llm.image import SimpleStableDiffusionWebUI
 from kirara_ai.workflow.implementations.blocks.mcp.tool import MCPToolProvider
 from kirara_ai.workflow.implementations.blocks.memory.clear_memory import ClearMemory
+from kirara_ai.workflow.implementations.blocks.memory.search_tools import SearchToolProvider
 from kirara_ai.workflow.implementations.blocks.system.basic import (CodeBlock, CurrentTimeBlock, TextBlock,
                                                                     TextConcatBlock, TextExtractByRegexBlock,
                                                                     TextReplaceBlock)
@@ -78,3 +79,6 @@ def register_system_blocks(registry: BlockRegistry):
     
     # MCP 相关 blocks
     registry.register("mcp_tool_provider", "mcp", MCPToolProvider, "MCP: 提供工具")
+    
+    # 搜索工具 blocks
+    registry.register("search_tool_provider", "memory", SearchToolProvider, "搜索: 提供记忆搜索工具")

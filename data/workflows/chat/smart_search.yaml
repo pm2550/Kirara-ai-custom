@@ -407,13 +407,27 @@ blocks:
               }
 
           # 全局扫描 memory 目录（群聊与私聊都搜）
-          memory_dir = "kirara-ai/data/memory"
+          memory_dir = "data/memory"
           results = []
           bot_results = []
+        group_id = getattr(chat_sender, "group_id", None) if chat_sender else None
+        if group_id is not None:
+            group_id = str(group_id)
+          if group_id is not None:
+              group_id = str(group_id)
           if os.path.exists(memory_dir):
               time_range_start = datetime.now() - timedelta(days=30)
               for name in os.listdir(memory_dir):
-                  if not (name.startswith("group_") or name.startswith("c2c_")):
+                  if not (name.startswith("group_") or name.startswith("c2c_") or name.startswith("member_")):
+                      continue
+                  if group_id:
+                      if name.startswith("group_") and name != f"group_{group_id}.json":
+                          continue
+                      if name.startswith("member_") and not name.startswith(f"member_{group_id}_"):
+                          continue
+                      if name.startswith("c2c_"):
+                          continue
+                  if name.endswith("_summary.json"):
                       continue
                   file_path = os.path.join(memory_dir, name)
                   try:
@@ -485,7 +499,7 @@ blocks:
 - type: internal:code
   name: vector_search
   params:
-    code: "import sys\nimport os\n\ndef execute(query, chat_sender, recent_count):\n    if recent_count and recent_count > 0:\n        return {\n            \"vector_results\": []\n        }\n\n    try:\n        # 添加项目根目录到 Python 路径\n        project_root = os.path.abspath(os.path.join(os.getcwd()))\n        if project_root not in sys.path:\n            sys.path.insert(0, project_root)\n        \n        from vector_memory import get_vector_manager\n        \n        vector_manager = get_vector_manager()\n        \n        # 向量搜索（全局，不限群）\n        vector_results = vector_manager.search(\n            query=query,\n            n_results=10,\n            group_filter=None\n        )\n        \n        # 格式化结果\n        formatted_results = []\n        for r in vector_results:\n            user_name = r.get(\"user_name\", \"\")\n            is_bot = user_name in {\"雷帝\", \"隐秘的阿雷\", \"雷猪猪\"}\n            formatted_results.append({\n                \"content\": r[\"content\"],\n                \"user_name\": r[\"user_name\"],\n                \"timestamp\": r[\"timestamp\"],\n                \"similarity\": 1 - r[\"distance\"],\n                \"source\": \"vector\",\n                \"is_bot\": is_bot\n            })\n        \n        return {\n            \"vector_results\": formatted_results\n        }\n    except Exception as e:\n        print(f\"Vector search error: {e}\")\n        return {\n            \"vector_results\": []\n        }\n"
+    code: "import sys\nimport os\n\ndef execute(query, chat_sender, recent_count):\n    if recent_count and recent_count > 0:\n        return {\n            \"vector_results\": []\n        }\n\n    try:\n        # 添加项目根目录到 Python 路径\n        project_root = os.path.abspath(os.path.join(os.getcwd()))\n        if project_root not in sys.path:\n            sys.path.insert(0, project_root)\n        \n        from vector_memory import get_vector_manager\n        \n        vector_manager = get_vector_manager()\n        \n        group_id = getattr(chat_sender, \"group_id\", None) if chat_sender else None\n        # 向量搜索（按群过滤，若无群号则全局）\n        vector_results = vector_manager.search(\n            query=query,\n            n_results=10,\n            group_filter=group_id\n        )\n        \n        # 格式化结果\n        formatted_results = []\n        for r in vector_results:\n            user_name = r.get(\"user_name\", \"\")\n            is_bot = user_name in {\"雷帝\", \"隐秘的阿雷\", \"雷猪猪\"}\n            formatted_results.append({\n                \"content\": r[\"content\"],\n                \"user_name\": r[\"user_name\"],\n                \"timestamp\": r[\"timestamp\"],\n                \"similarity\": 1 - r[\"distance\"],\n                \"source\": \"vector\",\n                \"is_bot\": is_bot\n            })\n        \n        return {\n            \"vector_results\": formatted_results\n        }\n    except Exception as e:\n        print(f\"Vector search error: {e}\")\n        return {\n            \"vector_results\": []\n        }\n"
     inputs:
     - name: query
       label: 查询关键词

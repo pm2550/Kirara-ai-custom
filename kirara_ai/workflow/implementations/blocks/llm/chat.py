@@ -96,6 +96,7 @@ class ChatMessageConstructor(Block):
             "{user_id}": user_msg.sender.user_id,
             "{user_qq_nickname}": user_msg.sender.raw_metadata.get("nickname", user_msg.sender.display_name),
             "{user_group_card}": user_msg.sender.raw_metadata.get("card", ""),
+            "{user_group_id}": user_msg.sender.group_id or "",
         }
 
         if isinstance(memory_content, list) and all(isinstance(item, str) for item in memory_content):
