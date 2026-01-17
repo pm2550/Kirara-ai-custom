@@ -63,8 +63,9 @@ async def convert_non_tool_message(msg: LLMChatMessage, media_manager: MediaMana
             if media is None:
                 raise ValueError(f"Media {element.media_id} not found")
             parts.append({
-                "inline_data": {
-                    "mime_type": str(media.mime_type),
+                # Gemini REST API expects camelCase inlineData/mimeType
+                "inlineData": {
+                    "mimeType": str(media.mime_type),
                     "data": await media.get_base64()
                 }
             })
@@ -189,7 +190,7 @@ class GeminiAdapter(LLMBackendAdapter, AutoDetectModelsProtocol, LLMChatProtocol
                 "topK": 40,
                 "maxOutputTokens": req.max_tokens,
                 "stopSequences": req.stop,
-                "responseModalities": response_modalities,
+                "stopSequences": req.stop,
             },
             "safetySettings": SAFETY_SETTINGS,
             "tools": convert_tools_to_gemini_format(req.tools) if req.tools else None,
@@ -197,8 +198,15 @@ class GeminiAdapter(LLMBackendAdapter, AutoDetectModelsProtocol, LLMChatProtocol
         
         self.logger.debug(f"Gemini request: {data}")
 
-        # Remove None fields
-        data = {k: v for k, v in data.items() if v is not None}
+        # Remove None fields (nested)
+        def _drop_none(obj):
+            if isinstance(obj, dict):
+                return {k: _drop_none(v) for k, v in obj.items() if v is not None}
+            if isinstance(obj, list):
+                return [_drop_none(v) for v in obj if v is not None]
+            return obj
+
+        data = _drop_none(data)
 
         response = self._post_with_retry(api_url, json=data, headers=headers)
 

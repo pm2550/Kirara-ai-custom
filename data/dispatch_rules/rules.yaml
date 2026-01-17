@@ -38,7 +38,7 @@
     rules:
     - type: regex
       config:
-        pattern: ^\[ImageMessage
+        pattern: (CQ:image|ImageMessage)
   - operator: or
     rules:
     - type: chat_type
@@ -48,7 +48,7 @@
     rules:
     - type: random
       config:
-        chance: 5
+        chance: 100
   metadata:
     category: chat
     permission: user

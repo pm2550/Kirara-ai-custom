@@ -78,6 +78,23 @@ class MediaManager:
         async with aiofiles.open(target_path, "wb") as f:
             await f.write(data)
     
+    def _sanitize_url(self, url: str) -> list[str]:
+        """生成一组用于尝试下载的 url（处理 &amp; 和 gchat 域名）"""
+        candidates = [url]
+        if "&amp;" in url:
+            candidates.append(url.replace("&amp;", "&"))
+        if "gchat.qpic.cn/download" in url:
+            candidates.append(url.replace("gchat.qpic.cn/download", "multimedia.nt.qq.com/download"))
+        # 去重保持顺序
+        seen = set()
+        ordered = []
+        for u in candidates:
+            if u in seen:
+                continue
+            seen.add(u)
+            ordered.append(u)
+        return ordered
+
     async def _download_file_async(self, url: str) -> bytes:
         """异步下载文件"""
         from curl_cffi import AsyncSession, Response
@@ -86,12 +103,25 @@ class MediaManager:
         if url.startswith("file://"):
             async with aiofiles.open(url[7:], "rb") as f:
                 return await f.read()
-        async with AsyncSession(trust_env=True, timeout=3000) as session:
-            resp: Response = await session.get(url)
-            if resp.status_code != 200:
-                raise ValueError(f"Failed to download file from {url}, status: {resp.status_code}")
-            return resp.content
-    
+
+        headers = {
+            "User-Agent": "Mozilla/5.0",
+            "Referer": "https://qq.com",
+        }
+
+        async with AsyncSession(trust_env=True, timeout=3000, verify=False) as session:
+            last_error = None
+            for candidate in self._sanitize_url(url):
+                try:
+                    resp: Response = await session.get(candidate, headers=headers)
+                except Exception as e:
+                    last_error = str(e)
+                    continue
+                if resp.status_code == 200:
+                    return resp.content
+                last_error = resp.status_code
+            raise ValueError(f"Failed to download file from {url}, status: {last_error}")
+
     def _download_file_sync(self, url: str) -> bytes:
         """同步下载文件"""
         from curl_cffi import Response, Session
@@ -100,11 +130,24 @@ class MediaManager:
         if url.startswith("file://"):
             with open(url[7:], "rb") as f:
                 return f.read()
-        with Session() as session:
-            resp: Response = session.get(url)
-            if resp.status_code != 200:
-                raise ValueError(f"Failed to download file from {url}, status: {resp.status_code}")
-            return resp.content
+
+        headers = {
+            "User-Agent": "Mozilla/5.0",
+            "Referer": "https://qq.com",
+        }
+
+        with Session(verify=False) as session:
+            last_error = None
+            for candidate in self._sanitize_url(url):
+                try:
+                    resp: Response = session.get(candidate, headers=headers)
+                except Exception as e:
+                    last_error = str(e)
+                    continue
+                if resp.status_code == 200:
+                    return resp.content
+                last_error = resp.status_code
+            raise ValueError(f"Failed to download file from {url}, status: {last_error}")
     
     async def register_media(
         self,

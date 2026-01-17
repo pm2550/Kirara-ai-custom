@@ -254,19 +254,18 @@ blocks:
     mapping:
       from: msg
       to: msg
-  - target: ocr_message_constructor
-    mapping:
-      from: msg
-      to: user_msg
+
 
 - type: internal:code
   name: extract_images
   params:
     code: |
       from kirara_ai.im.message import ImageMessage
+      import re
 
       def execute(msg):
           image_urls = []
+          # 优先从解析好的元素里拿
           if msg and getattr(msg, "message_elements", None):
               for element in msg.message_elements:
                   if isinstance(element, ImageMessage):
@@ -276,13 +275,41 @@ blocks:
                           image_urls.append(element.path)
                       elif element.media_id:
                           image_urls.append(f"media_id:{element.media_id}")
+          # 兜底从 raw_message 里的 CQ 码或 message 数组解析 URL
+          if msg:
+              raw = getattr(msg, "raw_message", "")
+              # OneBot 的 raw.message 里通常带有解析好的图片 URL
+              raw_msg_list = None
+              if isinstance(raw, dict):
+                  raw_msg_list = raw.get("message")
+              else:
+                  raw_msg_list = getattr(raw, "message", None)
+              if raw_msg_list:
+                  for item in raw_msg_list:
+                      if item.get("type") == "image":
+                          url = item.get("data", {}).get("url") or item.get("data", {}).get("file")
+                          if url:
+                              url = str(url).replace("&amp;", "&")
+                              if url not in image_urls:
+                                  image_urls.append(url)
+              # raw 可能是 dict/对象，尽量转成字符串再搜
+              try:
+                  raw_str = str(raw)
+              except Exception:
+                  raw_str = ""
+              # 搜 CQ:image 的 url 字段
+              match = re.search(r"url=([^,\\]]+)", raw_str)
+              if match:
+                  url = match.group(1).replace("&amp;", "&")
+                  if url not in image_urls:
+                      image_urls.append(url)
 
           user_text = getattr(msg, "content", "") or ""
           return {
               "image_urls": image_urls,
               "has_images": bool(image_urls),
-          "user_text": user_text,
-          "msg": msg,
+              "user_text": user_text,
+              "msg": msg,
           }
     inputs:
     - name: msg
@@ -308,6 +335,10 @@ blocks:
     mapping:
       from: user_text
       to: user_text
+  - target: prepare_ocr_prompt
+    mapping:
+      from: msg
+      to: msg
   - target: merge_user_text
     mapping:
       from: has_images
@@ -325,15 +356,65 @@ blocks:
   name: prepare_ocr_prompt
   params:
     code: |
-      def execute(image_urls, user_text):
-          image_urls = image_urls or []
-          if not image_urls:
+      def execute(image_urls, user_text, msg):
+          from kirara_ai.im.message import IMMessage, TextMessage, ImageMessage
+          
+          # 1. 构造 safe_msg，保留已下载成功的图片(Valid ImageMessage)，剔除 broken 的
+          safe_elements = []
+          has_valid_images = False
+          
+          if msg and getattr(msg, "message_elements", None):
+              for element in msg.message_elements:
+                  if isinstance(element, ImageMessage):
+                      # 检查是否是 fallback 的 url_only
+                      if str(element.media_id).startswith("url_only:"):
+                          pass # Skip broken image
+                      else:
+                          # 认为是有效图片（已下载或有path）
+                          safe_elements.append(element)
+                          has_valid_images = True
+                  else:
+                      safe_elements.append(element)
+          
+          if not safe_elements:
+              # 如果没有元素，至少放入文本（避免 message 为空）
+              safe_elements = [TextMessage(text=user_text or "")]
+              
+          safe_msg = IMMessage(
+              sender=msg.sender,
+              message_elements=safe_elements,
+              raw_message=None
+          )
+          
+          # 2. 如果有有效图片实体传给 LLM，直接请求识别
+          if has_valid_images:
+              prompt = "请提取图片中的文字；若无文字则简要描述主要内容。每张图片不超过50字。"
               return {
-                  "ocr_user_prompt": "",
+                  "ocr_user_prompt": prompt,
                   "user_text": user_text or "",
+                  "safe_msg": safe_msg,
+              }
+              
+          # 3. 如果没有有效图片实体（比如下载失败被过滤了），则尝试 fallback 到 URL 方式
+          # 只有非腾讯域名的 public URL 才能被 Gemini 直接通过 Prompt 访问
+          image_urls = image_urls or []
+          accessible_urls = []
+          for url in image_urls:
+              if url.startswith("url_only:") or url.startswith("media_id:"):
+                  continue
+              if "gchat.qpic.cn" in url or "multimedia.nt.qq.com" in url:
+                  continue
+              accessible_urls.append(url)
+          
+          if not accessible_urls:
+              # 所有图片都无法访问
+              return {
+                  "ocr_user_prompt": "(图片内容无法访问，请根据上下文回复)",
+                  "user_text": (user_text or "") + f"\n[用户发送了{len(image_urls)}张图片]",
+                  "safe_msg": safe_msg,
               }
 
-          lines = [f"{idx+1}. {url}" for idx, url in enumerate(image_urls[:4])]
+          lines = [f"{idx+1}. {url}" for idx, url in enumerate(accessible_urls[:4])]
           prompt = (
             "请阅读以下图片（URL可访问），提取图片文字；若无文字则简要描述主要内容。"
             "每张图片不超过50字，按序号逐条输出，最多4张。\n"
@@ -343,25 +424,34 @@ blocks:
           return {
               "ocr_user_prompt": prompt,
               "user_text": user_text or "",
+              "safe_msg": safe_msg,
           }
     inputs:
     - name: image_urls
       label: 图片URL列表
     - name: user_text
       label: 用户文本
+    - name: msg
+      label: 原始消息
     outputs:
     - name: ocr_user_prompt
-      label: OCR用户提示
+      label: OCR提示词
     - name: user_text
-      label: 用户文本透传
+      label: 用户文本
+    - name: safe_msg
+      label: 安全消息对象
   position:
-    x: 360
+    x: 320
     y: 360
   connected_to:
   - target: ocr_message_constructor
     mapping:
       from: ocr_user_prompt
       to: user_prompt_format
+  - target: ocr_message_constructor
+    mapping:
+      from: safe_msg
+      to: user_msg
   - target: merge_user_text
     mapping:
       from: user_text
@@ -395,7 +485,7 @@ blocks:
 - type: internal:chat_completion
   name: ocr_llm
   params:
-    model_name: gpt-4o-mini
+    model_name: gemini-2.5-flash
     temperature: 0.1
   position:
     x: 860

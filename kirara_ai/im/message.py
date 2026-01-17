@@ -389,7 +389,13 @@ class IMMessage:
             content += element.to_plain()
             if isinstance(element, TextMessage):
                 content += "\n"
-        return content.strip()
+        content = content.strip()
+        if not content and self.raw_message:
+            try:
+                content = str(self.raw_message)
+            except Exception:
+                pass
+        return content
 
     @property
     def images(self) -> List[ImageMessage]:
