@@ -30,3 +30,8 @@ uv.lock
 **/test_password.hash
 **/media/
 models/
+vector_db/
+startup.log
+kirara.log
+nohup.out
+*.log.zip
