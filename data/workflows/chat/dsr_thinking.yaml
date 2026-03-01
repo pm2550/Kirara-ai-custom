@@ -159,7 +159,7 @@ blocks:
   name: emoji_parser_code_block
   params:
     code: "import re\nfrom kirara_ai.im.message import IMMessage, TextMessage, EmojiMessage\n\
-      from kirara_ai.im.sender import ChatSender\n\ndef execute(llm_text):\n    messages\
+      from kirara_ai.im.sender import ChatSender\n\ndef execute(llm_text):\n    llm_text = (llm_text or \"\").replace(\"<br>\", \"<break>\").replace(\"<br/>\", \"<break>\")\n    messages\
       \ = []\n    \n    segments = llm_text.split(\"<break>\")\n    \n    for segment\
       \ in segments:\n        segment = segment.strip()\n        if not segment:\n\
       \            continue\n        \n        elements = []\n        face_pattern\
@@ -221,7 +221,7 @@ blocks:
 - type: internal:chat_completion
   name: llm_chat
   params:
-    model_name: deepseek-chat
+    model_name: qwen3.5-plus
     temperature: 1.4
   position:
     x: 1280

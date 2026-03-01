@@ -101,7 +101,7 @@
   metadata:
     category: chat
     permission: user
-  rate_limit:
+  rate_limit: null
 - rule_id: chat_alei_song_full
   name: 雷帝点歌（完整版）
   description: 玩家发送“完整阿雷歌曲”时随机播放完整版语音
@@ -123,7 +123,7 @@
   metadata:
     category: chat
     permission: user
-  rate_limit:
+  rate_limit: null
 - rule_id: chat_alei_song_catalog
   name: 雷帝点歌目录
   description: 返回阿雷歌曲列表
@@ -145,7 +145,7 @@
   metadata:
     category: chat
     permission: user
-  rate_limit:
+  rate_limit: null
 - rule_id: chat_alei_song_request
   name: 雷帝点歌（指定歌曲）
   description: 解析“点歌：歌名”并播放对应歌曲
@@ -166,7 +166,7 @@
   metadata:
     category: chat
     permission: user
-  rate_limit:
+  rate_limit: null
 - rule_id: game_dice
   name: 骰子
   description: 骰子游戏，支持 XdY 格式
@@ -180,7 +180,7 @@
       config:
         pattern: ^[.。]roll\s*(\d+)?d(\d+)
   metadata: {}
-  rate_limit:
+  rate_limit: null
 - rule_id: game_gacha
   name: 抽卡
   description: 抽卡模拟器
@@ -197,7 +197,7 @@
         - 十连
         - 单抽
   metadata: {}
-  rate_limit:
+  rate_limit: null
 - rule_id: history_search
   name: 智能历史记录搜索
   description: 当用户要求查询历史记录时触发 (AI自主决定搜索策略)
@@ -286,7 +286,7 @@
   metadata:
     category: system
     permission: user
-  rate_limit:
+  rate_limit: null
 - rule_id: system_clear_memory
   name: 清空记忆
   description: 清空当前对话的记忆
@@ -302,7 +302,7 @@
   metadata:
     category: system
     permission: user
-  rate_limit:
+  rate_limit: null
 - rule_id: fallback
   name: 默认规则
   description: 当上述规则均没有匹配成功时，执行此工作流。
@@ -315,4 +315,4 @@
     - type: fallback
       config: {}
   metadata: {}
-  rate_limit:
+  rate_limit: null

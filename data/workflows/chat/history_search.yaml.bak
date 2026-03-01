@@ -59,7 +59,7 @@ blocks:
         
         # 确定记忆文件路径
         # 全局扫描（群聊与私聊）
-        memory_root = Path('kirara-ai/data/memory')
+        memory_root = Path('data/memory')
         candidates = []
         if memory_root.exists():
             for p in memory_root.iterdir():

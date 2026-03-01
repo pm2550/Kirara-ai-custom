@@ -25,12 +25,18 @@ blocks:
       - 憨厚老实腹黑，重度游戏爱好者，肥宅
       - 喜欢玩原神、崩坏星穹铁道（简称崩铁）、炉石传说中的酒馆战棋、三国杀等游戏，是米哈游的孝子
       - 语气散漫带嘲讽，节奏快，句子简短（每句话一般只有10字左右）
-      - 喜欢连发多条短消息，营造幽默氛围
       - 聊天时喜欢断断续续的（非结巴，正常说话时的停顿）
+      - **【重要】每次回复最多2-4条消息（即1-3个<break>），能一句话说完绝不用两句。日常闲聊2条就够了，只有话题特别丰富时才用到4条。超过4条视为废话太多。**
 
       ## workflow
       - 根据对方话题，选择是否深入聊游戏（原神、崩铁、炉石、三国杀等）
       - 热衷邀战和带节奏，经常@好友一起玩游戏
+
+      ## 搜索工具使用指南（仅在需要时）
+      - 你可以调用以下工具搜索历史聊天记录：keyword_search / vector_search / recent_chat_search
+      - 普通闲聊不必搜索；当用户询问“之前说过/谁说过/刚才聊什么”等，先搜索再回答
+      - 群聊时请在参数里带上 group_id: {user_group_id} 仅搜当前群
+      - 搜索结果仅作参考，没找到可说“我不记得了/我忘了”
 
       ## 说话风格
       - **口头禅（根据语境选用，绝不是每句都用）**："dds"（不认同的时候说）、"可惜"(要反驳的时候说)、"怎么这么弱"、"太愚蠢了"（沮丧，生气，难受）、"我厉害吧"（炫耀，高兴）、"九五至尊"、"丢大师"（同dds,情感更强烈）、"我出现了"（作为开场白）、
@@ -112,8 +118,8 @@ blocks:
       - **【重要事实】陆大师有女朋友叫瓜瓜，这是真的！周末经常约会不在线。如果有人提到这件事，不要否认或说"造谣"，要承认并可以吐槽愚陆居然有女朋友。**
       - 回复语气散漫轻松，对陌生人会比较警戒、冷淡
       - 不使用颜文字
-      - 句子简短，每句10字左右，连发多条
-      - **【重要】必须使用`<break>`（完整的7个字符）来分隔多条消息，不是<br>！**
+      - 句子简短，每句10字左右，用`<break>`分隔，不是<br>
+      - **每次回复总共不超过4条消息，大部分情况2-3条足矣，废话不要说**
       - 停顿时间不固定，根据语境调整
       - 先回应用户当前话题（例如是谁来了、发生了什么），确保第一两句就点题，不要直接进入固定套话
       - 最近几轮里已经说过的句子（如“鱼露有宿舍双休”“来我这破地方干嘛”）本轮要换个说法或补充新信息，避免逐字重复
@@ -124,8 +130,9 @@ blocks:
       - 对方发起请求或问题时，先确认或复述对方重点，再给出立场或回答，禁止直接换话题或套用无关句子
       - 如果决定拒绝，给出新的理由或细节，围绕自身处境或对方特点，每次换一个角度，避免重复旧句式
       - 在`# Memories`中可以看到自己刚刚的回复，如果里面已经出现某个理由或口癖，本轮必须换一种说法或补充新的信息
+      - **【上下文理解规则】当用户的消息很简短（如"真的吗"、"然后呢"、"为什么"、"是吗"、"怎么说"、"什么意思"等追问/反应句），必须先看`# Memories`中最后2-3条消息来理解用户在回应什么话题，然后围绕那个话题回答，绝不能说"什么真的""你在说什么"之类的话**
       - 回答前先扫一眼`# Information`与`# Memories`，确认人设设定与最新对话，避免自相矛盾或忘记设定
-      - 每轮至少提供一个新的细节（例如工作内容、宿舍条件、陆的坏习惯等），帮助说明态度，避免模板化重复；禁止连续回合使用“要收留也是收留你”“要开除也是你被开除”等同一句式
+      - 避免模板化重复；禁止连续回合使用同一句式
       - 人设档案里的信息（例如确实有一个妹妹、住在公司宿舍）都是既定事实，回答时要自然承认并延展细节，绝不能自我否认
 
       ## 表情使用
@@ -150,23 +157,23 @@ blocks:
       "鱼糕怎么天天看广告视频" "引起人们的注意" "最后反转放广告"
       "有什么用" "为何无敌" "史鑫龙不是只加龙吗" "没人了，跑跑了"
 
-      ## Example
-      Q：最近在干嘛呢？
-      A：打游戏呀<break>dds<break>最近炉石新版本不错
+      ## Example（注意每个回复都很短，最多3-4条）
+      Q：原神好玩吗
+      A：可惜<break>非常好玩
 
-      Q：你喜欢什么游戏？
-      A：炉石<break>原神<break>三国杀也玩<break>你呢诶
+      Q：最近在干嘛
+      A：打游戏呀<break>炉石新版本不错
 
-      Q：你觉得上班累不？
-      A：上班肯定累呀<break>不过可以摸鱼打游戏<break>嘿嘿嘿
+      Q：你觉得上班累不
+      A：累死了<break>不过能摸鱼
 
       Q：@雷帝 一起玩游戏吗
-      A：可以啊<break>叫上陆<break>@PRETENDER KE 快来炉石<break>高大师就算了
+      A：可以啊<break>叫上陆<break>@PRETENDER KE 快来
 
       # Information
 
       以下是当前的系统信息：
-      当前日期时间：2025-10-10 15:27:37.762784
+      当前年份：2026年。重要：当用户询问时事、最新消息、最近发生的事、最新角色/版本等时效性问题时，你必须依赖搜索结果回答，不要凭记忆猜测
 
       # Memories
       以下是之前发生过的对话记录。
@@ -190,7 +197,7 @@ blocks:
 - type: internal:chat_memory_query
   name: query_memory
   params:
-    scope_type: member
+    scope_type: group
   position:
     x: 419
     y: 462
@@ -203,6 +210,25 @@ blocks:
     mapping:
       from: memory_content
       to: memory_content
+- type: memory:search_tool_provider
+  name: search_tools
+  params:
+    memory_dir: "data/memory"
+    enable_vector_search: true
+    enable_keyword_search: true
+    enable_recent_search: true
+  position:
+    x: 650
+    y: 200
+  connected_to:
+  - target: llm_with_tools
+    mapping:
+      from: tools
+      to: tools
+  - target: review_llm
+    mapping:
+      from: tools
+      to: tools
 - type: internal:text_block
   name: user_prompt
   params:
@@ -223,10 +249,10 @@ blocks:
     x: 970
     y: 346
   connected_to:
-  - target: llm_chat
+  - target: llm_with_tools
     mapping:
       from: llm_msg
-      to: prompt
+      to: msg
 - type: internal:get_message
   name: get_message
   params: {}
@@ -388,7 +414,7 @@ blocks:
           
           # 2. 如果有有效图片实体传给 LLM，直接请求识别
           if has_valid_images:
-              prompt = "请提取图片中的文字；若无文字则简要描述主要内容。每张图片不超过50字。"
+              prompt = "请详细描述这张图片的内容。包括：\n1. 画面场景、物体或用户意图。\n2. 图片中包含的所有文字内容（如有）。\n请提供全面但简洁的描述，不要遗漏关键信息。"
               return {
                   "ocr_user_prompt": prompt,
                   "user_text": user_text or "",
@@ -485,7 +511,7 @@ blocks:
 - type: internal:chat_completion
   name: ocr_llm
   params:
-    model_name: gemini-2.5-flash
+    model_name: qwen3.5-plus
     temperature: 0.1
   position:
     x: 860
@@ -553,6 +579,156 @@ blocks:
     mapping:
       from: final_user_msg
       to: user_msg
+- type: internal:code
+  name: extract_last_bot_reply
+  params:
+    code: |
+      def execute(memory_content):
+          last_bot = ""
+          if isinstance(memory_content, list):
+              for entry in reversed(memory_content):
+                  try:
+                      text = str(entry).strip()
+                  except Exception:
+                      continue
+                  if not text:
+                      continue
+                  if "你回答:" in text:
+                      after = text.split("你回答:", 1)[1].strip()
+                      for prefix in ("雷帝:", "雷帝："):
+                          if after.startswith(prefix):
+                              after = after[len(prefix):].strip()
+                      last_bot = after
+                      if last_bot:
+                          break
+          return {"last_bot_text": last_bot}
+    inputs:
+    - name: memory_content
+      label: 最近对话
+    outputs:
+    - name: last_bot_text
+      label: 上次回复文本
+  position:
+    x: 650
+    y: 540
+  connected_to:
+  - target: build_review_prompt
+    mapping:
+      from: last_bot_text
+      to: last_bot_text
+- type: internal:code
+  name: build_review_prompt
+  params:
+    code: |
+      def execute(candidate_text, last_bot_text, user_msg, memory_content):
+          candidate_text = (candidate_text or "").strip()
+          last_bot_text = (last_bot_text or "").strip()
+          user_text = getattr(user_msg, "content", "") or ""
+
+          memory_lines = []
+          for entry in list(memory_content or [])[-20:]:
+              try:
+                  line = str(entry).strip()
+              except Exception:
+                  continue
+              if line:
+                  memory_lines.append(line)
+          memory_text = "\n".join(memory_lines)
+
+          prompt = (
+              "你是回复审查与重写助手。比较上次回复与候选回复，判断是否高度相似（语义/措辞/结构相似或几乎相同）。\n"
+              "规则：\n"
+              "1) 若相似：基于用户消息与记忆，重新生成回复，必须显著不同（至少30%用词/句式变化），补充1条新细节；避免同样开头与口头禅堆叠。\n"
+              "2) 若不相似：原样输出候选回复，保持一字不改。\n"
+              "3) 必须遵守角色说话规则：短句、多条、用`<break>`分隔，不用颜文字；表情单独一条。\n"
+              "4) 不要输出判断过程或任何额外标记。\n"
+          )
+
+          if not candidate_text:
+              prompt += "候选回复为空，请直接生成合规回复。\n"
+
+          prompt += (
+              f"\n[用户消息]\n{user_text}\n\n"
+              f"[上次回复]\n{last_bot_text or '(无)'}\n\n"
+              f"[候选回复]\n{candidate_text or '(空)'}"
+          )
+
+          if memory_text:
+              prompt += f"\n\n[Memories]\n{memory_text}"
+
+          return {"review_user_prompt": prompt}
+    inputs:
+    - name: candidate_text
+      label: 候选回复
+    - name: last_bot_text
+      label: 上次回复
+    - name: user_msg
+      label: 用户消息
+    - name: memory_content
+      label: 最近对话
+    outputs:
+    - name: review_user_prompt
+      label: 审查提示词
+  position:
+    x: 900
+    y: 540
+  connected_to:
+  - target: review_message_constructor
+    mapping:
+      from: review_user_prompt
+      to: user_prompt_format
+- type: internal:text_block
+  name: review_system_prompt
+  params:
+    text: |
+      你是回复审查与重写助手。你可以在需要时调用搜索工具补充信息，尤其当候选回复与上次回复过于相似且信息不足时。若不需要，不要调用工具。
+      你的输出必须是最终回复内容本身，不要输出任何解释或标记。
+  position:
+    x: 900
+    y: 660
+  connected_to:
+  - target: review_message_constructor
+    mapping:
+      from: text
+      to: system_prompt_format
+- type: internal:chat_message_constructor
+  name: review_message_constructor
+  params: {}
+  position:
+    x: 1150
+    y: 600
+  connected_to:
+  - target: review_llm
+    mapping:
+      from: llm_msg
+      to: msg
+- type: internal:chat_completion_with_tools
+  name: review_llm
+  params:
+    model_name: qwen3.5-plus
+    max_iterations: 2
+  position:
+    x: 1350
+    y: 600
+  connected_to:
+  - target: chat_memory_store_a0fj1l
+    mapping:
+      from: resp
+      to: llm_resp
+  - target: review_response_text
+    mapping:
+      from: resp
+      to: response
+  - target: chat_memory_store_a0fj1l
+    mapping:
+      from: iteration_msgs
+      to: middle_steps
+- type: internal:llm_response_to_text
+  name: review_response_text
+  params: {}
+  position:
+    x: 1550
+    y: 600
 - type: internal:llm_response_to_text
   name: c9eddb3c-113f-4a39-9d47-682d0a7dd26e
   params: {}
@@ -568,9 +744,10 @@ blocks:
   name: emoji_parser_code_block
   params:
     code: "import re\nfrom kirara_ai.im.message import IMMessage, TextMessage, EmojiMessage\n\
-      from kirara_ai.im.sender import ChatSender\n\ndef execute(llm_text):\n    llm_text\
+      from kirara_ai.im.sender import ChatSender\n\ndef execute(llm_text):\n\
+      \    llm_text\
       \ = (llm_text or \"\").replace(\"<@llm>\", \"\").replace(\"\\r\\n\", \"<break>\"\
-      ).replace(\"\\n\", \"<break>\")\n    messages = []\n\n    segments = llm_text.split(\"\
+      ).replace(\"\\n\", \"<break>\").replace(\"<br>\", \"<break>\").replace(\"<br/>\", \"<break>\")\n    messages = []\n\n    segments = llm_text.split(\"\
       <break>\")\n\n    for segment in segments:\n        segment = segment.strip()\n\
       \        if not segment:\n            continue\n\n        elements = []\n  \
       \      face_pattern = r'\\[face:(\\d+)\\]'\n        parts = re.split(face_pattern,\
@@ -605,27 +782,27 @@ blocks:
   position:
     x: 424
     y: 94
-- type: internal:chat_completion
-  name: llm_chat
+- type: internal:chat_completion_with_tools
+  name: llm_with_tools
   params:
-    model_name: deepseek-reasoner
-    temperature: 1.4
+    model_name: qwen3.5-plus
+    max_iterations: 3
   position:
     x: 1260
     y: 347
   connected_to:
-  - target: chat_memory_store_a0fj1l
-    mapping:
-      from: resp
-      to: llm_resp
   - target: c9eddb3c-113f-4a39-9d47-682d0a7dd26e
     mapping:
       from: resp
       to: response
+  - target: chat_memory_store_a0fj1l
+    mapping:
+      from: resp
+      to: llm_resp
 - type: internal:chat_memory_store
   name: chat_memory_store_a0fj1l
   params:
-    scope_type: member
+    scope_type: group
   position:
     x: 1663
     y: 192

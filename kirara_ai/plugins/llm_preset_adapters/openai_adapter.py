@@ -1,5 +1,6 @@
 import asyncio
 import json
+import time
 from typing import Any, Dict, List, cast, Literal, TypedDict
 
 import aiohttp
@@ -62,7 +63,7 @@ async def convert_parts_factory(messages: LLMChatMessage, media_manager: MediaMa
                 parts.append({
                     "type": "image_url",
                     "image_url": {
-                        "url": await media.get_base64_url()
+                        "url": await media.get_url()
                     }
                 })
             elif isinstance(element, LLMToolCallContent):
@@ -109,12 +110,35 @@ class OpenAIAdapterChatBase(LLMBackendAdapter, AutoDetectModelsProtocol, LLMChat
     
     def __init__(self, config: OpenAIConfig):
         self.config = config
+    def _post_with_retry(self, url: str, json: dict, headers: dict, retry_count: int = 3, timeout: int = 60) -> requests.Response:
+        """带指数退避的重试机制，处理瞬态错误(502/503/504/超时/连接错误)"""
+        retryable_status = {502, 503, 504, 429}
+        response = None
+        for i in range(retry_count):
+            try:
+                response = requests.post(url, json=json, headers=headers, timeout=timeout)
+                if response.status_code in retryable_status and i < retry_count - 1:
+                    wait = min(2 ** i * 2, 30)
+                    logger.warning(f"Request got {response.status_code}, retrying in {wait}s ({i+1}/{retry_count})")
+                    time.sleep(wait)
+                    continue
+                return response
+            except (requests.exceptions.ConnectionError, requests.exceptions.Timeout) as e:
+                if i == retry_count - 1:
+                    logger.error(f"Request failed after {retry_count} retries: {e}")
+                    raise
+                wait = min(2 ** i * 2, 30)
+                logger.warning(f"Request failed ({type(e).__name__}), retrying in {wait}s ({i+1}/{retry_count}): {e}")
+                time.sleep(wait)
+        return response
+
     @trace_llm_chat
     def chat(self, req: LLMChatRequest) -> LLMChatResponse:
         api_url = f"{self.config.api_base}/chat/completions"
         headers = {
             "Authorization": f"Bearer {self.config.api_key}",
             "Content-Type": "application/json",
+            "Accept-Encoding": "identity",
         }
         
         data = {
@@ -138,15 +162,42 @@ class OpenAIAdapterChatBase(LLMBackendAdapter, AutoDetectModelsProtocol, LLMChat
 
         # Remove None fields
         data = {k: v for k, v in data.items() if v is not None}
+
+        # Qwen-specific: disable thinking and set dynamic max_tokens
+        if "qwen" in (req.model or "").lower():
+            data["enable_thinking"] = False
+            data["enable_search"] = True
+            # Inject current datetime into first system message
+            from datetime import datetime
+            now_str = datetime.now().strftime("%Y年%m月%d日 %H:%M")
+            date_prefix = "[当前时间: " + now_str + "]\n"
+            for m in data.get("messages", []):
+                if m.get("role") == "system":
+                    if isinstance(m["content"], str):
+                        m["content"] = date_prefix + m["content"]
+                    elif isinstance(m["content"], list):
+                        for item in m["content"]:
+                            if item.get("type") == "text":
+                                item["text"] = date_prefix + item["text"]
+                                break
+                    break
+            if "max_completion_tokens" not in data:
+                has_tool = any(m.get("role") == "tool" for m in data.get("messages", []))
+                data["max_completion_tokens"] = 500 if has_tool else 500
         
         logger.debug(f"Request: {data}")
 
-        response = requests.post(api_url, json=data, headers=headers)
+        response = self._post_with_retry(api_url, json=data, headers=headers)
         try:
             response.raise_for_status()
             response_data: dict = response.json()
         except Exception as e:
-            logger.error(f"Response: {response.text}")
+            try:
+                import gzip
+                err_text = gzip.decompress(response.content).decode("utf-8")
+            except Exception:
+                err_text = response.text
+            logger.error(f"Response [{response.status_code}]: {err_text}")
             raise e
         logger.debug(f"Response: {response_data}")
 
@@ -226,6 +277,7 @@ class OpenAIAdapter(OpenAIAdapterChatBase, LLMEmbeddingProtocol):
         headers = {
             "Authorization": f"Bearer {self.config.api_key}",
             "Content-Type": "application/json",
+            "Accept-Encoding": "identity",
         }
         if len(req.inputs) > 2048:
             # text数组不能超过2048个元素，openai api限制
@@ -249,7 +301,12 @@ class OpenAIAdapter(OpenAIAdapterChatBase, LLMEmbeddingProtocol):
             response.raise_for_status()
             response_data: EmbeddingResponse = response.json()
         except Exception as e:
-            logger.error(f"Response: {response.text}")
+            try:
+                import gzip
+                err_text = gzip.decompress(response.content).decode("utf-8")
+            except Exception:
+                err_text = response.text
+            logger.error(f"Response [{response.status_code}]: {err_text}")
             raise e
         logger.debug(f"Response: {response_data}")
         return LLMEmbeddingResponse(

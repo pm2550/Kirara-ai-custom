@@ -28,7 +28,7 @@ blocks:
 - type: internal:chat_memory_query
   name: recent_memory
   params:
-    scope_type: member
+    scope_type: group
   position:
     x: 100
     y: 450
@@ -121,7 +121,16 @@ blocks:
       - 当前群号：{user_group_id}（为空表示私聊）
       - 若用户在群聊中提问，请在工具参数里带上 `group_id: {user_group_id}`，仅搜索当前群，避免跨群混淆。
 
+      ### 网络搜索（自动生效，无需调用工具）
+      你的API已启用网络搜索功能。对于需要实时信息的问题，网络搜索结果会自动融入你的回答。
+      - **必须依赖网络搜索结果的场景**（绝对不要用聊天记录或记忆回答）：
+        - 游戏版本更新、最新角色、活动信息（如"原神最新角色"、"崩铁新版本"、"酒馆战棋更新"）
+        - 时事新闻、赛事结果（如"LPL最新比赛"、"今天发生了什么"）
+        - 任何涉及"最新"、"最近"、"现在"、"2025年"、"2026年"等时效性词语的事实性问题
+      - 对于这类问题：**不要调用聊天记录搜索工具**，直接根据网络搜索结果回答
+
       **重要决策原则**：
+      - 时效性事实问题（最新角色、比赛结果、新闻）→ **不搜聊天记录**，直接根据网络搜索结果回答
       - 普通闲聊（打招呼、闲扯）→ **不需要搜索**，直接回复
       - 问"XXX说过什么" → 使用 keyword_search
       - 问"有没有聊过XXX话题" → 使用 vector_search
@@ -189,7 +198,7 @@ blocks:
 - type: internal:chat_completion_with_tools
   name: llm_with_tools
   params:
-    model_name: deepseek-chat
+    model_name: qwen3.5-plus
     max_iterations: 3
   position:
     x: 800
@@ -208,7 +217,7 @@ blocks:
 - type: internal:chat_memory_store
   name: chat_memory_store
   params:
-    scope_type: member
+    scope_type: group
   position:
     x: 1050
     y: 450
@@ -236,7 +245,7 @@ blocks:
       from kirara_ai.im.sender import ChatSender
 
       def execute(llm_text):
-          llm_text = (llm_text or "").replace("<@llm>", "").replace("\n", "<break>").replace("\r", "<break>")
+          llm_text = (llm_text or "").replace("<@llm>", "").replace("\n", "<break>").replace("<br>", "<break>").replace("<br/>", "<break>").replace("\r", "<break>")
           messages = []
           segments = llm_text.split("<break>")
           

@@ -34,7 +34,9 @@ blocks:
       雷猪猪之歌\"),\n    \"大家一起雷猪猪\": (_resolve_media_path(\"silk_full\", \"leizhuzhu_full.silk\"\
       ), \"雷猪猪之歌\"),\n    \"陆陆宝宝打雷了\": (_resolve_media_path(\"silk_full\", \"alei_extra_full.silk\"\
       ), \"陆陆宝宝打雷了\"),\n    \"陆陆宝宝打雷\": (_resolve_media_path(\"silk_full\", \"alei_extra_full.silk\"\
-      ), \"陆陆宝宝打雷了\"),\n}\n\ndef normalize(text: str) -> str:\n    return text.strip().replace(\"\
+      ), \"陆陆宝宝打雷了\"),\n    \"一起下棋\": (_resolve_media_path(\"silk_full\", \"一起下棋_full.silk\"\
+      ), \"一起下棋\"),\n    \"下棋\": (_resolve_media_path(\"silk_full\", \"一起下棋_full.silk\"\
+      ), \"一起下棋\"),\n}\n\ndef normalize(text: str) -> str:\n    return text.strip().replace(\"\
       \ \", \"\")\n\ndef execute(chat_sender, user_msg):\n    content = getattr(user_msg,\
       \ \"content\", \"\") or \"\"\n    content = content.strip()\n    match = re.search(r\"\
       点歌[:：]\\s*(.+)\", content, re.IGNORECASE)\n    if not match:\n        message\
