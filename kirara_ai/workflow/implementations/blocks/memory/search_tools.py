@@ -3,11 +3,16 @@
 将搜索功能封装成 Tool，让 AI 自主决定搜索策略
 """
 
+import asyncio
+import html
 import json
 import os
+import re
 import sys
 from datetime import datetime, timedelta
 from typing import Annotated, Any, Dict, List, Optional
+
+import requests
 
 from kirara_ai.ioc.container import DependencyContainer
 from kirara_ai.llm.format.message import LLMToolResultContent
@@ -44,6 +49,17 @@ class SearchToolProvider(Block):
         "丁": ["1290480847"],
         "小丁丁": ["1290480847"],
     }
+
+    WEB_HEADERS = {
+        "User-Agent": (
+            "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
+            "(KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+        ),
+        "Accept": "text/html,application/xhtml+xml,text/plain;q=0.9,*/*;q=0.8",
+        "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.6",
+    }
+    MAX_WEB_RESULTS_WITH_FULLTEXT = 3
+    MAX_WEB_EXCERPT_CHARS = 1200
     
     @staticmethod
     def _normalize_user_id(user_id) -> str:
@@ -76,6 +92,88 @@ class SearchToolProvider(Block):
                     continue
             yield os.path.join(self.memory_dir, name)
 
+    @classmethod
+    def _is_noise_line(cls, line: str) -> bool:
+        if not line:
+            return True
+        if re.fullmatch(r"t\d[\w_.:-]{0,40}", line):
+            return True
+        if re.fullmatch(r"\d+(\.\d+)?\s?(KB|MB|GB|TB)", line, re.IGNORECASE):
+            return True
+        if re.fullmatch(r"[A-Za-z0-9_.:-]{1,40}", line) and " " not in line:
+            return True
+
+        meaningful_chars = sum(
+            1
+            for ch in line
+            if ("\u4e00" <= ch <= "\u9fff") or ch.isalpha()
+        )
+        if meaningful_chars == 0:
+            return True
+        if len(line) < 12 and meaningful_chars < 4 and " " not in line:
+            return True
+        return False
+
+    @classmethod
+    def _extract_html_text(cls, html_text: str) -> str:
+        """粗略提取网页正文，尽量保留可读段落并压掉导航、脚本等噪声。"""
+        cleaned = re.sub(r"(?is)<!--.*?-->", " ", html_text)
+        cleaned = re.sub(
+            r"(?is)<(script|style|noscript|svg|iframe|canvas|form|footer|nav|aside).*?>.*?</\1>",
+            " ",
+            cleaned,
+        )
+        cleaned = re.sub(r"(?i)<br\s*/?>", "\n", cleaned)
+        cleaned = re.sub(r"(?i)</(p|div|article|section|main|li|ul|ol|h[1-6]|tr|table|blockquote)>", "\n", cleaned)
+        cleaned = re.sub(r"(?is)<[^>]+>", " ", cleaned)
+        cleaned = html.unescape(cleaned)
+
+        lines = []
+        seen = set()
+        for raw_line in cleaned.splitlines():
+            line = re.sub(r"\s+", " ", raw_line).strip()
+            if not line:
+                continue
+            if len(line) < 8 and not re.search(r"[。！？.!?]", line):
+                continue
+            if cls._is_noise_line(line):
+                continue
+            if line in seen:
+                continue
+            seen.add(line)
+            lines.append(line)
+
+        text = "\n".join(lines)
+        text = re.sub(r"\n{3,}", "\n\n", text).strip()
+        return text
+
+    def _fetch_page_excerpt(self, url: str) -> str:
+        """抓取网页并提取正文摘录。"""
+        if not url:
+            return ""
+
+        resp = requests.get(
+            url,
+            headers=self.WEB_HEADERS,
+            timeout=8,
+            allow_redirects=True,
+        )
+        resp.raise_for_status()
+
+        content_type = (resp.headers.get("content-type") or "").lower()
+        if "text/html" in content_type or "application/xhtml+xml" in content_type or not content_type:
+            text = self._extract_html_text(resp.text)
+        elif content_type.startswith("text/"):
+            text = resp.text
+        else:
+            return ""
+
+        text = re.sub(r"\s+\n", "\n", text)
+        text = re.sub(r"\n{3,}", "\n\n", text).strip()
+        if len(text) > self.MAX_WEB_EXCERPT_CHARS:
+            text = text[:self.MAX_WEB_EXCERPT_CHARS].rsplit("\n", 1)[0].rstrip()
+        return text
+
     def __init__(
         self,
         memory_dir: Annotated[
@@ -106,11 +204,27 @@ class SearchToolProvider(Block):
                 description="是否启用最近对话搜索功能"
             )
         ] = True,
+        enable_web_search: Annotated[
+            bool,
+            ParamMeta(
+                label="启用网络搜索",
+                description="是否启用 SearXNG 网络搜索功能"
+            )
+        ] = False,
+        searxng_url: Annotated[
+            str,
+            ParamMeta(
+                label="SearXNG 地址",
+                description="SearXNG 搜索引擎 API 地址"
+            )
+        ] = "http://localhost:8888",
     ):
         self.memory_dir = memory_dir
         self.enable_vector_search = enable_vector_search
         self.enable_keyword_search = enable_keyword_search
         self.enable_recent_search = enable_recent_search
+        self.enable_web_search = enable_web_search
+        self.searxng_url = searxng_url
         self.logger = get_logger("SearchToolProvider")
 
     async def _keyword_search(self, tool_call: ToolCall) -> LLMToolResultContent:
@@ -279,6 +393,65 @@ class SearchToolProvider(Block):
             content=[TextContent(text=result_text)]
         )
 
+    async def _web_search(self, tool_call: ToolCall) -> LLMToolResultContent:
+        """SearXNG 网络搜索实现"""
+        args = tool_call.function.arguments or {}
+        query = args.get("query", "")
+        limit = args.get("limit", 5)
+
+        try:
+            def _do_search():
+                resp = requests.get(
+                    f"{self.searxng_url}/search",
+                    params={"q": query, "format": "json", "language": "zh-CN"},
+                    timeout=10
+                )
+                resp.raise_for_status()
+                return resp.json()
+
+            data = await asyncio.to_thread(_do_search)
+            results = data.get("results", [])[:limit]
+
+            if not results:
+                result_text = f"[网络搜索] 没有找到关于「{query}」的结果。"
+            else:
+                fetch_count = min(len(results), self.MAX_WEB_RESULTS_WITH_FULLTEXT)
+                fetch_tasks = [
+                    asyncio.to_thread(self._fetch_page_excerpt, r.get("url", ""))
+                    for r in results[:fetch_count]
+                ]
+                fetched_pages = await asyncio.gather(*fetch_tasks, return_exceptions=True)
+
+                lines = [f"[网络搜索] 找到 {len(results)} 条结果，已读取前 {fetch_count} 个网页正文:\n"]
+                for i, r in enumerate(results, 1):
+                    title = r.get("title", "")
+                    url = r.get("url", "")
+                    snippet = (r.get("content", "") or "")[:180]
+                    lines.append(f"{i}. {title}\n   链接: {url}")
+                    if snippet:
+                        lines.append(f"   搜索摘要: {snippet}")
+
+                    if i <= fetch_count:
+                        page_excerpt = fetched_pages[i - 1]
+                        if isinstance(page_excerpt, Exception):
+                            self.logger.warning(f"Fetch page failed for {url}: {page_excerpt}")
+                        elif page_excerpt:
+                            lines.append(f"   网页正文摘录: {page_excerpt}")
+
+                result_text = "\n".join(lines)
+        except Exception as e:
+            self.logger.error(f"Web search error: {e}")
+            result_text = f"网络搜索失败: {str(e)}"
+            return LLMToolResultContent(
+                id=tool_call.id, name=tool_call.function.name,
+                content=[TextContent(text=result_text)], isError=True
+            )
+
+        return LLMToolResultContent(
+            id=tool_call.id, name=tool_call.function.name,
+            content=[TextContent(text=result_text)]
+        )
+
     def _format_results(self, results: List[Dict], search_type: str) -> str:
         """格式化搜索结果"""
         if not results:
@@ -392,5 +565,27 @@ class SearchToolProvider(Block):
                 invokeFunc=CallableWrapper(self._recent_chat_search)
             ))
         
+        if self.enable_web_search:
+            tools.append(Tool(
+                name="web_search",
+                description="搜索互联网获取实时信息和链接，并进一步抓取网页正文摘录。当用户需要查找网址、产品链接、新闻、教程等网络信息时使用。返回标题、链接、搜索摘要和网页正文摘录。",
+                parameters=ToolInputSchema(
+                    type="object",
+                    properties={
+                        "query": {
+                            "type": "string",
+                            "description": "搜索关键词"
+                        },
+                        "limit": {
+                            "type": "integer",
+                            "description": "返回结果数量，默认5",
+                            "default": 5
+                        }
+                    },
+                    required=["query"]
+                ),
+                invokeFunc=CallableWrapper(self._web_search)
+            ))
+
         self.logger.info(f"SearchToolProvider: 提供了 {len(tools)} 个搜索工具")
         return {"tools": tools}

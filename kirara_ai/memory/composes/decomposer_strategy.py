@@ -296,18 +296,19 @@ class DefaultDecomposerStrategy:
         
         # 尝试加载历史摘要
         scope_key = context.get("scope_key", "")
-        if self.summary_manager and scope_key and len(entries) > 60:
+        detailed_limit = 100
+        if self.summary_manager and scope_key and len(entries) > detailed_limit:
             summary_data = self.summary_manager.load_summary(scope_key)
             if summary_data and summary_data.get("summary"):
                 old_count = summary_data.get("entry_count", 0)
                 result.append(f"[更早的 {old_count} 条对话摘要]\n{summary_data['summary']}\n[以下是最近的详细对话]")
             else:
                 # 没有摘要时的简单提示
-                old_count = len(entries) - 40
+                old_count = len(entries) - detailed_limit
                 result.append(f"[更早的约 {old_count} 条对话未显示]")
-        
-        # 限制最近的条目数量（显示最近 40 条）
-        entries = entries[-40:]
+
+        # 限制最近的条目数量（显示最近 100 条）
+        entries = entries[-detailed_limit:]
         
         for entry in entries:
             time_diff = datetime.now() - entry.timestamp
