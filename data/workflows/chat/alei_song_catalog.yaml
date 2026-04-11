@@ -18,7 +18,7 @@ blocks:
   name: build_catalog
   params:
     code: "from kirara_ai.im.message import IMMessage, TextMessage\nfrom kirara_ai.im.sender\
-      \ import ChatSender\n\nSONG_DISPLAY = [\n    \"雷猪猪之歌\",\n    \"陆陆宝宝打雷了\",\n\
+      \ import ChatSender\n\nSONG_DISPLAY = [\n    \"雷猪猪之歌\",\n    \"陆陆宝宝打雷了\",\n    \"一起下棋\",\n    \"雷帝传\",\n    \"肾虚高\",\n    \"汇亚大厦\",\n    \"太好玩了\",\n    \"紧急移除\",\n\
       ]\n\ndef execute(chat_sender):\n    lines = [\"雷帝歌单：\"]\n    for idx, title\
       \ in enumerate(SONG_DISPLAY, start=1):\n        lines.append(f\"{idx}. {title}\"\
       )\n    message = IMMessage(\n        sender=ChatSender.get_bot_sender(),\n \
