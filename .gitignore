@@ -35,3 +35,5 @@ startup.log
 kirara.log
 nohup.out
 *.log.zip
+*.bak
+

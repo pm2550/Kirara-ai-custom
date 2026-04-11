@@ -403,7 +403,7 @@ class SearchToolProvider(Block):
             def _do_search():
                 resp = requests.get(
                     f"{self.searxng_url}/search",
-                    params={"q": query, "format": "json", "language": "zh-CN"},
+                    params={"q": query, "format": "json"},
                     timeout=10
                 )
                 resp.raise_for_status()
