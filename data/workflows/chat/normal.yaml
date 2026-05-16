@@ -450,7 +450,7 @@ blocks:
 - type: internal:chat_completion
   name: r1_llm
   params:
-    model_name: qwen3.5-plus
+    model_name: qwen3.6-plus
   position:
     x: 700
     y: 100
@@ -848,7 +848,7 @@ blocks:
 - type: internal:chat_completion
   name: ocr_llm
   params:
-    model_name: qwen3.5-plus
+    model_name: qwen3.6-plus
     temperature: 0.1
   position:
     x: 860
@@ -1142,7 +1142,7 @@ blocks:
 - type: internal:chat_completion
   name: llm_with_tools
   params:
-    model_name: qwen3.5-plus
+    model_name: qwen3.6-plus
   position:
     x: 1260
     y: 347

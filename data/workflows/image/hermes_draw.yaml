@@ -59,8 +59,8 @@ blocks:
 
       _ENDPOINT = "http://127.0.0.1:8765/draw"
       _TIMEOUT = 90
-      # 默认二次元画风; prompt 里写 写实/photoreal 等可盖过
-      _STYLE_PREFIX = "anime style illustration, vibrant colors, sharp linework, detailed character art. Subject: "
+      # 默认二次元一个词, 不加任何 quality/style modifier, 让 Grok 自由发挥
+      _STYLE_PREFIX = "二次元. "
 
       def _err(text):
           return {"reply": IMMessage(

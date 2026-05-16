@@ -41,7 +41,9 @@ blocks:
       ), \"肾虚高\"),\n    \"汇亚大厦\": (_resolve_media_path(\"silk_full\", \"汇亚大厦_full.silk\"\
       ), \"汇亚大厦\"),\n    \"太好玩了\": (_resolve_media_path(\"silk_full\", \"taihaowan_full.silk\"\
       ), \"太好玩了\"),\n    \"紧急移除\": (_resolve_media_path(\"silk_full\", \"jinji_full.silk\"\
-      ), \"紧急移除\"),\n}\n\ndef normalize(text: str) -> str:\n    return text.strip().replace(\"\
+      ), \"紧急移除\"),\n    \"玺为你登记了\": (_resolve_media_path(\"silk_full\", \"xi_full.silk\"\
+      ), \"玺为你登记了\"),\n    \"西非猪\": (_resolve_media_path(\"silk_full\", \"xifeizhu_full.silk\"\
+      ), \"西非猪\"),\n}\n\ndef normalize(text: str) -> str:\n    return text.strip().replace(\"\
       \ \", \"\")\n\ndef execute(chat_sender, user_msg):\n    content = getattr(user_msg,\
       \ \"content\", \"\") or \"\"\n    content = content.strip()\n    match = re.search(r\"\
       点歌[:：]\\s*(.+)\", content, re.IGNORECASE)\n    if not match:\n        message\

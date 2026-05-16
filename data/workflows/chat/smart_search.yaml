@@ -175,7 +175,7 @@ blocks:
 - type: internal:chat_completion
   name: summary_llm_chat
   params:
-    model_name: qwen3.5-plus
+    model_name: qwen3.6-plus
     temperature: 0.2
   position:
     x: 1000
@@ -891,7 +891,7 @@ blocks:
 - type: internal:chat_completion
   name: llm_chat
   params:
-    model_name: qwen3.5-plus
+    model_name: qwen3.6-plus
     temperature: 1.2
   position:
     x: 1400
