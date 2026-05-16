@@ -1,0 +1,123 @@
+name: 画图 - Hermes Grok Imagine
+description: 收到"画图:xxx"或"画图：xxx"时调用 Hermes Image API (Grok Imagine) 画图并发回
+blocks:
+- type: internal:get_message
+  name: msg_in
+  params: {}
+  position:
+    x: 100
+    y: 100
+  connected_to:
+  - target: extract_prompt
+    mapping:
+      from: msg
+      to: msg
+
+- type: internal:code
+  name: extract_prompt
+  params:
+    code: |
+      import re
+      from kirara_ai.im.message import TextMessage
+
+      _DRAW_RE = re.compile(r'^\s*画图\s*[:：]\s*(.+)$', re.S)
+
+      def execute(msg):
+          text = ''
+          for el in msg.message_elements:
+              if isinstance(el, TextMessage):
+                  text = (el.text or '').strip()
+                  break
+          m = _DRAW_RE.match(text)
+          prompt = (m.group(1).strip() if m else text).strip()
+          return {"prompt": prompt}
+    inputs:
+    - name: msg
+      label: IM 消息
+    outputs:
+    - name: prompt
+      label: 画图提示词
+  position:
+    x: 400
+    y: 100
+  connected_to:
+  - target: call_hermes
+    mapping:
+      from: prompt
+      to: prompt
+
+- type: internal:code
+  name: call_hermes
+  params:
+    code: |
+      import json
+      import os
+      import urllib.request
+      import urllib.error
+      from kirara_ai.im.message import IMMessage, ImageMessage, TextMessage
+      from kirara_ai.im.sender import ChatSender
+
+      _ENDPOINT = "http://127.0.0.1:8765/draw"
+      _TIMEOUT = 90
+      # 默认二次元画风; prompt 里写 写实/photoreal 等可盖过
+      _STYLE_PREFIX = "anime style illustration, vibrant colors, sharp linework, detailed character art. Subject: "
+
+      def _err(text):
+          return {"reply": IMMessage(
+              sender=ChatSender.get_bot_sender(),
+              message_elements=[TextMessage(text)],
+          )}
+
+      def execute(prompt):
+          if not prompt:
+              return _err("画图失败: 提示词为空, 用法: 画图:你要画的东西")
+          styled = _STYLE_PREFIX + prompt
+
+          body = json.dumps({"prompt": styled, "ratio": "1:1"}).encode("utf-8")
+          req = urllib.request.Request(
+              _ENDPOINT,
+              data=body,
+              headers={"Content-Type": "application/json"},
+              method="POST",
+          )
+          try:
+              with urllib.request.urlopen(req, timeout=_TIMEOUT) as resp:
+                  data = json.loads(resp.read().decode("utf-8"))
+          except urllib.error.HTTPError as exc:
+              try:
+                  detail = json.loads(exc.read().decode("utf-8")).get("error", str(exc))
+              except Exception:
+                  detail = str(exc)
+              return _err(f"画图失败 ({exc.code}): {detail}")
+          except Exception as exc:
+              return _err(f"画图失败: {exc}")
+
+          path = data.get("image_path")
+          if not path or not os.path.exists(path):
+              return _err(f"画图失败: 文件不存在 ({path})")
+
+          return {"reply": IMMessage(
+              sender=ChatSender.get_bot_sender(),
+              message_elements=[ImageMessage(path=path, format="png")],
+          )}
+    inputs:
+    - name: prompt
+      label: 画图提示词
+    outputs:
+    - name: reply
+      label: 回复消息
+  position:
+    x: 700
+    y: 100
+  connected_to:
+  - target: msg_out
+    mapping:
+      from: reply
+      to: msg
+
+- type: internal:send_message
+  name: msg_out
+  params: {}
+  position:
+    x: 1000
+    y: 100

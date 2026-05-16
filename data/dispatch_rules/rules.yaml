@@ -303,6 +303,27 @@
     category: system
     permission: user
   rate_limit: null
+- rule_id: image_hermes_draw
+  name: Hermes 画图
+  description: 收到"画图:xxx"或"画图：xxx"时调 Hermes Image API (Grok Imagine) 生成并发回
+  workflow_id: image:hermes_draw
+  priority: 8
+  enabled: true
+  rule_groups:
+  - operator: or
+    rules:
+    - type: regex
+      config:
+        pattern: ^\s*画图\s*[:：]
+  metadata:
+    category: image
+    permission: user
+  rate_limit:
+    per_sender_seconds: 15.0
+    per_chat_seconds: 5.0
+    burst:
+      window_seconds: 60.0
+      max_triggers: 3
 - rule_id: fallback
   name: 默认规则
   description: 当上述规则均没有匹配成功时，执行此工作流。
