@@ -37,3 +37,8 @@ nohup.out
 *.log.zip
 *.bak
 
+
+# 手工备份 (config.yaml.bak.pre-xxx / *.bak-时间戳) 和 Windows 路径日志
+*.bak.*
+*.bak-*
+/C:*
