@@ -21,50 +21,7 @@ blocks:
 - type: internal:code
   name: handle_request
   params:
-    code: "import pathlib\nimport re\nfrom kirara_ai.im.message import IMMessage,\
-      \ VoiceMessage, TextMessage\nfrom kirara_ai.im.sender import ChatSender\n\n\
-      def _resolve_media_path(*parts):\n    project_media = pathlib.Path.cwd() / \"\
-      media\"\n    if project_media.exists():\n        return (project_media / pathlib.Path(*parts)).resolve()\n\
-      \n    try:\n        current = pathlib.Path(__file__).resolve()\n    except NameError:\n\
-      \        current = pathlib.Path.cwd()\n\n    for parent in [current, *current.parents]:\n\
-      \        media_root = parent / \"media\"\n        if media_root.exists():\n\
-      \            return (media_root / pathlib.Path(*parts)).resolve()\n\n    return\
-      \ (project_media / pathlib.Path(*parts)).resolve()\n\nSONG_LIBRARY = {\n   \
-      \ \"雷猪猪之歌\": (_resolve_media_path(\"silk_full\", \"leizhuzhu_full.silk\"), \"\
-      雷猪猪之歌\"),\n    \"大家一起雷猪猪\": (_resolve_media_path(\"silk_full\", \"leizhuzhu_full.silk\"\
-      ), \"雷猪猪之歌\"),\n    \"陆陆宝宝打雷了\": (_resolve_media_path(\"silk_full\", \"alei_extra_full.silk\"\
-      ), \"陆陆宝宝打雷了\"),\n    \"陆陆宝宝打雷\": (_resolve_media_path(\"silk_full\", \"alei_extra_full.silk\"\
-      ), \"陆陆宝宝打雷了\"),\n    \"一起下棋\": (_resolve_media_path(\"silk_full\", \"一起下棋_full.silk\"\
-      ), \"一起下棋\"),\n    \"下棋\": (_resolve_media_path(\"silk_full\", \"一起下棋_full.silk\"\
-      ), \"一起下棋\"),\n    \"雷帝传\": (_resolve_media_path(\"silk_full\", \"雷帝传_full.silk\"\
-      ), \"雷帝传\"),\n    \"肾虚高\": (_resolve_media_path(\"silk_full\", \"肾虚高_full.silk\"\
-      ), \"肾虚高\"),\n    \"汇亚大厦\": (_resolve_media_path(\"silk_full\", \"汇亚大厦_full.silk\"\
-      ), \"汇亚大厦\"),\n    \"太好玩了\": (_resolve_media_path(\"silk_full\", \"taihaowan_full.silk\"\
-      ), \"太好玩了\"),\n    \"紧急移除\": (_resolve_media_path(\"silk_full\", \"jinji_full.silk\"\
-      ), \"紧急移除\"),\n    \"玺为你登记了\": (_resolve_media_path(\"silk_full\", \"xi_full.silk\"\
-      ), \"玺为你登记了\"),\n    \"西非猪\": (_resolve_media_path(\"silk_full\", \"xifeizhu_full.silk\"\
-      ), \"西非猪\"),\n}\n\ndef normalize(text: str) -> str:\n    return text.strip().replace(\"\
-      \ \", \"\")\n\ndef execute(chat_sender, user_msg):\n    content = getattr(user_msg,\
-      \ \"content\", \"\") or \"\"\n    content = content.strip()\n    match = re.search(r\"\
-      点歌[:：]\\s*(.+)\", content, re.IGNORECASE)\n    if not match:\n        message\
-      \ = IMMessage(\n            sender=ChatSender.get_bot_sender(),\n          \
-      \  message_elements=[TextMessage(\"唱啥？格式是：点歌：歌名\")]\n        )\n        return\
-      \ {\"msgs\": [message], \"target\": chat_sender}\n\n    song_name_raw = match.group(1).strip()\n\
-      \    song_key = normalize(song_name_raw)\n\n    selected = None\n    for name,\
-      \ (path, display) in SONG_LIBRARY.items():\n        if normalize(name) == song_key:\n\
-      \            selected = (path, display)\n            break\n\n    if not selected:\n\
-      \        options = sorted({info[1] for info in SONG_LIBRARY.values()})\n   \
-      \     tips = \"\\\\n\".join([f\"- {opt}\" for opt in options])\n        message\
-      \ = IMMessage(\n            sender=ChatSender.get_bot_sender(),\n          \
-      \  message_elements=[\n                TextMessage(f\"没找到《{song_name_raw}》，可选歌单：\\\
-      \\n{tips}\")\n            ]\n        )\n        return {\"msgs\": [message],\
-      \ \"target\": chat_sender}\n\n    path, display = selected\n    if not path.exists():\n\
-      \        message = IMMessage(\n            sender=ChatSender.get_bot_sender(),\n\
-      \            message_elements=[TextMessage(f\"语音文件缺失：{path}\")]\n        )\n\
-      \        return {\"msgs\": [message], \"target\": chat_sender}\n\n    voice\
-      \ = VoiceMessage(path=str(path), format=\"silk\")\n    message = IMMessage(\n\
-      \        sender=ChatSender.get_bot_sender(),\n        message_elements=[voice]\n\
-      \    )\n    return {\"msgs\": [message], \"target\": chat_sender}\n"
+    code: "import pathlib\nimport re\nfrom kirara_ai.im.message import IMMessage, VoiceMessage, TextMessage\nfrom kirara_ai.im.sender import ChatSender\n\ndef _resolve_media_path(*parts):\n    project_media = pathlib.Path.cwd() / \"media\"\n    if project_media.exists():\n        return (project_media / pathlib.Path(*parts)).resolve()\n\n    try:\n        current = pathlib.Path(__file__).resolve()\n    except NameError:\n        current = pathlib.Path.cwd()\n\n    for parent in [current, *current.parents]:\n        media_root = parent / \"media\"\n        if media_root.exists():\n            return (media_root / pathlib.Path(*parts)).resolve()\n\n    return (project_media / pathlib.Path(*parts)).resolve()\n\nSONG_LIBRARY = {\n    \"雷猪猪之歌\": (_resolve_media_path(\"silk_full\", \"leizhuzhu_full.silk\"), \"雷猪猪之歌\"),\n    \"大家一起雷猪猪\": (_resolve_media_path(\"silk_full\", \"leizhuzhu_full.silk\"), \"雷猪猪之歌\"),\n    \"陆陆宝宝打雷了\": (_resolve_media_path(\"silk_full\", \"alei_extra_full.silk\"), \"陆陆宝宝打雷了\"),\n    \"陆陆宝宝打雷\": (_resolve_media_path(\"silk_full\", \"alei_extra_full.silk\"), \"陆陆宝宝打雷了\"),\n    \"一起下棋\": (_resolve_media_path(\"silk_full\", \"一起下棋_full.silk\"), \"一起下棋\"),\n    \"下棋\": (_resolve_media_path(\"silk_full\", \"一起下棋_full.silk\"), \"一起下棋\"),\n    \"雷帝传\": (_resolve_media_path(\"silk_full\", \"雷帝传_full.silk\"), \"雷帝传\"),\n    \"肾虚高\": (_resolve_media_path(\"silk_full\", \"肾虚高_full.silk\"), \"肾虚高\"),\n    \"汇亚大厦\": (_resolve_media_path(\"silk_full\", \"汇亚大厦_full.silk\"), \"汇亚大厦\"),\n    \"太好玩了\": (_resolve_media_path(\"silk_full\", \"taihaowan_full.silk\"), \"太好玩了\"),\n    \"紧急移除\": (_resolve_media_path(\"silk_full\", \"jinji_full.silk\"), \"紧急移除\"),\n    \"玺为你登记了\": (_resolve_media_path(\"silk_full\", \"xi_full.silk\"), \"玺为你登记了\"),\n    \"西非猪\": (_resolve_media_path(\"silk_full\", \"xifeizhu_full.silk\"), \"西非猪\"),\n    \"南通汉堡\": (_resolve_media_path(\"silk_full\", \"南通汉堡_full.silk\"), \"南通汉堡\"),\n    \"汉堡\": (_resolve_media_path(\"silk_full\", \"南通汉堡_full.silk\"), \"南通汉堡\"),\n    \"浮光\": (_resolve_media_path(\"silk_full\", \"浮光_full.silk\"), \"浮光\"),\n}\n\ndef normalize(text: str) -> str:\n    return text.strip().replace(\" \", \"\")\n\ndef execute(chat_sender, user_msg):\n    content = getattr(user_msg, \"content\", \"\") or \"\"\n    content = content.strip()\n    match = re.search(r\"点歌[:：]\\s*(.+)\", content, re.IGNORECASE)\n    if not match:\n        message = IMMessage(\n            sender=ChatSender.get_bot_sender(),\n            message_elements=[TextMessage(\"唱啥？格式是：点歌：歌名\")]\n        )\n        return {\"msgs\": [message], \"target\": chat_sender}\n\n    song_name_raw = match.group(1).strip()\n    song_key = normalize(song_name_raw)\n\n    selected = None\n    for name, (path, display) in SONG_LIBRARY.items():\n        if normalize(name) == song_key:\n            selected = (path, display)\n            break\n\n    if not selected:\n        options = sorted({info[1] for info in SONG_LIBRARY.values()})\n        tips = \"\\n\".join([f\"- {opt}\" for opt in options])\n        message = IMMessage(\n            sender=ChatSender.get_bot_sender(),\n            message_elements=[\n                TextMessage(f\"没找到《{song_name_raw}》，可选歌单：\\n{tips}\")\n            ]\n        )\n        return {\"msgs\": [message], \"target\": chat_sender}\n\n    path, display = selected\n    if not path.exists():\n        message = IMMessage(\n            sender=ChatSender.get_bot_sender(),\n            message_elements=[TextMessage(f\"语音文件缺失：{path}\")]\n        )\n        return {\"msgs\": [message], \"target\": chat_sender}\n\n    voice = VoiceMessage(path=str(path), format=\"silk\")\n    message = IMMessage(\n        sender=ChatSender.get_bot_sender(),\n        message_elements=[voice]\n    )\n    return {\"msgs\": [message], \"target\": chat_sender}\n"
     inputs:
     - name: chat_sender
       label: 目标
