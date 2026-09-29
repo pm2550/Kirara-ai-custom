@@ -1,3 +1,4 @@
+import base64
 import asyncio
 import json
 import time
@@ -8,6 +9,29 @@ import requests
 from pydantic import BaseModel, ConfigDict
 
 import kirara_ai.llm.format.tool as tools
+
+def _compress_image_b64(data: bytes, max_dim: int = 1024, quality: int = 80) -> str:
+    """压缩图片为 JPEG base64，避免 413 Request Entity Too Large"""
+    import base64
+    import io
+    from PIL import Image
+    try:
+        img = Image.open(io.BytesIO(data))
+        if img.mode in ("RGBA", "P", "LA"):
+            img = img.convert("RGB")
+        w, h = img.size
+        if max(w, h) > max_dim:
+            scale = max_dim / max(w, h)
+            img = img.resize((max(1, int(w * scale)), max(1, int(h * scale))), Image.LANCZOS)
+        buf = io.BytesIO()
+        img.save(buf, format="JPEG", quality=quality)
+        out = buf.getvalue()
+        if len(out) < len(data):
+            return base64.b64encode(out).decode()
+    except Exception:
+        pass
+    return base64.b64encode(data).decode()
+
 from kirara_ai.config.global_config import ModelConfig
 from kirara_ai.llm.adapter import AutoDetectModelsProtocol, LLMBackendAdapter, LLMChatProtocol, LLMEmbeddingProtocol
 from kirara_ai.llm.format.message import (LLMChatContentPartType, LLMChatImageContent, LLMChatMessage,
@@ -60,10 +84,15 @@ async def convert_parts_factory(messages: LLMChatMessage, media_manager: MediaMa
                 media = media_manager.get_media(element.media_id)
                 if media is None:
                     raise ValueError(f"Media {element.media_id} not found")
+                _raw = await media.get_data()
+                _b64 = _compress_image_b64(_raw) if _raw else (await media.get_base64())
                 parts.append({
                     "type": "image_url",
                     "image_url": {
-                        "url": await media.get_url()
+                        # Ollama Cloud (ollama.com/v1) 拒绝 http 图片 URL，强制要求 base64；
+                        # base64 data URI 同样被 OpenAI / Gemini 等所有 OpenAI 兼容视觉后端接受
+                        # 图片先压缩到 <=1024px JPEG，避免 nano-gpt 413 Request Entity Too Large
+                        "url": f"data:{media.mime_type};base64,{_b64}"
                     }
                 })
             elif isinstance(element, LLMToolCallContent):
