@@ -179,7 +179,7 @@ blocks:
 - type: internal:chat_completion
   name: llm_chat
   params:
-    model_name: qwen3.6-plus
+    model_name: free-auto
     temperature: 1.4
   position:
     x: 1260

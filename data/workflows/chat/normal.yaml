@@ -450,7 +450,7 @@ blocks:
 - type: internal:chat_completion
   name: r1_llm
   params:
-    model_name: qwen3.6-plus
+    model_name: free-auto
   position:
     x: 700
     y: 100
@@ -848,7 +848,7 @@ blocks:
 - type: internal:chat_completion
   name: ocr_llm
   params:
-    model_name: qwen3.6-plus
+    model_name: free-auto
     temperature: 0.1
   position:
     x: 860
@@ -1042,7 +1042,7 @@ blocks:
 - type: internal:chat_completion_with_tools
   name: review_llm
   params:
-    model_name: gemini-3-flash-preview
+    model_name: free-auto
     max_iterations: 2
   position:
     x: 1350
@@ -1142,7 +1142,7 @@ blocks:
 - type: internal:chat_completion
   name: llm_with_tools
   params:
-    model_name: qwen3.6-plus
+    model_name: free-auto
   position:
     x: 1260
     y: 347
