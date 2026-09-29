@@ -943,7 +943,9 @@ blocks:
       to: msgs
 - type: internal:send_message_batch
   name: msg_sender_batch
-  params: {}
+  params:
+    interval_ms: 400
+    jitter_ms: 200
   position:
     x: 2000
     y: 300

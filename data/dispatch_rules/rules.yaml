@@ -31,7 +31,7 @@
   name: 群聊图片对话
   description: 群聊中仅发图片时也触发聊天
   workflow_id: chat:normal
-  priority: 6
+  priority: 16
   enabled: true
   rule_groups:
   - operator: or

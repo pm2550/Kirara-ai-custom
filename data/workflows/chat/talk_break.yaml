@@ -202,7 +202,9 @@ blocks:
     y: 192
 - type: internal:send_message_batch
   name: msg_sender_lakgf8
-  params: {}
+  params:
+    interval_ms: 400
+    jitter_ms: 200
   position:
     x: 2377
     y: 346
