@@ -453,7 +453,7 @@ blocks:
 - type: internal:chat_completion
   name: r1_llm
   params:
-    model_name: free-auto
+    model_name: free-auto-think
   position:
     x: 700
     y: 100
