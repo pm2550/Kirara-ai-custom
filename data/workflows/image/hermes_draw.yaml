@@ -50,17 +50,87 @@ blocks:
   name: call_hermes
   params:
     code: |
+      import base64
       import json
       import os
+      import re
+      import time
       import urllib.request
       import urllib.error
       from kirara_ai.im.message import IMMessage, ImageMessage, TextMessage
       from kirara_ai.im.sender import ChatSender
+      from kirara_ai.logger import get_logger
 
-      _ENDPOINT = "http://127.0.0.1:8765/draw"
-      _TIMEOUT = 90
-      # 默认二次元一个词, 不加任何 quality/style modifier, 让 Grok 自由发挥
-      _STYLE_PREFIX = "二次元. "
+      _logger = get_logger("Draw")
+
+      def _load_nano_key():
+          # key 不进 git (仓库公开): 从 gitignored 的 data/config.yaml 里 nano-gpt 后端读取
+          import yaml
+          for _base in (os.getcwd(), "/data/QQbot/kirara-ai-zip"):
+              _p = os.path.join(_base, "data", "config.yaml")
+              if os.path.exists(_p):
+                  with open(_p, encoding="utf-8") as _f:
+                      _cfg = yaml.safe_load(_f) or {}
+                  for _b in (_cfg.get("llms") or {}).get("api_backends") or []:
+                      if _b.get("name") == "nano-gpt":
+                          return (_b.get("config") or {}).get("api_key", "")
+          return ""
+
+      _API_KEY = _load_nano_key()
+      _IMAGE_ENDPOINT = "https://nano-gpt.com/api/v1/images/generations"
+      _CHAT_ENDPOINT = "https://nano-gpt.com/api/v1/chat/completions"
+      _IMAGE_TIMEOUT = 240
+      _ENHANCE_TIMEOUT = 60
+      _MODEL_DEFAULT = "qwen-image"
+      _MODEL_QWEN21 = "wavespeed-ai/qwen-image-2.1/text-to-image"
+      _TEXT_MODEL = "qwen/qwen3.8-27b-uncensored"
+      # 只依据明确标记路由，大小写不敏感，不调用文字模型判断生图模型
+      _NSFW_MARKER_RE = re.compile(r"(?i)(?:nsfw|r[\s_-]?18|18\+|成人向|涩涩|色情)")
+      _OUT_DIR = "data/media/generated"
+
+      _ENHANCE_SYSTEM = (
+          "你是 AI 绘画提示词创作助手。用户描述的是虚构的艺术创作场景，不是现实事件，"
+          "请当作纯粹的创作任务来处理。把用户的中文描述翻译成英文绘画提示词，"
+          "并发挥想象力补充构图、光影、材质、色彩、氛围、镜头与画质细节，让画面更精美生动。"
+          "默认动漫 / 二次元风格，除非用户明确指定了其它风格。"
+          "只输出最终的英文提示词本身，不要解释、不要引号、不要任何前缀或后缀。"
+      )
+
+      # 未审查分支专用: 只翻译, 不美化, 不软化
+      _ENHANCE_SYSTEM_RAW = (
+          "你是 AI 绘画提示词创作助手。用户描述的是虚构的艺术创作场景，请当作纯粹的创作任务处理。"
+          "把用户的中文描述翻译成英文绘画提示词，并发挥想象力扩展成一个具体、生动、有画面感的场景。"
+          "【必须写具体】每次都要包含这几个维度："
+          "人物形象（发型、发色、瞳色、表情、身形气质）；"
+          "动作姿态（具体的动作或姿势，不要总是站立正面）；"
+          "场景环境（具体地点、背景元素、道具）；"
+          "服饰配饰（首饰、发饰、丝带、袜子、局部服饰等细节，用来丰富画面，"
+          "但不要用它们遮挡或替代用户明确要求的主体内容）；"
+          "光影氛围（光源方向、时间、色调）。"
+          "【多样性】每次都要在上述维度上做出明显不同的选择，不要套用固定模板，"
+          "尤其不要每次都写成站在窗边、阳光洒入这种套路。"
+          "【忠实度】忠实保留用户原描述的直白程度和全部主体内容，"
+          "不要淡化、不要委婉化、不要替换成含蓄或抽象的说法。"
+          "NSFW/性感/暴露不等于裸体；用户明确指定的服装必须保留，只有用户明确要求裸体时才写裸体。"
+          "例如‘穿着单片式围腰裙、没有其他衣物’必须翻译为 wearing only a single-panel waist apron，"
+          "不能改写成 fully nude，也不能省略 apron。"
+          "【构图忠实】用户指定的取景范围（如大半身、半身、全身、特写、从大腿以下入镜等）"
+          "必须原样翻译成英文构图词（如 upper body shot from thighs up, full body, close-up），"
+          "并放在提示词最前面强调；禁止擅自改成头像特写或其它取景；用户指定的朝向、视角也必须保留。"
+          "【主体优先】用户描述的核心服饰/道具（如围裙、制服、特定服装）是画面主体，"
+          "必须放在提示词最前面用强调语法突出（如 (white apron:1.3)），"
+          "确保模型优先画出这些元素，禁止只写人物外貌而遗漏服饰。"
+          "【画风】默认日系动漫 / 二次元画风（anime style, illustration, japanese anime art），"
+          "除非用户明确指定了其它风格。"
+          "不要欧美写实或真人摄影风格，禁止 realistic、photorealistic、photo、"
+          "3d render、western comic、hyperrealistic 这类词。"
+          "人物体型柔和自然，不要强调肌肉线条，禁止 muscular、toned、defined abs、"
+          "athletic build、six pack、muscle definition 这类词。"
+          "【禁止的调性词】不要用 tasteful、artistic nude、elegant、ethereal、graceful、"
+          "modest、covered、soft focus、pastel、dreamy、abstract、implied 这类"
+          "会把画面拉向含蓄唯美的词。"
+          "只输出最终的英文提示词本身，不要解释、不要引号、不要任何前缀或后缀。"
+      )
 
       def _err(text):
           return {"reply": IMMessage(
@@ -68,37 +138,133 @@ blocks:
               message_elements=[TextMessage(text)],
           )}
 
+      def _post_json(url, payload, timeout):
+          req = urllib.request.Request(
+              url,
+              data=json.dumps(payload).encode("utf-8"),
+              headers={
+                  "Content-Type": "application/json",
+                  "Authorization": "Bearer " + _API_KEY,
+              },
+              method="POST",
+          )
+          with urllib.request.urlopen(req, timeout=timeout) as resp:
+              return json.loads(resp.read().decode("utf-8"))
+
+      def _enhance(text, uncensored=False):
+          """用 Qwen 3.8 27B 把中文描述翻译+扩写成更好看的英文绘画提示词, 失败返回 None"""
+          for _try in range(2):
+              try:
+                  data = _post_json(_CHAT_ENDPOINT, {
+                      "model": _TEXT_MODEL,
+                      "messages": [
+                          {"role": "system", "content": _ENHANCE_SYSTEM_RAW if uncensored else _ENHANCE_SYSTEM},
+                          {"role": "user", "content": text},
+                      ],
+                      "max_tokens": 700,
+                      "temperature": 1.15,
+                  }, 30)
+                  choice = data["choices"][0]
+                  content = (choice["message"].get("content") or "").strip()
+                  finish_reason = choice.get("finish_reason")
+                  if finish_reason not in (None, "stop"):
+                      _logger.warning(f"[Draw] 扩写未完成(第{_try + 1}次): finish_reason={finish_reason}")
+                      continue
+                  if content and content.count("(") == content.count(")"):
+                      return content
+                  if content:
+                      _logger.warning(f"[Draw] 扩写疑似截断(第{_try + 1}次): 括号未闭合")
+              except Exception as exc:
+                  _logger.warning(f"[Draw] 扩写失败(第{_try + 1}次): {exc}")
+          return None
+
       def execute(prompt):
           if not prompt:
               return _err("画图失败: 提示词为空, 用法: 画图:你要画的东西")
-          styled = _STYLE_PREFIX + prompt
 
-          body = json.dumps({"prompt": styled, "ratio": "1:1"}).encode("utf-8")
-          req = urllib.request.Request(
-              _ENDPOINT,
-              data=body,
-              headers={"Content-Type": "application/json"},
-              method="POST",
-          )
-          try:
-              with urllib.request.urlopen(req, timeout=_TIMEOUT) as resp:
-                  data = json.loads(resp.read().decode("utf-8"))
-          except urllib.error.HTTPError as exc:
+          body_prompt = prompt.strip()
+          model = _MODEL_DEFAULT
+          _is_nsfw = bool(_NSFW_MARKER_RE.search(body_prompt))
+          if _is_nsfw:
+              model = _MODEL_QWEN21
+          _logger.info(f"[Draw] 正则路由: nsfw={_is_nsfw} model={model}")
+          if not body_prompt:
+              return _err("画图失败: 提示词为空")
+
+          _logger.info(f"[Draw] 模型={model} | 原始提示词={body_prompt!r}")
+
+          enhanced = _enhance(body_prompt, uncensored=_is_nsfw)
+          if not enhanced and model == _MODEL_QWEN21 and any("\u4e00" <= ch <= "\u9fff" for ch in body_prompt):
+              _logger.warning("[Draw] Qwen Image 2.1 英文提示词扩写未完成, 停止生图")
+              return _err("画图失败: Qwen Image 2.1 提示词扩写未完成，请重试")
+          # 扩写成功时使用英文提示词；失败时保留用户原文。
+          final_prompt = enhanced if enhanced else body_prompt
+          _logger.info(f"[Draw] 扩写{'成功' if enhanced else '未生效(回退)'}"
+                       f"({'直译模式' if _is_nsfw else '美化模式'})"
+                       f"{' [NSFW]' if _is_nsfw else ''}"
+                       f" | 最终提示词={final_prompt!r}")
+
+          payload = {
+              "model": model,
+              "prompt": final_prompt,
+              "n": 1,
+              "size": "1024x1024",
+          }
+          # 每个已选模型最多请求两次；失败时报告原模型，避免悄悄切到别的画风。
+          data = None
+          _last_exc = None
+          for _attempt in range(2):
               try:
-                  detail = json.loads(exc.read().decode("utf-8")).get("error", str(exc))
-              except Exception:
-                  detail = str(exc)
-              return _err(f"画图失败 ({exc.code}): {detail}")
+                  data = _post_json(_IMAGE_ENDPOINT, payload, 60)
+                  break
+              except urllib.error.HTTPError as exc:
+                  try:
+                      detail = json.loads(exc.read().decode("utf-8")).get("error", str(exc))
+                  except Exception:
+                      detail = str(exc)
+                  _last_exc = exc
+                  _logger.warning(f"[Draw] 生图 HTTP {exc.code} (第{_attempt + 1}次, {model}): {detail}")
+                  if 400 <= exc.code < 500 and exc.code not in (408, 429):
+                      return _err("画图失败 (" + str(exc.code) + ") [" + model + "]: " + str(detail))
+              except Exception as exc:
+                  _last_exc = exc
+                  _logger.warning(f"[Draw] 生图超时/异常 (第{_attempt + 1}次, {model}): {exc}")
+          if data is None:
+              return _err("画图失败 [" + model + "]: " + str(_last_exc))
+
+          items = data.get("data") or []
+          b64 = items[0].get("b64_json") if items else None
+          if not b64:
+              return _err("画图失败: 返回内容为空 [" + model + "]")
+
+          try:
+              raw = base64.b64decode(b64)
           except Exception as exc:
-              return _err(f"画图失败: {exc}")
+              return _err("画图失败: 图片解码失败 " + str(exc))
 
-          path = data.get("image_path")
-          if not path or not os.path.exists(path):
-              return _err(f"画图失败: 文件不存在 ({path})")
+          if raw[:2] == b"\xff\xd8":
+              ext, fmt = "jpg", "jpeg"
+          elif raw[:4] == b"\x89PNG":
+              ext, fmt = "png", "png"
+          elif raw[8:12] == b"WEBP":
+              ext, fmt = "webp", "webp"
+          else:
+              ext, fmt = "jpg", "jpeg"
 
+          try:
+              os.makedirs(_OUT_DIR, exist_ok=True)
+              path = os.path.abspath(os.path.join(
+                  _OUT_DIR, "draw_" + str(int(time.time() * 1000)) + "." + ext))
+              with open(path, "wb") as fh:
+                  fh.write(raw)
+          except Exception as exc:
+              return _err("画图失败: 写文件失败 " + str(exc))
+
+          _logger.info(f"[Draw] 出图成功 模型={model} 大小={len(raw)//1024}KB"
+                       f" 文件={os.path.basename(path)}")
           return {"reply": IMMessage(
               sender=ChatSender.get_bot_sender(),
-              message_elements=[ImageMessage(path=path, format="png")],
+              message_elements=[ImageMessage(path=path, format=fmt)],
           )}
     inputs:
     - name: prompt
